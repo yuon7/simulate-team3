@@ -14,3 +14,17 @@ model Todo {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+/// 名前,email,性別,年齢,スキル,希望職種,希望場所,希望年収,自治体フラグ,作成日,最終更新日
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  gender       String?
+  age          Int?
+  skills       String?
+  desiredJob   String?
+  desiredPlace String?
+  desiredSalary Int?
+  government   Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}

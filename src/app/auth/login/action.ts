@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { prisma } from "@/lib/prisma/server";
 
 export async function login(formData: FormData) {
   const supabase = await createClient();
@@ -47,6 +48,17 @@ export async function signup(formData: FormData) {
     };
     const errorMessage = errorMessages[error.message] || error.message;
     redirect(`/auth/login?error=${encodeURIComponent(errorMessage)}`);
+  }
+  // prismaに追加
+  if (signUpData?.user) {
+    try {
+      await prisma.user.create({data: {
+        email: data.email,
+      },
+    });
+    } catch (err: any) {
+      console.error("Prisma User 作成エラー:", err.message);
+    }
   }
 
   if (signUpData?.user && signUpData.user.identities?.length === 0) {
