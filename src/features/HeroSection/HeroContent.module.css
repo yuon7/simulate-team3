@@ -1,0 +1,82 @@
+.container {
+    position: relative;
+    z-index: 1;
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+  
+  .title {
+    font-size: 56px;
+    font-weight: 900;
+    line-height: 1.1;
+    text-align: left;
+    color: var(--mantine-color-text);
+  }
+  
+  @media (max-width: 755px) {
+    .title {
+      font-size: 42px;
+      text-align: center;
+    }
+  }
+  
+  .highlight {
+    color: var(--mantine-color-blue-6);
+  }
+  
+  .description {
+    max-width: 600px;
+    text-align: left;
+  }
+  
+  @media (max-width: 755px) {
+    .description {
+      text-align: center;
+    }
+  }
+  
+  .statIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--mantine-radius-md);
+  }
+  
+  .iconPrimary {
+    color: var(--mantine-color-green-6);
+  }
+  
+  .iconSecondary {
+    color: var(--mantine-color-blue-6);
+  }
+  
+  .iconAccent {
+    color: var(--mantine-color-orange-6);
+  }
+  
+  .statNumber {
+    color: var(--mantine-color-text);
+  }
+  
+  .imageWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    height: 100%;
+  }
+  
+  .imagePaper {
+    width: 100%;
+    max-width: 500px;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .image {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
