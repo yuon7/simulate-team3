@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "@mantine/core/styles.css";
 import "../../styles/globals.css";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
-import { HeaderMegaMenu } from "@/components/Header/Header";
+import { Header } from "@/components/Header/Header";
 import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
@@ -22,7 +22,8 @@ export default function RootLayout({
       </head>
       <body>
         <MantineProvider>
-          <HeaderMegaMenu />
+          {/* <HeaderMegaMenu /> を <Header /> に変更 */}
+          <Header />
           {children}
           <Analytics />
         </MantineProvider>

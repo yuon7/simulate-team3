@@ -1,28 +1,21 @@
-import { redirect } from "next/navigation";
-import TodoApp from "@/features/TodoApp/TodoApp";
-import { createClient } from "@/lib/supabase/server";
-import styles from "./page.module.css";
+import { HeroSection } from "../components/HeroSection/HeroSection"
+import { FeaturesSection } from "../components/FeaturesSection/FeaturesSection"
+import { JobListings } from "../components/JobListings/JobListings"
+import { LifeSimulator } from "../components/LifeSimulator/LifeSimulator"
+import { RegionSpotlight } from "../components/RegionSpotlight/RegionSpotlight"
+import { Footer } from "../components/Footer/Footer"
 
-export default async function Home() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/auth/login");
-  }
-
+export default function HomePage() {
   return (
-    <div className={styles.container}>
-      <header className={styles.header}>
-        <div className={styles.logo} />
-        <h1 className={styles.title}>Next-Hono-Template</h1>
-        <p className={styles.subtitle}>
-          A modern template combining the power of Next.js and Hono.
-        </p>
-      </header>
-      <TodoApp />
-    </div>
-  );
+    <>
+      <main>
+        <HeroSection />
+        <FeaturesSection />
+        <JobListings />
+        <LifeSimulator />
+        <RegionSpotlight />
+      </main>
+      <Footer />
+    </>
+  )
 }
