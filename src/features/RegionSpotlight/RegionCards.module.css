@@ -1,0 +1,39 @@
+.regionCard {
+    transition: transform 0.2s ease-in-out;
+    border: 1px solid var(--mantine-color-gray-2);
+  }
+  
+  .regionCard:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--mantine-shadow-md);
+  }
+  
+  .imageWrapper {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+    border-top-left-radius: var(--mantine-radius-md);
+    border-top-right-radius: var(--mantine-radius-md);
+  }
+  
+  .imageWrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .ratingBadge {
+    position: absolute;
+    top: var(--mantine-spacing-md);
+    right: var(--mantine-spacing-md);
+    background-color: var(--mantine-color-yellow-filled);
+    color: var(--mantine-color-white);
+  }
+  
+  .iconPrimary {
+    color: var(--mantine-color-blue-6);
+  }
+  
+  .iconSecondary {
+    color: var(--mantine-color-green-6);
+  }
