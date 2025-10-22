@@ -1,0 +1,38 @@
+.featureCard {
+  transition: transform 0.2s ease-in-out;
+  border: 1px solid var(--mantine-color-gray-2);
+}
+
+.featureCard:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--mantine-shadow-md);
+}
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: var(--mantine-radius-md);
+  color: var(--mantine-color-white);
+}
+
+.iconWrapper[data-color="green"] {
+  background-color: var(--mantine-color-green-6);
+}
+.iconWrapper[data-color="blue"] {
+  background-color: var(--mantine-color-blue-6);
+}
+.iconWrapper[data-color="orange"] {
+  background-color: var(--mantine-color-orange-6);
+}
+.iconWrapper[data-color="violet"] {
+  background-color: var(--mantine-color-violet-6);
+}
+.iconWrapper[data-color="pink"] {
+  background-color: var(--mantine-color-pink-6);
+}
+.iconWrapper[data-color="teal"] {
+  background-color: var(--mantine-color-teal-6);
+}

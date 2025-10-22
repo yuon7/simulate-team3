@@ -1,0 +1,22 @@
+.section {
+    position: relative;
+    min-height: 700px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    padding-top: var(--mantine-spacing-xl);
+    padding-bottom: var(--mantine-spacing-xl);
+  }
+  
+  .background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('/path/to/your/abstract-background.svg'); /* Replace with actual background if needed */
+    background-size: cover;
+    background-position: center;
+    opacity: 0.1; /* Adjust as needed */
+    z-index: 0;
+  }

@@ -1,0 +1,45 @@
+.primaryIcon {
+    color: var(--mantine-color-blue-6);
+  }
+  
+  .costItem {
+    border: 1px solid var(--mantine-color-gray-2);
+    border-radius: var(--mantine-radius-md);
+  }
+  
+  .icon {
+    color: var(--mantine-color-dimmed);
+  }
+  
+  .trendDown {
+    color: var(--mantine-color-green-6);
+  }
+  
+  .trendUp {
+    color: var(--mantine-color-orange-6);
+  }
+  
+  .incomeCard {
+    background-color: var(--mantine-color-blue-0);
+    border: 1px solid var(--mantine-color-blue-2);
+    border-radius: var(--mantine-radius-md);
+  }
+  
+  .incomeAmount {
+    color: var(--mantine-color-blue-8);
+  }
+  
+  .qualityItem {
+    border: 1px solid var(--mantine-color-gray-2);
+    border-radius: var(--mantine-radius-md);
+  }
+  
+  .qualityValue {
+    color: var(--mantine-color-text);
+  }
+  
+  .benefitsCard {
+    background-color: var(--mantine-color-teal-0);
+    border: 1px solid var(--mantine-color-teal-2);
+    border-radius: var(--mantine-radius-md);
+  }

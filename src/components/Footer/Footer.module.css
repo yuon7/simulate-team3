@@ -1,0 +1,33 @@
+.footer {
+    background-color: var(--mantine-color-gray-1);
+    border-top: 1px solid var(--mantine-color-gray-3);
+  }
+  
+  .logo {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background-color: var(--mantine-color-green-6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .link {
+    transition: color 0.2s ease;
+  }
+  
+  .link:hover {
+    color: var(--mantine-color-text);
+  }
+  
+  .icon {
+    color: var(--mantine-color-dimmed);
+  }
+  
+  .copyright {
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid var(--mantine-color-gray-3);
+  }
+  
