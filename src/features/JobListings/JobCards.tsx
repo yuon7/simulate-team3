@@ -47,10 +47,18 @@ const jobListings = [
   },
 ]
 
-export function JobCards() {
+type JobCardsProps = {
+  company?: string; // オプションで会社名を受け取れる
+};
+
+export function JobCards({ company }: JobCardsProps) {
+  const jobsToDisplay = company
+    ? jobListings.filter((job) => job.company === company)
+    : jobListings;
+  
   return (
     <Grid gutter="lg" mb={48}>
-      {jobListings.map((job) => (
+      {jobsToDisplay.map((job) => (
         <Grid.Col key={job.id} span={{ base: 12, md: 6 }}>
           <Card shadow="sm" padding="lg" radius="md" className={jobCardStyles.jobCard}>
             <Stack gap="md">
