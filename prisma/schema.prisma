@@ -7,10 +7,201 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Todo {
-  id        Int      @id @default(autoincrement())
-  title     String
-  done      Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+enum UserRole {
+  CANDIDATE // 候補者
+  STAFF     // 企業・自治体担当者
+}
+
+enum OrganizationType {
+  COMPANY    // 一般企業
+  GOVERNMENT // 自治体
+}
+
+enum ApplicationStatus {
+  PENDING   // 応募済み (企業未確認)
+  VIEWED    // 企業が閲覧
+  INTERVIEW // 面接
+  OFFERED   // 内定
+  REJECTED  // 不合格
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  role         UserRole
+  
+  candidate    CandidateProfile?
+  staff        StaffProfile?
+  
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime? // NULL許容に変更 (削除されていなければNULL)
+}
+
+model CandidateProfile {
+  userId     String    @unique
+  user       User      @relation(fields: [userId], references: [id])
+  
+  gender     String
+  age        Int
+  
+  bio        String?
+  
+  userSkills UserSkill[] // 候補者の保有スキル
+
+  desiredLocations DesiredLocation[]
+  
+  // 希望職種 (変更なし)
+  desiredJobId Int?
+  desiredJob   JobCategory? @relation(fields: [desiredJobId], references: [id], name: "DesiredJob")
+  
+  desiredSalary Int?      // 希望年収 (範囲にする場合は別途スキーマ修正)
+  
+  applications Application[] // 応募履歴
+  
+  matchingScores MatchingScore[] @relation(name: "CandidateScores")
+}
+
+model StaffProfile {
+  userId     String    @unique
+  user       User      @relation(fields: [userId], references: [id])
+  organizationId Int
+  organization Organization @relation(fields: [organizationId], references: [id])
+  department String?
+  title      String?
+}
+
+model Organization {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+
+  organizationType OrganizationType
+  description String?
+  
+  locationId  Int
+  location    Location @relation(fields: [locationId], references: [id])
+  
+  staffs      StaffProfile[]
+  
+  // 企業の場合、求人を作成
+  jobPostings JobPosting[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model JobPosting {
+  id             Int       @id @default(autoincrement())
+  title          String
+  description    String
+  
+  organizationId Int
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  
+  jobCategoryId  Int
+  jobCategory    JobCategory @relation(fields: [jobCategoryId], references: [id])
+  locationId     Int
+  location       Location  @relation(fields: [locationId], references: [id])
+  
+  salaryMin      Int?
+  salaryMax      Int?
+  
+  applications   Application[]
+
+  requiredSkills JobPostingSkill[]
+  
+  matchingScores MatchingScore[] @relation(name: "JobPostingScores")
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model Application {
+  candidateId  String
+  candidate    CandidateProfile @relation(fields: [candidateId], references: [userId])
+  
+  jobPostingId Int
+  jobPosting   JobPosting       @relation(fields: [jobPostingId], references: [id])
+  
+  status       ApplicationStatus @default(PENDING)
+  
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  @@id([candidateId, jobPostingId])
+}
+
+model JobCategory {
+  id             Int                @id @default(autoincrement())
+  name           String             @unique
+  
+  jobPostings    JobPosting[]
+  desiredByUsers CandidateProfile[] @relation(name: "DesiredJob")
+}
+
+model Location {
+  id             Int               @id @default(autoincrement())
+  name           String            // 例: '東京都', '大阪府'
+  prefectureCode String?           @unique
+  
+  organizations  Organization[]
+  jobPostings    JobPosting[]
+  
+  desiredByUsers DesiredLocation[]
+}
+
+model Skill {
+  id          Int               @id @default(autoincrement())
+  name        String            @unique
+  userSkills  UserSkill[]
+  jobPostings JobPostingSkill[]
+}
+
+model UserSkill {
+  userId      String
+  userProfile CandidateProfile @relation(fields: [userId], references: [userId])
+  skillId     Int
+  skill       Skill            @relation(fields: [skillId], references: [id])
+  @@id([userId, skillId])
+}
+
+model JobPostingSkill {
+  jobPostingId Int
+  jobPosting   JobPosting @relation(fields: [jobPostingId], references: [id])
+  
+  skillId      Int
+  skill        Skill      @relation(fields: [skillId], references: [id])
+  level        String?    // 例: "必須", "歓迎"
+  
+  @@id([jobPostingId, skillId])
+}
+
+model DesiredLocation {
+  candidateId String
+  candidate   CandidateProfile @relation(fields: [candidateId], references: [userId])
+  
+  locationId  Int
+  location    Location         @relation(fields: [locationId], references: [id])
+  
+  @@id([candidateId, locationId])
+}
+
+model MatchingScore {
+  id             Int      @id @default(autoincrement())
+  candidateId    String
+  candidate      CandidateProfile @relation(fields: [candidateId], references: [userId], name: "CandidateScores")
+  
+  jobPostingId   Int
+  jobPosting     JobPosting @relation(fields: [jobPostingId], references: [id], name: "JobPostingScores")
+  
+  score          Float    // 総合マッチングスコア (例: 0.85)
+  // 各項目の個別スコアも保存可能
+  skillScore     Float?
+  locationScore  Float?
+  salaryScore    Float?
+  
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  
+  @@unique([candidateId, jobPostingId]) // 候補者と求人の組み合わせは一意
 }
