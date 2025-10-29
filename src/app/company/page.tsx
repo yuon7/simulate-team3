@@ -7,14 +7,14 @@ export default function CompanyProfilePage() {
       <h1 className={styles.title}>企業紹介</h1>
 
       <CompanyCard
-        name="TechVision株式会社"
+        name="株式会社地方テック"
         industry="IT・ソフトウェア開発"
-        location="東京都渋谷区"
+        location="長野県松本市"
         established="2015年"
         employees="120名"
         email="info@techvision.co.jp"
         phone="03-1234-5678"
-        description="TechVisionは「テクノロジーで社会をより良くする」をミッションに、Webアプリケーション開発やAIソリューションの提供を行うスタートアップです。"
+        description="地方発のスタートアップで最新技術を使った開発に携われます。"
         services={['Web開発', 'AI開発', 'クラウドソリューション']}
         hiring={true}
       />

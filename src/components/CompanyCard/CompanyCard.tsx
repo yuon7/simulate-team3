@@ -2,6 +2,7 @@
 
 import { Card, Text, Group, Badge, Stack, Button, Divider } from '@mantine/core';
 import { IconMail, IconPhone, IconMapPin, IconBuilding } from '@tabler/icons-react';
+import { JobCards } from '@/features/JobListings/JobCards';
 
 type CompanyCardProps = {
   name: string;
@@ -62,10 +63,14 @@ export function CompanyCard({
           </Badge>
         ))}
       </Group>
-
+    
+      <JobCards company={name} />
+      
       <Button mt="lg" fullWidth color="blue">
         企業サイトを見る
       </Button>
+
+      
     </Card>
   );
 }
