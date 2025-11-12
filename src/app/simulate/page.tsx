@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Container, Title, SimpleGrid, Card, Text, Button, Space } from "@mantine/core";
 
-// ✅ コンポーネントのimport先を修正
 import { LifeCostSimulator } from "@/components/LifeSimulator/LifeCostSimulator";
 import { LifeChatAssistant } from "@/components/LifeSimulator/LifeChatAssistant";
 import { SupportNavigator } from "@/components/LifeSimulator/SupportNavigator";
