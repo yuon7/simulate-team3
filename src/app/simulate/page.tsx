@@ -1,72 +1,63 @@
-// src/app/simulate/page.tsx
-import Link from 'next/link';
-import { Metadata } from 'next';
-import styles from './simulate.module.css';
-import { Container, SimpleGrid, Card, Text, Title, Button, Group } from '@mantine/core';
+"use client";
 
-export const metadata: Metadata = {
-  title: 'Simulate — 地方移住シミュレーション',
-  description: '地方に移住したあとの暮らしを想像するシミュレーションページ',
-};
+import { useState } from "react";
+import { Container, Title, SimpleGrid, Card, Text, Button, Space } from "@mantine/core";
+
+// ✅ コンポーネントのimport先を修正
+import { LifeCostSimulator } from "@/components/LifeSimulator/LifeCostSimulator";
+import { LifeChatAssistant } from "@/components/LifeSimulator/LifeChatAssistant";
+import { SupportNavigator } from "@/components/LifeSimulator/SupportNavigator";
 
 export default function SimulatePage() {
+  const [activeFeature, setActiveFeature] = useState<string | null>(null);
+
   return (
-    <main className={styles.root}>
-      <Container size="lg" py="xl">
-        {/* header */}
-        <Group justify="space-between" align="flex-end" mb="md">
-          <div>
-            <Title order={2}>地方移住シミュレーション</Title>
-            <Text color="dimmed" size="sm">
-              条件を入力して、移住後の生活スタイルをシミュレーションしてみましょう。
-              （機能はこれから実装します。まずはページ構成を用意します）
-            </Text>
-          </div>
+    <Container size="lg" py="xl">
+      <Title order={2} ta="center" mb="md">
+        🏡 地方移住 生活シミュレーション
+      </Title>
+      <Text ta="center" c="dimmed" mb="xl">
+        住居費・交通費・支援制度・暮らし相談をまとめて体験できます。
+      </Text>
 
-          <div>
-            <Link href="/profile">
-              <Button variant="outline" size="sm">自分のプロフィールを見る</Button>
-            </Link>
-          </div>
-        </Group>
+      <SimpleGrid cols={{ base: 1, sm: 3 }} spacing="lg">
+        <Card shadow="sm" padding="lg" radius="md" withBorder>
+          <Title order={4}>💰 生活コスト試算</Title>
+          <Text mt="xs" c="dimmed">
+            地域・条件から住居費・交通費・食費などの概算を試算します。
+          </Text>
+          <Button mt="md" fullWidth onClick={() => setActiveFeature("cost")}>
+            試してみる
+          </Button>
+        </Card>
 
-        {/* layout */}
-        <SimpleGrid cols={2} spacing="xl" verticalSpacing='md'>
-          {/* left */}
-          <Card shadow="sm" padding="lg" radius="md" withBorder>
-            <Title order={4} mb="xs">入力パネル（準備中）</Title>
-            <Text size="sm" color="dimmed" mb="md">
-              ここに「職業」「家族構成」「予算」「好きな休日の過ごし方」などの入力フォームを置きます。
-            </Text>
+        <Card shadow="sm" padding="lg" radius="md" withBorder>
+          <Title order={4}>💬 暮らし相談AI</Title>
+          <Text mt="xs" c="dimmed">
+            ChatGPTと会話しながら、理想の暮らしや移住プランを検討します。
+          </Text>
+          <Button mt="md" fullWidth onClick={() => setActiveFeature("chat")}>
+            試してみる
+          </Button>
+        </Card>
 
-            <div className={styles.placeholder}>
-              {/* ⚠️ ここは Text の align prop を使わず sx で代替 */}
-              <Text style={{ textAlign: 'center' }} color="dimmed">フォームコンポーネントをここに追加します</Text>
-            </div>
+        <Card shadow="sm" padding="lg" radius="md" withBorder>
+          <Title order={4}>🧭 支援制度ナビ</Title>
+          <Text mt="xs" c="dimmed">
+            地域の移住支援・住宅補助など、利用可能な制度を確認できます。
+          </Text>
+          <Button mt="md" fullWidth onClick={() => setActiveFeature("support")}>
+            試してみる
+          </Button>
+        </Card>
+      </SimpleGrid>
 
-            <Group justify="space-between" mt="md">
-              <Button disabled>シミュレーション開始（実装中）</Button>
-              <Button variant="subtle" size="xs">テンプレセットを読み込む</Button>
-            </Group>
-          </Card>
+      <Space h="xl" />
 
-          {/* right */}
-          <Card shadow="sm" padding="lg" radius="md" withBorder>
-            <Title order={4} mb="xs">シミュレーション結果（プレビュー）</Title>
-            <Text size="sm" color="dimmed" mb="md">
-              シミュレーションを実行するとここに生活プランや推定支出が表示されます。
-            </Text>
-
-            <div className={styles.resultPlaceholder}>
-              <Text style={{ textAlign: 'center' }} color="dimmed">結果プレビューはここに表示されます</Text>
-            </div>
-
-            <Group justify="flex-end" mt="md">
-              <Button variant="outline" disabled>PDFで保存（実装中）</Button>
-            </Group>
-          </Card>
-        </SimpleGrid>
-      </Container>
-    </main>
+      {activeFeature === "cost" && <LifeCostSimulator />}
+      {activeFeature === "chat" && <LifeChatAssistant />}
+      {activeFeature === "support" && <SupportNavigator />}
+    </Container>
   );
 }
+
