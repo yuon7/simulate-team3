@@ -142,14 +142,25 @@ model JobCategory {
 }
 
 model Location {
-  id             Int               @id @default(autoincrement())
-  name           String            // 例: '東京都', '大阪府'
-  prefectureCode String?           @unique
+  id           Int        @id @default(autoincrement())
+  prefectureId Int
+  prefecture   Prefecture @relation(fields: [prefectureId], references: [id])
+  city         String     // 市町村
+  street       String     @default("")// 番地
+  @@unique([prefectureId, city, street])
   
   organizations  Organization[]
   jobPostings    JobPosting[]
   
   desiredByUsers DesiredLocation[]
+}
+
+model Prefecture {
+  id   Int    @id @default(autoincrement())
+  code String @unique
+  name String @unique
+
+  locations Location[]
 }
 
 model Skill {
