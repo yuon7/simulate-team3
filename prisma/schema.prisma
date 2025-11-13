@@ -30,13 +30,15 @@ model User {
   email        String    @unique
   passwordHash String
   role         UserRole
+  name         String    @default("guest")
+  phone        String?
   
   candidate    CandidateProfile?
   staff        StaffProfile?
   
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
-  deletedAt    DateTime? // NULL許容に変更 (削除されていなければNULL)
+  deletedAt    DateTime? //(削除されていなければNULL)
 }
 
 model CandidateProfile {
