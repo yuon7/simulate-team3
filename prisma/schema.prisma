@@ -17,6 +17,18 @@ enum OrganizationType {
   GOVERNMENT // 自治体
 }
 
+enum SkillLevel {
+  MUST   // 必須
+  NICE   // 歓迎
+}
+
+enum SkillProficiency {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  EXPERT
+}
+
 enum ApplicationStatus {
   PENDING   // 応募済み (企業未確認)
   VIEWED    // 企業が閲覧
@@ -175,6 +187,7 @@ model UserSkill {
   userProfile CandidateProfile @relation(fields: [userId], references: [userId])
   skillId     Int
   skill       Skill            @relation(fields: [skillId], references: [id])
+  proficiency  SkillProficiency
   @@id([userId, skillId])
 }
 
@@ -184,8 +197,9 @@ model JobPostingSkill {
   
   skillId      Int
   skill        Skill      @relation(fields: [skillId], references: [id])
-  level        String?    // 例: "必須", "歓迎"
-  
+  level        SkillLevel
+  proficiency  SkillProficiency
+
   @@id([jobPostingId, skillId])
 }
 
