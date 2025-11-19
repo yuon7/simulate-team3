@@ -1,36 +1,61 @@
 "use client";
-import { Card, Title, Text, Textarea, Button } from "@mantine/core";
-import { useState } from "react";
 
-export function LifeChatAssistant() {
-  const [message, setMessage] = useState("");
-  const [reply, setReply] = useState<string | null>(null);
+import { useState } from "react";
+import { Card, Textarea, Button, Text } from "@mantine/core";
+
+export default function LifeChatAssistant() {
+  const [question, setQuestion] = useState("");
+  const [answer, setAnswer] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSend = async () => {
+    if (!question.trim()) return;
+
+    setLoading(true);
+    setAnswer("");
+
+    try {
+      const res = await fetch("/api/simulate/life-chat", {
+        method: "POST",
+        body: JSON.stringify({ message: question }),
+      });
+
+      const data = await res.json();
+      setAnswer(data.reply || "回答を取得できませんでした。");
+    } catch (err) {
+      console.error(err);
+      setAnswer("サーバーとの通信に失敗しました。");
+    }
+
+    setLoading(false);
+  };
 
   return (
-    <Card shadow="sm" padding="lg" radius="md" withBorder>
-      <Title order={4}>💬 暮らし相談AI（デモ）</Title>
-      <Text mt="xs" c="dimmed">
-        ChatGPTと話して、理想の暮らしを相談できます（現在はダミー応答です）。
-      </Text>
-
+    <Card withBorder padding="lg" radius="md">
       <Textarea
-        mt="md"
-        placeholder="例：自然が多くて静かな場所に住みたい"
-        value={message}
-        onChange={(e) => setMessage(e.currentTarget.value)}
+        label="質問を入力"
+        placeholder="例：福岡に移住した場合の生活費を教えて"
+        minRows={3}
+        value={question}
+        onChange={(e) => setQuestion(e.currentTarget.value)}
       />
+
       <Button
         mt="md"
-        onClick={() => setReply("🌳 自然豊かな地域なら長野県や熊本県がおすすめです！")}
+        onClick={handleSend}
+        loading={loading}
       >
-        相談する
+        回答を取得する
       </Button>
 
-      {reply && (
-        <Text mt="md" fw={500}>
-          {reply}
-        </Text>
+      {answer && (
+        <Card mt="md" padding="md" radius="md" withBorder>
+          <Text size="sm" style={{ whiteSpace: "pre-wrap" }}>
+            {answer}
+          </Text>
+        </Card>
       )}
     </Card>
   );
 }
+

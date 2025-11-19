@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Container, Title, SimpleGrid, Card, Text, Button, Space } from "@mantine/core";
 
 import { LifeCostSimulator } from "@/components/LifeSimulator/LifeCostSimulator";
-import { LifeChatAssistant } from "@/components/LifeSimulator/LifeChatAssistant";
+import LifeChatAssistant from "@/components/LifeSimulator/LifeChatAssistant";
 import { SupportNavigator } from "@/components/LifeSimulator/SupportNavigator";
 
 export default function SimulatePage() {
