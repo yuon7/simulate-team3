@@ -1,3 +1,4 @@
+"use client";
 import { Container, Title, Text, Stack } from "@mantine/core"
 import simulatorSectionStyles from "./LifeSimulator.module.css"
 import { LifeSimulation } from "../../features/LifeSimulator/LifeSimulation"
