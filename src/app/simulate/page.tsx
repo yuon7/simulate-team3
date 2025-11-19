@@ -10,6 +10,7 @@ import { SupportNavigator } from "@/components/LifeSimulator/SupportNavigator";
 export default function SimulatePage() {
   const [activeFeature, setActiveFeature] = useState<string | null>(null);
 
+  
   return (
     <Container size="lg" py="xl">
       <Title order={2} ta="center" mb="md">
