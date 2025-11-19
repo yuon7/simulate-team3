@@ -17,6 +17,18 @@ enum OrganizationType {
   GOVERNMENT // 自治体
 }
 
+enum SkillLevel {
+  MUST   // 必須
+  NICE   // 歓迎
+}
+
+enum SkillProficiency {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  EXPERT
+}
+
 enum ApplicationStatus {
   PENDING   // 応募済み (企業未確認)
   VIEWED    // 企業が閲覧
@@ -30,13 +42,15 @@ model User {
   email        String    @unique
   passwordHash String
   role         UserRole
+  name         String    @default("guest")
+  phone        String?
   
   candidate    CandidateProfile?
   staff        StaffProfile?
   
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
-  deletedAt    DateTime? // NULL許容に変更 (削除されていなければNULL)
+  deletedAt    DateTime? //(削除されていなければNULL)
 }
 
 model CandidateProfile {
@@ -140,14 +154,25 @@ model JobCategory {
 }
 
 model Location {
-  id             Int               @id @default(autoincrement())
-  name           String            // 例: '東京都', '大阪府'
-  prefectureCode String?           @unique
+  id           Int        @id @default(autoincrement())
+  prefectureId Int
+  prefecture   Prefecture @relation(fields: [prefectureId], references: [id])
+  city         String     // 市町村
+  street       String     @default("")// 番地
+  @@unique([prefectureId, city, street])
   
   organizations  Organization[]
   jobPostings    JobPosting[]
   
   desiredByUsers DesiredLocation[]
+}
+
+model Prefecture {
+  id   Int    @id @default(autoincrement())
+  code String @unique
+  name String @unique
+
+  locations Location[]
 }
 
 model Skill {
@@ -162,6 +187,7 @@ model UserSkill {
   userProfile CandidateProfile @relation(fields: [userId], references: [userId])
   skillId     Int
   skill       Skill            @relation(fields: [skillId], references: [id])
+  proficiency  SkillProficiency
   @@id([userId, skillId])
 }
 
@@ -171,8 +197,9 @@ model JobPostingSkill {
   
   skillId      Int
   skill        Skill      @relation(fields: [skillId], references: [id])
-  level        String?    // 例: "必須", "歓迎"
-  
+  level        SkillLevel
+  proficiency  SkillProficiency
+
   @@id([jobPostingId, skillId])
 }
 
