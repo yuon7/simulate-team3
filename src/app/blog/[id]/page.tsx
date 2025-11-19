@@ -1,3 +1,4 @@
+"use client";
 import { Container, Title, Text, Group, Badge, Divider, Button } from '@mantine/core';
 import { IconCalendar, IconUser, IconArrowLeft } from '@tabler/icons-react';
 import Link from 'next/link';

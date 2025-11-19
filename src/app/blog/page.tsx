@@ -1,5 +1,6 @@
-import { Container, Title, Grid, Card, Text, Group, Badge, Button } from '@mantine/core';
-import { IconCalendar, IconUser, IconArrowRight } from '@tabler/icons-react';
+"use client";
+import { Container, Title, Grid, Text, Group, Button } from '@mantine/core';
+import {IconArrowRight } from '@tabler/icons-react';
 import BlogCard from '@/components/BlogCard/BlogCard';
 import styles from './blog.module.css';
 

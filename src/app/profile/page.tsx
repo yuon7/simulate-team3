@@ -1,5 +1,4 @@
-import { Card, Text, Avatar, Group, Button, Stack, Badge } from '@mantine/core';
-import { IconMail, IconPhone, IconMapPin } from '@tabler/icons-react';
+"use client"
 import ProfileCard from '@/components/ProfileCard/ProfileCard';
 import styles from './profile.module.css';
 
