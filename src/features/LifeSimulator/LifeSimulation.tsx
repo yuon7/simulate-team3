@@ -1,6 +1,6 @@
 "use client"
 
-import { Container, Title, Text, Card, Stack, Group, Badge, Button, Grid, Paper } from "@mantine/core"
+import { Container, Title, Text, Card, Stack, Group, Badge, Button, Grid, GridCol, Paper } from "@mantine/core"
 import {
   IconCalculator,
   IconHome,
@@ -50,7 +50,8 @@ export function LifeSimulation() {
           </div>
 
           <Grid gutter="xl">
-            <Grid.Col span={{ base: 12, md: 6 }}>
+            {/* Grid.Col を GridCol に変更 */}
+            <GridCol span={{ base: 12, md: 6 }}>
               <Stack gap="lg">
                 <div>
                   <Title order={4} mb="md">
@@ -97,16 +98,17 @@ export function LifeSimulation() {
                   </Text>
                 </Paper>
               </Stack>
-            </Grid.Col>
+            </GridCol>
 
-            <Grid.Col span={{ base: 12, md: 6 }}>
+            {/* Grid.Col を GridCol に変更 */}
+            <GridCol span={{ base: 12, md: 6 }}>
               <Stack gap="lg">
                 <div>
                   <Title order={4} mb="md">
                     生活の質指標
                   </Title>
                   <Grid gutter="sm">
-                    <Grid.Col span={6}>
+                    <GridCol span={6}>
                       <Paper p="md" className={simulationStyles.qualityItem}>
                         <Text size="sm" c="dimmed" mb={4}>
                           通勤時間
@@ -115,8 +117,8 @@ export function LifeSimulation() {
                           {simulationData.qualityOfLife.commute}
                         </Text>
                       </Paper>
-                    </Grid.Col>
-                    <Grid.Col span={6}>
+                    </GridCol>
+                    <GridCol span={6}>
                       <Paper p="md" className={simulationStyles.qualityItem}>
                         <Text size="sm" c="dimmed" mb={4}>
                           自然環境
@@ -125,8 +127,8 @@ export function LifeSimulation() {
                           {simulationData.qualityOfLife.nature}
                         </Text>
                       </Paper>
-                    </Grid.Col>
-                    <Grid.Col span={6}>
+                    </GridCol>
+                    <GridCol span={6}>
                       <Paper p="md" className={simulationStyles.qualityItem}>
                         <Text size="sm" c="dimmed" mb={4}>
                           コミュニティ
@@ -135,8 +137,8 @@ export function LifeSimulation() {
                           {simulationData.qualityOfLife.community}
                         </Text>
                       </Paper>
-                    </Grid.Col>
-                    <Grid.Col span={6}>
+                    </GridCol>
+                    <GridCol span={6}>
                       <Paper p="md" className={simulationStyles.qualityItem}>
                         <Text size="sm" c="dimmed" mb={4}>
                           ワークライフ
@@ -145,7 +147,7 @@ export function LifeSimulation() {
                           {simulationData.qualityOfLife.workLife}
                         </Text>
                       </Paper>
-                    </Grid.Col>
+                    </GridCol>
                   </Grid>
                 </div>
 
@@ -169,7 +171,7 @@ export function LifeSimulation() {
                   </Stack>
                 </Paper>
               </Stack>
-            </Grid.Col>
+            </GridCol>
           </Grid>
 
           <Group gap="md" pt="md" style={{ borderTop: "1px solid var(--mantine-color-gray-3)" }}>
