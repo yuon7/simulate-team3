@@ -1,4 +1,3 @@
-// src/app/api/simulate/life-cost/route.ts
 import { NextResponse } from "next/server";
 
 type ReqBody = {
@@ -12,7 +11,8 @@ type ReqBody = {
 };
 
 function formatYen(n: number) {
-  return n.toLocaleString("ja-JP") + "円";
+  // ▼ 修正: "+" をやめて `${}` を使う形に変更
+  return `${n.toLocaleString("ja-JP")}円`;
 }
 
 /** 内部の固定データ（初期版） */
@@ -162,4 +162,3 @@ export async function POST(req: Request) {
     );
   }
 }
-
