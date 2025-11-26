@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { Card, Textarea, Button, Text } from "@mantine/core";
 

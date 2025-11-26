@@ -1,4 +1,3 @@
-"use client";
 import { Card, Text, Avatar, Group, Button, Stack, Badge, Divider } from '@mantine/core';
 import { IconMail, IconPhone, IconMapPin, IconEdit } from '@tabler/icons-react';
 import styles from './ProfileCard.module.css';
