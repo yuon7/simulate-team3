@@ -1,4 +1,3 @@
-"use client";
 import type { Metadata } from "next";
 import "@mantine/core/styles.css";
 import "../../styles/globals.css";
