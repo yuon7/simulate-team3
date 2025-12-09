@@ -55,7 +55,7 @@ export async function GET(request: NextRequest) {
               id: user.id, // Sync Supabase ID with Prisma ID
               email: user.email,
               passwordHash: "managed_by_supabase", // Placeholder
-              role: role,
+              role,
             },
           });
         }
