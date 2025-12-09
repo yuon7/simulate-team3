@@ -16,6 +16,9 @@
     "typecheck": "npm run hcm && tsc --noEmit",
     "format": "prettier --write \"./**/*.{ts,tsx,js,json,css,md}\" --ignore-path .gitignore"
   },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+  },
   "dependencies": {
     "@mantine/core": "^7.17.0",
     "@mantine/hooks": "^7.17.0",
@@ -54,6 +57,7 @@
     "prisma": "^6.16.3",
     "stylelint": "^15.11.0",
     "stylelint-config-standard": "^31.0.0",
+    "ts-node": "^10.9.2",
     "typescript": "^5.8.2"
   }
 }
