@@ -40,11 +40,23 @@ export function HeaderContent() {
             visibleFrom="md"
           />
 
-          <Button variant="outline" size="sm" leftSection={<IconUser size={16} />} visibleFrom="md">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            leftSection={<IconUser size={16} />} 
+            visibleFrom="md"
+            component="a"
+            href="/auth/login"
+          >
             ログイン
           </Button>
 
-          <Button size="sm" visibleFrom="md">
+          <Button 
+            size="sm" 
+            visibleFrom="md"
+            component="a"
+            href="/auth/select-role"
+          >
             新規登録
           </Button>
 
