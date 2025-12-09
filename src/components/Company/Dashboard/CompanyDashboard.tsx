@@ -1,9 +1,15 @@
+"use client";
+
 import { Container, Title, Grid, Card, Text, Button, Group } from "@mantine/core";
 import Link from "next/link";
-import { CompanyProfileSummary } from "@/features/Company/Dashboard/CompanyProfileSummary";
 import styles from "./CompanyDashboard.module.css";
+import { ReactNode } from "react";
 
-export function CompanyDashboard() {
+type CompanyDashboardProps = {
+  summary: ReactNode;
+};
+
+export function CompanyDashboard({ summary }: CompanyDashboardProps) {
   return (
     <Container size="xl" py="xl" className={styles.container}>
       <Group justify="space-between" mb="xl">
@@ -19,7 +25,7 @@ export function CompanyDashboard() {
             <Title order={2} size="h3" mb="md">
               企業情報サマリー
             </Title>
-            <CompanyProfileSummary />
+            {summary}
           </Card>
           
           {/* Future: Recent Applications */}

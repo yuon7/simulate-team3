@@ -1,9 +1,10 @@
 import { CompanyDashboard } from "@/components/Company/Dashboard/CompanyDashboard";
+import { CompanyProfileSummary } from "@/features/Company/Dashboard/CompanyProfileSummary";
 
 export default function CompanyPage() {
   return (
     <main>
-      <CompanyDashboard />
+      <CompanyDashboard summary={<CompanyProfileSummary />} />
     </main>
   );
 }
