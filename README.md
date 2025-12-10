@@ -116,6 +116,32 @@ Supabase を使用する場合、通常の PostgreSQL 接続文字列を使用�
 3. Vercel の環境変数設定で `.env` の内容を追加。
 4. deploy
 
+## Mastra環境構築
+1.  TypeScript プロジェクトを初期化し、次の依存関係を インストール:
+  ```sh
+  npm init -y
+  npm install -D typescript @types/node mastra@latest
+  npm install @mastra/core@latest zod@^4
+  ```
+
+2. 依存関係をインストール:
+   ```sh
+   npm install @mastra/memory
+   npm install @mastra/libsql
+   ```
+
+3. APIキーを追加:
+  `.env`ファイルに以下を追加:
+  Gemini
+   ```sh
+   GOOGLE_GENERATIVE_AI_API_KEY=your-API-key
+   ```
+
+4. ローカル開発サーバーを起動:
+   ```sh
+   npm run dev:mastra
+   ```
+
 ---
 
 ## 📚 開発ガイド
