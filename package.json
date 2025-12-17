@@ -14,7 +14,9 @@
     "lint:style": "stylelint \"src/**/*.css\" --ignore-path .gitignore",
     "lint:fix": "npm run lint:js -- --fix && prettier --write \"./**/*.{ts,tsx,js}\" --ignore-path .gitignore && npm run lint:style -- --fix",
     "typecheck": "npm run hcm && tsc --noEmit",
-    "format": "prettier --write \"./**/*.{ts,tsx,js,json,css,md}\" --ignore-path .gitignore"
+    "format": "prettier --write \"./**/*.{ts,tsx,js,json,css,md}\" --ignore-path .gitignore",
+    "dev:mastra": "mastra dev --dir mastra",
+    "mastra:build": "mastra build --dir mastra"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
@@ -23,6 +25,9 @@
     "@mantine/core": "^7.17.0",
     "@mantine/hooks": "^7.17.0",
     "@mantinex/mantine-logo": "^1.1.0",
+    "@mastra/core": "^0.24.7",
+    "@mastra/libsql": "^0.16.4",
+    "@mastra/memory": "^0.15.13",
     "@next/eslint-plugin-next": "^15.2.1",
     "@prisma/extension-accelerate": "^2.0.2",
     "@supabase/ssr": "^0.4.0",
@@ -35,12 +40,13 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "tailwind-merge": "^3.3.1",
-    "typescript-eslint": "^8.26.1"
+    "typescript-eslint": "^8.26.1",
+    "zod": "^4.1.13"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
     "@prisma/client": "^6.16.3",
-    "@types/node": "^20",
+    "@types/node": "^20.19.26",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@typescript-eslint/eslint-plugin": "^8.26.1",
@@ -49,15 +55,29 @@
     "eslint-config-flat-gitignore": "^2.1.0",
     "eslint-config-next": "15.1.4",
     "eslint-config-prettier": "^10.1.1",
+    "eslint-plugin-es5": "^1.5.0",
     "happy-css-modules": "^3.2.0",
     "i": "^0.3.7",
     "jiti": "^2.4.2",
+    "mastra": "^0.18.7",
     "npm": "^11.2.0",
     "prettier": "3.5.3",
     "prisma": "^6.16.3",
     "stylelint": "^15.11.0",
     "stylelint-config-standard": "^31.0.0",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.8.2"
-  }
+    "typescript": "^5.8.3"
+  },
+  "description": "Next.js 内に Hono や Supabase Auth、Prisma を組み込んだフルスタックテンプレートです。 このテンプレートは、エッジランタイム専用のアプリケーションを構築するためのものです。",
+  "main": "next.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yuon7/simulate-team3.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yuon7/simulate-team3/issues"
+  },
+  "homepage": "https://github.com/yuon7/simulate-team3#readme"
 }
