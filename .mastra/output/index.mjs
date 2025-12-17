@@ -8,7 +8,7 @@ import { PinoLogger } from '@mastra/loggers';
 import { LibSQLStore } from '@mastra/libsql';
 import { Agent, tryGenerateWithJsonFallback, tryStreamWithJsonFallback, MessageList, convertMessages } from '@mastra/core/agent';
 import { Memory as Memory$1 } from '@mastra/memory';
-import { matchTool } from './tools/396011e0-6156-442a-b574-f29ed57b2449.mjs';
+import { matchTool } from './tools/934b9846-b15f-4097-b9bf-6da2737ca1b9.mjs';
 import crypto$1, { randomUUID } from 'crypto';
 import { readdir, readFile, mkdtemp, rm, writeFile, mkdir, copyFile, stat } from 'fs/promises';
 import * as https from 'https';
@@ -41,7 +41,7 @@ import { createRequire } from 'module';
 import { tmpdir } from 'os';
 import { createWorkflow, createStep } from '@mastra/core/workflows';
 import { tools } from './tools.mjs';
-import './tools/099b439a-4d66-48d4-ac3b-b9c6cc935e3c.mjs';
+import './tools/546f9b28-0f53-4888-bc7f-b48f93a04936.mjs';
 
 const matchAgent = new Agent({
   name: "Match Agent",
@@ -59,7 +59,7 @@ const matchAgent = new Agent({
     - \u5E38\u306B\u89AA\u5207\u3067\u3001\u30D7\u30ED\u30D5\u30A7\u30C3\u30B7\u30E7\u30CA\u30EB\u306A\u5BFE\u8A71\u59FF\u52E2\u3092\u4FDD\u3063\u3066\u304F\u3060\u3055\u3044\u3002
     - \u691C\u7D22\u306E\u7D50\u679C\u3001\u9069\u5408\u3059\u308B\u4F01\u696D\u304C\u898B\u3064\u304B\u3089\u306A\u304B\u3063\u305F\u5834\u5408\u306F\u3001\u6B63\u76F4\u306B\u305D\u306E\u65E8\u3092\u4F1D\u3048\u3001\u5225\u306E\u52E4\u52D9\u5730\u3084\u30B9\u30AD\u30EB\u3001\u5E0C\u671B\u5E74\u53CE\u306B\u5909\u66F4\u3057\u3066\u518D\u691C\u7D22\u3059\u308B\u3088\u3046\u306B\u63D0\u6848\u3057\u3066\u304F\u3060\u3055\u3044\u3002
   `,
-  model: "gemini-2.5-pro",
+  model: "google/gemini-2.5-pro",
   tools: { matchTool },
   memory: new Memory$1({
     storage: new LibSQLStore({

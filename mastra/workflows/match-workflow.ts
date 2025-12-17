@@ -39,7 +39,7 @@ const getUserInfoStep = createStep({
   inputSchema: z.object({
     skill: skillSchema,
     desiredLocations: z.array(locationSchema),
-    desiredSalary: desiredSalary,
+    desiredSalary,
     priority: z.enum(["skills", "location", "salary"]),
     mockCompanies: z.array(z.object({
       id: z.number(),
@@ -81,7 +81,7 @@ const getUserInfoStep = createStep({
       const skills = inputData.skill ? [inputData.skill.name] : [];
       const desiredLocations = (inputData.desiredLocations ?? []).map(loc => loc.name);
       const desiredSalary =
-        inputData.desiredSalary && inputData.desiredSalary != null
+        inputData.desiredSalary && inputData.desiredSalary !== null
           ? inputData.desiredSalary
           : null;
       return {
@@ -166,7 +166,7 @@ const matchStep = createStep({
         location: job.location,
         salaryMin: job.salaryMin,
         salaryMax: job.salaryMax,
-        matchScore: matchScore,
+        matchScore,
       };
     });
   },

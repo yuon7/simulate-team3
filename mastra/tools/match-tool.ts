@@ -127,7 +127,7 @@ export const matchTool = createTool({
         location: job.location,
         salaryMin: job.salaryMin,
         salaryMax: job.salaryMax,
-        matchScore: matchScore,
+        matchScore,
       };
     });
 
