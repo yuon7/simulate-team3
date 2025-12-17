@@ -19,7 +19,7 @@ export const matchAgent = new Agent({
     - 常に親切で、プロフェッショナルな対話姿勢を保ってください。
     - 検索の結果、適合する企業が見つからなかった場合は、正直にその旨を伝え、別の勤務地やスキル、希望年収に変更して再検索するように提案してください。
   `,
-  model: 'google/gemini-2.5-pro',
+  model: 'google/gemini-2.5-flash-lite',
   tools: { matchTool },
   memory: new Memory({
     storage: new LibSQLStore({
