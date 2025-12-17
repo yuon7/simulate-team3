@@ -22,7 +22,7 @@
     "@mantine/core": "^7.17.0",
     "@mantine/hooks": "^7.17.0",
     "@mantinex/mantine-logo": "^1.1.0",
-    "@mastra/core": "^0.24.7",
+    "@mastra/core": "^0.24.8",
     "@mastra/libsql": "^0.16.4",
     "@mastra/memory": "^0.15.13",
     "@next/eslint-plugin-next": "^15.2.1",
