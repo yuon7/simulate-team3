@@ -18,6 +18,9 @@
     "dev:mastra": "mastra dev --dir mastra",
     "mastra:build": "mastra build --dir mastra"
   },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+  },
   "dependencies": {
     "@mantine/core": "^7.17.0",
     "@mantine/hooks": "^7.17.0",

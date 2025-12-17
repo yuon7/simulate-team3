@@ -1,0 +1,23 @@
+.container {
+  min-height: 80vh;
+}
+
+.menuLinks {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.link {
+  color: #228be6;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 8px 0;
+  border-bottom: 1px solid #f1f3f5;
+  transition: color 0.2s;
+}
+
+.link:hover {
+  color: #1c7ed6;
+  text-decoration: underline;
+}

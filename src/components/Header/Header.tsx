@@ -1,11 +1,16 @@
-// src/components/Header/Header.tsx
 import headerSectionStyles from "./Header.module.css"
 import { HeaderContent } from "../../features/Header/HeaderContent"
+import { createClient } from "@/lib/supabase/server"
 
-export function Header() {
+export async function Header() {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
   return (
     <header className={headerSectionStyles.header}>
-      <HeaderContent />
+      <HeaderContent user={user} />
     </header>
   )
 }

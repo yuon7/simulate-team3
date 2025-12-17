@@ -30,10 +30,17 @@ export async function createCandidateProfile(formData: FormData) {
   try {
     // Transaction to update User and create CandidateProfile
     await prisma.$transaction(async (tx) => {
-      // 1. Update User name
-      await tx.user.update({
-        where: { email: user.email! },
-        data: { name },
+      // 1. Update User name (or create if missing - handling sync issues)
+      await tx.user.upsert({
+        where: { id: user.id },
+        update: { name },
+        create: {
+          id: user.id,
+          email: user.email!,
+          name,
+          role: "CANDIDATE", // Default/Assumption - validated by onboarding path usually
+          passwordHash: "managed_by_supabase",
+        },
       });
 
       // 2. Create CandidateProfile

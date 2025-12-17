@@ -1,5 +1,8 @@
+"use client";
+
 import { createCompanyProfile } from "./action";
 import styles from "./page.module.css";
+import { useFormState } from "react-dom";
 
 // Note: In a real app, fetch prefectures from DB. Hardcoding a few for demo.
 const PREFECTURES = [
@@ -10,7 +13,13 @@ const PREFECTURES = [
   // ... others
 ];
 
+const initialState = {
+  error: "",
+};
+
 export default function CompanyOnboardingPage() {
+  const [state, formAction] = useFormState(createCompanyProfile, initialState);
+
   return (
     <div className={styles.container}>
       <div className={styles.card}>
@@ -19,7 +28,13 @@ export default function CompanyOnboardingPage() {
           求人を掲載するために、組織情報と担当者情報を登録してください。
         </p>
         
-        <form action={createCompanyProfile} className={styles.form}>
+        {state?.error && (
+          <div style={{ color: "red", padding: "10px", backgroundColor: "#ffebee", borderRadius: "4px", marginBottom: "20px" }}>
+            {state.error}
+          </div>
+        )}
+
+        <form action={formAction} className={styles.form}>
           <section className={styles.section}>
             <h2 className={styles.sectionTitle}>組織情報</h2>
             

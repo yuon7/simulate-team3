@@ -91,10 +91,16 @@ model Organization {
   name        String   @unique
 
   organizationType OrganizationType
-  description String?
-  
+  industry         String?
+  description      String?
+  logoUrl          String?
+  websiteUrl       String?
+
   locationId  Int
   location    Location @relation(fields: [locationId], references: [id])
+  foundedDate DateTime?
+  employeeCount Int?
+  capital     String?
   
   staffs      StaffProfile[]
   

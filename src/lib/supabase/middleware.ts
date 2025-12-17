@@ -34,7 +34,6 @@ export async function updateSession(request: NextRequest) {
   // issues with users being randomly logged out.
 
   // IMPORTANT: DO NOT REMOVE auth.getUser()
-
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -46,8 +45,39 @@ export async function updateSession(request: NextRequest) {
   ) {
     // no user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone();
-    url.pathname = "auth/login";
+    url.pathname = "/auth/login";
     return NextResponse.redirect(url);
+  }
+
+  // Session Timeout Logic
+  if (user) {
+    const lastActivity = request.cookies.get("last-activity");
+    const now = Date.now();
+    const TIMEOUT_DURATION = 6 * 60 * 60 * 1000; // 6 hours in milliseconds
+
+    if (lastActivity) {
+      const lastActivityTime = parseInt(lastActivity.value, 10);
+      if (now - lastActivityTime > TIMEOUT_DURATION) {
+        // Session expired
+        await supabase.auth.signOut();
+        const url = request.nextUrl.clone();
+        url.pathname = "/auth/login";
+        url.searchParams.set("error", "session_expired");
+        const response = NextResponse.redirect(url);
+        
+        // Clear related cookies
+        response.cookies.delete("last-activity");
+        return response;
+      }
+    }
+
+    // Update last activity
+    supabaseResponse.cookies.set("last-activity", now.toString(), {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+      sameSite: "lax",
+    });
   }
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is.
