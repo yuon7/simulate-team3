@@ -1,61 +1,77 @@
 "use client"
 
-import { Grid, Card, Badge, Group, Button, Stack, Title, Text } from "@mantine/core"
-import { IconMapPin, IconBuilding, IconCurrencyYen, IconArrowRight } from "@tabler/icons-react"
+import { Grid, Card, Badge, Group, Button, Stack, Title, Text, Loader, Center, Alert } from "@mantine/core"
+import { IconMapPin, IconBuilding, IconCurrencyYen, IconArrowRight, IconInfoCircle } from "@tabler/icons-react"
+import useSWR from "swr"
+import { fetcher } from "@/lib/fetcher"
 import jobCardStyles from "./JobCards.module.css"
 
-const jobListings = [
-  {
-    id: 1,
-    title: "Webエンジニア",
-    company: "株式会社地方テック",
-    location: "長野県松本市",
-    type: "正社員",
-    salary: "400-600万円",
-    tags: ["リモートワーク可", "フレックス", "住宅補助"],
-    description: "地方発のスタートアップで最新技術を使った開発に携われます。",
-  },
-  {
-    id: 2,
-    title: "マーケティング担当",
-    company: "農業法人グリーンファーム",
-    location: "熊本県阿蘇市",
-    type: "正社員",
-    salary: "350-500万円",
-    tags: ["未経験歓迎", "研修充実", "移住支援"],
-    description: "地域の農産物を全国に届けるマーケティング戦略を企画・実行。",
-  },
-  {
-    id: 3,
-    title: "UI/UXデザイナー",
-    company: "地域創生デザイン",
-    location: "島根県出雲市",
-    type: "正社員",
-    salary: "380-550万円",
-    tags: ["クリエイティブ", "地域貢献", "副業OK"],
-    description: "地域の魅力を伝えるデジタルコンテンツのデザインを担当。",
-  },
-  {
-    id: 4,
-    title: "プロジェクトマネージャー",
-    company: "観光開発株式会社",
-    location: "沖縄県石垣市",
-    type: "正社員",
-    salary: "450-700万円",
-    tags: ["マネジメント", "観光業界", "英語活用"],
-    description: "持続可能な観光開発プロジェクトの企画・運営を統括。",
-  },
-]
+type Job = {
+  id: number
+  title: string
+  description: string
+  employmentType: string
+  tags: string[]
+  organization: {
+    name: string
+  }
+  location: {
+    city: string
+    prefecture: {
+      name: string
+    }
+  } | null
+  salaryMin: number | null
+  salaryMax: number | null
+}
+
+type JobsResponse = {
+  data: Job[]
+  meta: {
+    total: number
+  }
+}
 
 type JobCardsProps = {
-  company?: string; // オプションで会社名を受け取れる
+  company?: string; 
 };
 
 export function JobCards({ company }: JobCardsProps) {
-  const jobsToDisplay = company
-    ? jobListings.filter((job) => job.company === company)
-    : jobListings;
+  // Filters could be passed here
+  const { data, error, isLoading } = useSWR<JobsResponse>('/api/jobs', fetcher)
+
+  if (isLoading) {
+    return (
+      <Center h={200}>
+        <Loader />
+      </Center>
+    )
+  }
+
+  if (error) {
+    return (
+      <Alert icon={<IconInfoCircle />} title="エラー" color="red" mb="xl">
+        求人情報の取得に失敗しました。
+      </Alert>
+    )
+  }
+
+  const jobs = data?.data || []
   
+  // Note: Client-side filtering for 'company' prop is suboptimal for large datasets, 
+  // but matches the previous existing logic. Ideally, pass filter to API.
+  const jobsToDisplay = company
+    ? jobs.filter((job) => job.organization.name === company)
+    : jobs;
+  
+  if (jobsToDisplay.length === 0) {
+    return (
+       <Alert icon={<IconInfoCircle />} title="お知らせ" color="blue" mb="xl">
+        現在掲載されている求人はありません。
+      </Alert>
+    )
+  }
+
   return (
     <Grid gutter="lg" mb={48}>
       {jobsToDisplay.map((job) => (
@@ -65,7 +81,7 @@ export function JobCards({ company }: JobCardsProps) {
               <Group justify="space-between" align="flex-start">
                 <Title order={4}>{job.title}</Title>
                 <Badge variant="light" color="blue">
-                  {job.type}
+                  {job.employmentType}
                 </Badge>
               </Group>
 
@@ -73,24 +89,25 @@ export function JobCards({ company }: JobCardsProps) {
                 <Group gap="xs">
                   <IconBuilding size={16} className={jobCardStyles.icon} />
                   <Text size="sm" c="dimmed">
-                    {job.company}
+                    {job.organization.name}
                   </Text>
                 </Group>
+               {/* Location handling needs to be robust as it might be null or different structure based on API */}
                 <Group gap="xs">
                   <IconMapPin size={16} className={jobCardStyles.icon} />
                   <Text size="sm" c="dimmed">
-                    {job.location}
+                     {job.location ? `${job.location.prefecture.name} ${job.location.city}` : '勤務地未定'}
                   </Text>
                 </Group>
                 <Group gap="xs">
                   <IconCurrencyYen size={16} className={jobCardStyles.icon} />
                   <Text size="sm" c="dimmed">
-                    {job.salary}
+                    {job.salaryMin ? `${job.salaryMin}万円~` : "応相談"}
                   </Text>
                 </Group>
               </Stack>
 
-              <Text size="sm" c="dimmed">
+              <Text size="sm" c="dimmed" lineClamp={2}>
                 {job.description}
               </Text>
 
