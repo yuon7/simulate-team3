@@ -1,11 +1,15 @@
 import { PrismaClient } from "@prisma/client/edge";
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
+import jobsApp from "../jobs";
 
 export const runtime = "edge";
 
 const app = new Hono().basePath("/api");
 const prisma = new PrismaClient();
+
+app.route('/jobs', jobsApp);
+
 
 // app.get("/todos", async (c) => {
 //   const todos = await prisma.todo.findMany();

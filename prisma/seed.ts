@@ -62,6 +62,33 @@ async function main() {
       create: pref,
     });
   }
+
+  // Create or find Tokyo Location
+  const tokyoPref = await prisma.prefecture.findFirst({ where: { name: "東京都" } });
+  if (tokyoPref) {
+    const location = await prisma.location.create({
+      data: {
+        prefectureId: tokyoPref.id,
+        city: "千代田区",
+        street: "丸の内1-1",
+      },
+    });
+
+    // Create Organization
+    await prisma.organization.create({
+      data: {
+        name: "株式会社地方マッチング",
+        organizationType: "COMPANY", // Enum value
+        locationId: location.id,
+        description: "地方創生を目指す企業です。",
+      },
+    });
+  }
+
+  // Create JobCategory
+  await prisma.jobCategory.create({
+    data: { name: "エンジニア" },
+  });
   
   console.log("Seeding finished.");
 }
