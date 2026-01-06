@@ -2,6 +2,8 @@ import { PrismaClient } from "@prisma/client/edge";
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
 import jobsApp from "../jobs";
+import profileApp from "../profile";
+import applicationsApp from "../applications";
 
 export const runtime = "edge";
 
@@ -9,6 +11,8 @@ const app = new Hono().basePath("/api");
 const prisma = new PrismaClient();
 
 app.route('/jobs', jobsApp);
+app.route('/profile', profileApp);
+app.route('/applications', applicationsApp);
 
 
 // app.get("/todos", async (c) => {

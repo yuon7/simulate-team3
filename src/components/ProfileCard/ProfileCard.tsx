@@ -10,6 +10,7 @@ interface ProfileCardProps {
   role: string;
   bio: string;
   skills: string[];
+  onEdit?: () => void;
 }
 
 export default function ProfileCard({
@@ -20,6 +21,7 @@ export default function ProfileCard({
   role,
   bio,
   skills,
+  onEdit,
 }: ProfileCardProps) {
   return (
     <Card shadow="lg" padding="xl" radius="md" withBorder className={styles.card}>
@@ -37,7 +39,7 @@ export default function ProfileCard({
             </Text>
           </div>
         </Group>
-        <Button leftSection={<IconEdit size={16} />} variant="light">
+        <Button leftSection={<IconEdit size={16} />} variant="light" onClick={onEdit}>
           編集
         </Button>
       </Group>
