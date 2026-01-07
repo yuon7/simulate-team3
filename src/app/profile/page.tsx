@@ -1,22 +1,60 @@
-import { Card, Text, Avatar, Group, Button, Stack, Badge } from '@mantine/core';
-import { IconMail, IconPhone, IconMapPin } from '@tabler/icons-react';
+"use client";
+
+import { Modal, Container, Center, Loader, Alert } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import ProfileCard from '@/components/ProfileCard/ProfileCard';
+import { EditProfileForm } from '@/features/Profile/EditProfileForm';
 import styles from './profile.module.css';
+import useSWR from 'swr';
+import { fetcher } from '@/lib/fetcher';
+import { IconInfoCircle } from '@tabler/icons-react';
 
 export default function ProfilePage() {
+  const [opened, { open, close }] = useDisclosure(false);
+  const { data, error, isLoading } = useSWR('/api/profile', fetcher);
+
+  if (isLoading) {
+    return (
+      <Center h="100vh">
+        <Loader />
+      </Center>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container py="xl">
+         <Alert icon={<IconInfoCircle />} title="エラー" color="red">
+          プロフィールの取得に失敗しました。
+        </Alert>
+      </Container>
+    );
+  }
+
+  const profile = data;
+
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>プロフィール</h1>
       
       <ProfileCard
-        name="田中太郎"
-        email="tanaka@example.com"
-        phone="090-1234-5678"
-        location="東京都"
-        role="フロントエンド開発者"
-        bio="Next.jsとReactが大好きな開発者です。ユーザー体験を重視したWebアプリケーションの開発に取り組んでいます。"
-        skills={['React', 'Next.js', 'TypeScript', 'Mantine UI']}
+        name={profile.name}
+        email={profile.email}
+        phone={profile.phone}
+        location={profile.location}
+        role={profile.role}
+        bio={profile.bio}
+        skills={profile.skills}
+        onEdit={open}
       />
+
+      <Modal opened={opened} onClose={close} title="プロフィール編集" size="lg">
+        <EditProfileForm
+          initialData={profile}
+          onSuccess={close}
+          onCancel={close}
+        />
+      </Modal>
     </div>
   );
 }

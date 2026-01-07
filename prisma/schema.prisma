@@ -115,6 +115,9 @@ model JobPosting {
   id             Int       @id @default(autoincrement())
   title          String
   description    String
+
+  employmentType String   @default("正社員") // 雇用形態 (正社員, 契約社員, etc.)
+  tags           String[] // 特徴タグ (リモート可, etc.)
   
   organizationId Int
   organization   Organization @relation(fields: [organizationId], references: [id])

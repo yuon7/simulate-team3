@@ -23,7 +23,9 @@
   },
   "dependencies": {
     "@mantine/core": "^7.17.0",
+    "@mantine/form": "^8.3.11",
     "@mantine/hooks": "^7.17.0",
+    "@mantine/notifications": "^7.17.8",
     "@mantinex/mantine-logo": "^1.1.0",
     "@mastra/core": "^0.24.8",
     "@mastra/libsql": "^0.16.4",
@@ -39,6 +41,7 @@
     "next": "^14.2.23",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "swr": "^2.3.8",
     "tailwind-merge": "^3.3.1",
     "typescript-eslint": "^8.26.1",
     "zod": "^4.1.13"

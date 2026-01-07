@@ -62,7 +62,98 @@ async function main() {
       create: pref,
     });
   }
+
+  // Create or find Tokyo Location
+  const tokyoPref = await prisma.prefecture.findFirst({ where: { name: "東京都" } });
+  if (tokyoPref) {
+    const location = await prisma.location.upsert({
+      where: {
+        prefectureId_city_street: {
+          prefectureId: tokyoPref.id,
+          city: "千代田区",
+          street: "丸の内1-1",
+        },
+      },
+      update: {},
+      create: {
+        prefectureId: tokyoPref.id,
+        city: "千代田区",
+        street: "丸の内1-1",
+      },
+    });
+
+    // Create Organization
+    await prisma.organization.upsert({
+      where: { name: "株式会社地方マッチング" },
+      update: {},
+      create: {
+        name: "株式会社地方マッチング",
+        organizationType: "COMPANY", // Enum value
+        locationId: location.id,
+        description: "地方創生を目指す企業です。",
+      },
+    });
+  }
+
+  // Create JobCategory
+  await prisma.jobCategory.upsert({
+    where: { name: "エンジニア" },
+    update: {},
+    create: { name: "エンジニア" },
+  });
   
+  // Create Skills
+  const skills = ["React", "Next.js", "TypeScript", "Mantine", "Node.js"];
+  for (const skillName of skills) {
+    await prisma.skill.upsert({
+      where: { name: skillName },
+      update: {},
+      create: { name: skillName },
+    });
+  }
+
+  // Create Test User (Candidate)
+  const testUserId = "testid-candidate";
+  const testUser = await prisma.user.upsert({
+    where: { id: testUserId },
+    update: {},
+    create: {
+      id: testUserId,
+      email: "candidate@example.com",
+      passwordHash: "mock-hash", // Mock password
+      role: "CANDIDATE",
+      name: "テスト候補者",
+      phone: "090-0000-0000",
+    },
+  });
+
+  // Create Candidate Profile
+  await prisma.candidateProfile.upsert({
+    where: { userId: testUserId },
+    update: {},
+    create: {
+      userId: testUserId,
+      gender: "その他",
+      age: 25,
+      bio: "地方移住に興味があるエンジニアです。リモートワーク中心の働き方を希望しています。",
+      desiredJobId: 1, // エンジニア
+    },
+  });
+  
+  // Link Skills to Candidate
+  const reactSkill = await prisma.skill.findUnique({ where: { name: "React" } });
+  if (reactSkill) {
+    await prisma.userSkill.upsert({
+      where: { userId_skillId: { userId: testUserId, skillId: reactSkill.id } },
+      update: {},
+      create: {
+        userId: testUserId,
+        skillId: reactSkill.id,
+        proficiency: "INTERMEDIATE",
+      },
+    });
+  }
+
   console.log("Seeding finished.");
 }
 
