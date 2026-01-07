@@ -5,6 +5,9 @@ import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { Header } from "@/components/Header/Header";
 import { Analytics } from "@vercel/analytics/next";
 
+import "@mantine/notifications/styles.css";
+import { Notifications } from "@mantine/notifications";
+
 export const metadata: Metadata = {
   title: "Next-Hono-Template",
   description: "A modern template combining Next.js and Hono.",
@@ -22,6 +25,7 @@ export default function RootLayout({
       </head>
       <body>
         <MantineProvider>
+          <Notifications />
           {/* <HeaderMegaMenu /> を <Header /> に変更 */}
           <Header />
           {children}
