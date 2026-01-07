@@ -1,66 +1,50 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Card, Title, Text, Select, Button, Badge, Group, Stack, ThemeIcon, Alert } from "@mantine/core";
-import { IconCoin, IconMapPin, IconInfoCircle, IconCheck } from "@tabler/icons-react";
-
-// データはここに「直書き」
-// 数字(amount)を持たせて計算
-const SUPPORT_DATA = [
-  {
-    id: 1,
-    region: "nagano_matsumoto",
-    title: "松本市移住支援金",
-    amount: 1000000,
-    category: "移住支援",
-    description: "東京圏から移住し、就業・起業した方に最大100万円を支給。",
-  },
-  {
-    id: 2,
-    region: "nagano_matsumoto",
-    title: "三世代同居等推進事業補助金",
-    amount: 300000,
-    category: "住宅",
-    description: "親世帯と同居するための改修工事費用を一部補助。",
-  },
-  {
-    id: 3,
-    region: "fukui",
-    title: "ふくい移住支援金",
-    amount: 1000000,
-    category: "移住支援",
-    description: "全国トップクラスの支援額。条件を満たせば単身でも60万円支給。",
-  },
-  {
-    id: 4,
-    region: "fukui",
-    title: "結婚新生活支援事業",
-    amount: 600000,
-    category: "結婚",
-    description: "新婚世帯の引越し費用や家賃を最大60万円まで補助。",
-  },
-  {
-    id: 5,
-    region: "hokkaido_sapporo",
-    title: "UIJターン新規就業支援",
-    amount: 600000,
-    category: "就業",
-    description: "道外からの移住で、対象企業に就職した場合に移転費用を補助。",
-  },
-];
+import { Card, Title, Text, Select, Badge, Group, Stack, Alert, Grid, GridCol, Box } from "@mantine/core";
+import { IconCoin, IconMapPin, IconInfoCircle, IconBuildingCottage, IconBuildingSkyscraper } from "@tabler/icons-react";
+import { REGIONS, PREFECTURAL_CAPITALS, getSupportsForCity } from "./supportData";
 
 export function SupportNavigator() {
-  const [region, setRegion] = useState<string | null>("nagano_matsumoto");
+  const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
+  const [selectedPref, setSelectedPref] = useState<string | null>(null);
+  const [selectedCity, setSelectedCity] = useState<string | null>(null); // 追加
 
-  // ▼ 2. 選んだ地域に合わせてデータをフィルタリング＆合計計算
+  // ▼ 1. 地方が選ばれたら、その中の都道府県リストを出す
+  const prefectureOptions = useMemo(() => {
+    if (!selectedRegion) return [];
+    const target = REGIONS.find((r) => r.region === selectedRegion);
+    return target ? target.prefs : [];
+  }, [selectedRegion]);
+
+  // ▼ 2. 都道府県が選ばれたら、その中の都市リスト（県庁所在地）を出す
+  const cityOptions = useMemo(() => {
+    if (!selectedPref) return [];
+    return PREFECTURAL_CAPITALS[selectedPref] || [];
+  }, [selectedPref]);
+
+  // ▼ 3. 都市まで選ばれたら、支援データを生成して合計する
   const { filteredSupports, totalAmount } = useMemo(() => {
-    if (!region) return { filteredSupports: [], totalAmount: 0 };
+    if (!selectedPref || !selectedCity) return { filteredSupports: [], totalAmount: 0 };
+    
+    // 都市名を渡してデータを取得
+    const supports = getSupportsForCity(selectedPref, selectedCity);
+    const total = supports.reduce((sum, item) => sum + item.amount, 0);
 
-    const filtered = SUPPORT_DATA.filter((item) => item.region === region);
-    const total = filtered.reduce((sum, item) => sum + item.amount, 0);
+    return { filteredSupports: supports, totalAmount: total };
+  }, [selectedPref, selectedCity]);
 
-    return { filteredSupports: filtered, totalAmount: total };
-  }, [region]);
+  // ▼ リセット処理
+  const handleRegionChange = (val: string | null) => {
+    setSelectedRegion(val);
+    setSelectedPref(null);
+    setSelectedCity(null);
+  };
+
+  const handlePrefChange = (val: string | null) => {
+    setSelectedPref(val);
+    setSelectedCity(null);
+  };
 
   return (
     <Card shadow="sm" padding="lg" radius="md" withBorder>
@@ -68,42 +52,66 @@ export function SupportNavigator() {
         <div>
           <Title order={4} mb="xs">🧭 支援制度ナビ</Title>
           <Text c="dimmed" size="sm">
-            地域を選択すると、利用可能な支援制度と「最大受給額」を試算します。
+            47都道府県・主要都市対応。地域ごとの移住支援金や、独自の補助金を試算します。
           </Text>
         </div>
 
-        {/* 地域選択 */}
-        <Select
-          label="移住検討先の地域"
-          placeholder="地域を選択してください"
-          data={[
-            { value: "nagano_matsumoto", label: "長野県 松本市" },
-            { value: "fukui", label: "福井県 福井市" },
-            { value: "hokkaido_sapporo", label: "北海道 札幌市" },
-            { value: "miyagi_sendai", label: "宮城県 仙台市" },
-          ]}
-          value={region}
-          onChange={setRegion}
-          leftSection={<IconMapPin size={16} />}
-        />
-
-        {/* ▼ 3. 合計金額（数字）をドーンと表示 */}
-        {region && filteredSupports.length > 0 ? (
+        {/* ▼ 3段階選択エリア */}
+        <Box p="md" bg="gray.0" style={{ borderRadius: "8px" }}>
+          <Grid align="flex-end">
+            <GridCol span={{ base: 12, sm: 4 }}>
+              <Select
+                label="① 地方を選択"
+                placeholder="例：関東"
+                data={REGIONS.map((r) => r.region)}
+                value={selectedRegion}
+                onChange={handleRegionChange}
+                leftSection={<IconMapPin size={16} />}
+              />
+            </GridCol>
+            <GridCol span={{ base: 12, sm: 4 }}>
+              <Select
+                label="② 都道府県を選択"
+                placeholder={selectedRegion ? "都道府県" : "地方を選んでください"}
+                data={prefectureOptions}
+                value={selectedPref}
+                onChange={handlePrefChange}
+                disabled={!selectedRegion}
+                leftSection={<IconBuildingCottage size={16} />}
+              />
+            </GridCol>
+            <GridCol span={{ base: 12, sm: 4 }}>
+              <Select
+                label="③ 都市を選択"
+                placeholder={selectedPref ? "都市を選択" : "県を選んでください"}
+                data={cityOptions}
+                value={selectedCity}
+                onChange={setSelectedCity}
+                disabled={!selectedPref}
+                leftSection={<IconBuildingSkyscraper size={16} />}
+              />
+            </GridCol>
+          </Grid>
+        </Box>
+        {/* ▼ 結果表示エリア（都市まで選んだら表示） */}
+        {selectedCity ? (
           <>
-            <Alert variant="light" color="teal" title="受給可能な最大金額（試算）" icon={<IconCoin />}>
+            <Alert 
+              variant="light" 
+              color="teal" 
+              title={`${selectedPref} ${selectedCity} の支援額試算（最大）`} 
+              icon={<IconCoin />}
+              radius="md"
+            >
               <Group align="flex-end" gap="xs">
-                <Text size="xl" fw={700} c="teal">
-                  最大
-                </Text>
+                <Text size="xl" fw={700} c="teal">最大</Text>
                 <Text size="3rem" fw={900} c="teal" style={{ lineHeight: 1 }}>
                   {(totalAmount / 10000).toLocaleString()}
                 </Text>
-                <Text size="xl" fw={700} c="teal">
-                  万円
-                </Text>
+                <Text size="xl" fw={700} c="teal">万円</Text>
               </Group>
               <Text size="xs" mt="sm">
-                ※条件をすべて満たした場合の最大額です。
+                ※世帯構成や就業条件により変動します。
               </Text>
             </Alert>
 
@@ -129,7 +137,7 @@ export function SupportNavigator() {
           </>
         ) : (
           <Alert color="gray" icon={<IconInfoCircle />}>
-            地域を選択すると情報が表示されます（データがない地域もあります）。
+            上部から地域・都道府県・都市を選択すると、支援制度と金額が表示されます。
           </Alert>
         )}
       </Stack>
