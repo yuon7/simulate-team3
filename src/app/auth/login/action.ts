@@ -43,7 +43,7 @@ export async function login(formData: FormData) {
           id: user.id,
           email: user.email!,
           passwordHash: "managed_by_supabase",
-          role: role,
+          role,
         },
       });
 
