@@ -42,6 +42,13 @@ type JobCardsProps = {
 export function JobCards({ company }: JobCardsProps) {
   // Filters could be passed here
   const { data, error, isLoading } = useSWR<JobsResponse>('/api/jobs', fetcher)
+  const [opened, { open, close }] = useDisclosure(false);
+  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
+
+  const handleOpenDetail = (job: Job) => {
+    setSelectedJob(job);
+    open();
+  };
 
   if (isLoading) {
     return (
@@ -67,13 +74,7 @@ export function JobCards({ company }: JobCardsProps) {
     ? jobs.filter((job) => job.organization.name === company)
     : jobs;
   
-  const [opened, { open, close }] = useDisclosure(false);
-  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
 
-  const handleOpenDetail = (job: Job) => {
-    setSelectedJob(job);
-    open();
-  };
 
   if (jobsToDisplay.length === 0) {
     return (
