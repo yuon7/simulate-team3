@@ -2,13 +2,16 @@
 
 import { useState, useMemo } from "react";
 import { Card, Title, Text, Select, Badge, Group, Stack, Alert, Grid, GridCol, Box } from "@mantine/core";
-import { IconCoin, IconMapPin, IconInfoCircle, IconBuildingCottage, IconBuildingSkyscraper } from "@tabler/icons-react";
-import { REGIONS, PREFECTURAL_CAPITALS, getSupportsForCity } from "./supportData";
+import { IconCoin, IconMapPin, IconInfoCircle, IconBuildingCottage, IconBuildingSkyscraper, IconMap } from "@tabler/icons-react";
+
+// PREFECTURE_AREAS という新しい定数名でインポート
+import { REGIONS, PREFECTURE_AREAS, getSupportsForCity } from "./supportData";
 
 export function SupportNavigator() {
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
   const [selectedPref, setSelectedPref] = useState<string | null>(null);
-  const [selectedCity, setSelectedCity] = useState<string | null>(null); // 追加
+  const [selectedArea, setSelectedArea] = useState<string | null>(null); // 追加：県内エリア（道央など）
+  const [selectedCity, setSelectedCity] = useState<string | null>(null);
 
   // ▼ 1. 地方が選ばれたら、その中の都道府県リストを出す
   const prefectureOptions = useMemo(() => {
@@ -17,13 +20,21 @@ export function SupportNavigator() {
     return target ? target.prefs : [];
   }, [selectedRegion]);
 
-  // ▼ 2. 都道府県が選ばれたら、その中の都市リスト（県庁所在地）を出す
-  const cityOptions = useMemo(() => {
+  // ▼ 2. 都道府県が選ばれたら、その中の「地域（エリア）」リストを出す
+  // (PREFECTURE_AREASのキーを取り出します)
+  const areaOptions = useMemo(() => {
     if (!selectedPref) return [];
-    return PREFECTURAL_CAPITALS[selectedPref] || [];
+    const areas = PREFECTURE_AREAS[selectedPref];
+    return areas ? Object.keys(areas) : [];
   }, [selectedPref]);
 
-  // ▼ 3. 都市まで選ばれたら、支援データを生成して合計する
+  // ▼ 3. 地域（エリア）が選ばれたら、その中の「市」リストを出す
+  const cityOptions = useMemo(() => {
+    if (!selectedPref || !selectedArea) return [];
+    return PREFECTURE_AREAS[selectedPref][selectedArea] || [];
+  }, [selectedPref, selectedArea]);
+
+  // ▼ 4. 都市まで選ばれたら、支援データを生成して合計する
   const { filteredSupports, totalAmount } = useMemo(() => {
     if (!selectedPref || !selectedCity) return { filteredSupports: [], totalAmount: 0 };
     
@@ -34,15 +45,22 @@ export function SupportNavigator() {
     return { filteredSupports: supports, totalAmount: total };
   }, [selectedPref, selectedCity]);
 
-  // ▼ リセット処理
+  // ▼ リセット処理系
   const handleRegionChange = (val: string | null) => {
     setSelectedRegion(val);
     setSelectedPref(null);
+    setSelectedArea(null);
     setSelectedCity(null);
   };
 
   const handlePrefChange = (val: string | null) => {
     setSelectedPref(val);
+    setSelectedArea(null);
+    setSelectedCity(null);
+  };
+
+  const handleAreaChange = (val: string | null) => {
+    setSelectedArea(val);
     setSelectedCity(null);
   };
 
@@ -52,27 +70,27 @@ export function SupportNavigator() {
         <div>
           <Title order={4} mb="xs">🧭 支援制度ナビ</Title>
           <Text c="dimmed" size="sm">
-            47都道府県・主要都市対応。地域ごとの移住支援金や、独自の補助金を試算します。
+            47都道府県・全域対応。地域ごとの移住支援金や、独自の補助金を試算します。
           </Text>
         </div>
 
-        {/* ▼ 3段階選択エリア */}
+        {/* ▼ 4段階選択エリア */}
         <Box p="md" bg="gray.0" style={{ borderRadius: "8px" }}>
           <Grid align="flex-end">
-            <GridCol span={{ base: 12, sm: 4 }}>
+            <GridCol span={{ base: 12, sm: 6, md: 3 }}>
               <Select
-                label="① 地方を選択"
-                placeholder="例：関東"
+                label="① 地方"
+                placeholder="地方"
                 data={REGIONS.map((r) => r.region)}
                 value={selectedRegion}
                 onChange={handleRegionChange}
                 leftSection={<IconMapPin size={16} />}
               />
             </GridCol>
-            <GridCol span={{ base: 12, sm: 4 }}>
+            <GridCol span={{ base: 12, sm: 6, md: 3 }}>
               <Select
-                label="② 都道府県を選択"
-                placeholder={selectedRegion ? "都道府県" : "地方を選んでください"}
+                label="② 都道府県"
+                placeholder={selectedRegion ? "都道府県" : "-"}
                 data={prefectureOptions}
                 value={selectedPref}
                 onChange={handlePrefChange}
@@ -80,19 +98,31 @@ export function SupportNavigator() {
                 leftSection={<IconBuildingCottage size={16} />}
               />
             </GridCol>
-            <GridCol span={{ base: 12, sm: 4 }}>
+            <GridCol span={{ base: 12, sm: 6, md: 3 }}>
               <Select
-                label="③ 都市を選択"
-                placeholder={selectedPref ? "都市を選択" : "県を選んでください"}
+                label="③ 地域"
+                placeholder={selectedPref ? "地域(エリア)" : "-"}
+                data={areaOptions}
+                value={selectedArea}
+                onChange={handleAreaChange}
+                disabled={!selectedPref}
+                leftSection={<IconMap size={16} />}
+              />
+            </GridCol>
+            <GridCol span={{ base: 12, sm: 6, md: 3 }}>
+              <Select
+                label="④ 都市"
+                placeholder={selectedArea ? "市町村" : "-"}
                 data={cityOptions}
                 value={selectedCity}
                 onChange={setSelectedCity}
-                disabled={!selectedPref}
+                disabled={!selectedArea}
                 leftSection={<IconBuildingSkyscraper size={16} />}
               />
             </GridCol>
           </Grid>
         </Box>
+
         {/* ▼ 結果表示エリア（都市まで選んだら表示） */}
         {selectedCity ? (
           <>
@@ -137,7 +167,7 @@ export function SupportNavigator() {
           </>
         ) : (
           <Alert color="gray" icon={<IconInfoCircle />}>
-            上部から地域・都道府県・都市を選択すると、支援制度と金額が表示されます。
+            上部から場所を選択すると、支援制度と金額が表示されます。
           </Alert>
         )}
       </Stack>
