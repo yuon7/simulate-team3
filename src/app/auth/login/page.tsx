@@ -1,11 +1,22 @@
 import { login } from "@/app/auth/login/action";
 import styles from "./page.module.css";
+import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
 
-export default function LoginPage({
+export default async function LoginPage({
   searchParams,
 }: {
   searchParams: { error?: string };
 }) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (user) {
+    redirect("/");
+  }
+
   const hasError = searchParams.error === "invalid_credentials";
 
   return (
