@@ -1,11 +1,34 @@
-import { login, signup } from "@/app/auth/login/action";
+import { login } from "@/app/auth/login/action";
 import styles from "./page.module.css";
+import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
 
-export default function LoginPage() {
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: { error?: string };
+}) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (user) {
+    redirect("/");
+  }
+
+  const hasError = searchParams.error === "invalid_credentials";
+
   return (
     <div className={styles.container}>
       <div className={styles.card}>
         <form method="post" className={styles.form}>
+          {hasError && (
+            <div className={styles.errorMessage}>
+              メールアドレスまたはパスワードが間違っています
+            </div>
+          )}
+
           <div>
             <label htmlFor="email" className={styles.label}>
               Email:
@@ -15,7 +38,7 @@ export default function LoginPage() {
               name="email"
               type="email"
               required
-              className={styles.input}
+              className={`${styles.input} ${hasError ? styles.inputError : ""}`}
             />
           </div>
 
@@ -28,7 +51,7 @@ export default function LoginPage() {
               name="password"
               type="password"
               required
-              className={styles.input}
+              className={`${styles.input} ${hasError ? styles.inputError : ""}`}
             />
           </div>
 
@@ -39,12 +62,12 @@ export default function LoginPage() {
             >
               Log in
             </button>
-            <button
-              formAction={signup}
+            <a
+              href="/auth/select-role"
               className={`${styles.button} ${styles.signupButton}`}
             >
               Sign up
-            </button>
+            </a>
           </div>
         </form>
       </div>

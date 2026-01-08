@@ -4,8 +4,13 @@ import { Container, Group, Button, TextInput, Burger, Anchor } from "@mantine/co
 import { IconSearch, IconUser } from "@tabler/icons-react"
 import { useState } from "react"
 import headerContentStyles from "./HeaderContent.module.css"
+import { User } from "@supabase/supabase-js"
 
-export function HeaderContent() {
+type HeaderContentProps = {
+  user: User | null
+}
+
+export function HeaderContent({ user }: HeaderContentProps) {
   const [opened, setOpened] = useState(false)
 
   return (
@@ -40,13 +45,29 @@ export function HeaderContent() {
             visibleFrom="md"
           />
 
-          <Button variant="outline" size="sm" leftSection={<IconUser size={16} />} visibleFrom="md">
-            ログイン
-          </Button>
+          {!user && (
+            <>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                leftSection={<IconUser size={16} />} 
+                visibleFrom="md"
+                component="a"
+                href="/auth/login"
+              >
+                ログイン
+              </Button>
 
-          <Button size="sm" visibleFrom="md">
-            新規登録
-          </Button>
+              <Button 
+                size="sm" 
+                visibleFrom="md"
+                component="a"
+                href="/auth/select-role"
+              >
+                新規登録
+              </Button>
+            </>
+          )}
 
           <Burger opened={opened} onClick={() => setOpened(!opened)} hiddenFrom="md" size="sm" />
         </Group>
