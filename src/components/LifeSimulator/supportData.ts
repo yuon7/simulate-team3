@@ -1,4 +1,3 @@
-// 型定義
 export type SupportItem = {
   id: string;
   title: string;
@@ -19,13 +18,12 @@ export const REGIONS = [
 ];
 
 // ▼ 2. 都道府県 > 地域(エリア) > 市町村 の3階層データ
-// Record<県名, Record<地域名, 市のリスト>>
 export const PREFECTURE_AREAS: Record<string, Record<string, string[]>> = {
   "北海道": {
     "道央": ["夕張市", "岩見沢市", "美唄市", "芦別市", "赤平市", "三笠市", "滝川市", "砂川市", "歌志内市", "深川市", "札幌市", "江別市", "千歳市", "恵庭市", "北広島市", "石狩市", "小樽市", "室蘭市", "苫小牧市", "登別市", "伊達市"],
     "道南": ["函館市", "北斗市"],
     "道北": ["北見市", "網走市", "紋別市"],
-    "道東": ["帯広市", "釧路市", "根室市"] // ※頂いたデータリストに基づき「道北」と分かれているように見えたため整理しました
+    "道東": ["帯広市", "釧路市", "根室市"] 
   },
   "青森県": {
     "下北地方": ["むつ市"],
@@ -48,7 +46,7 @@ export const PREFECTURE_AREAS: Record<string, Record<string, string[]>> = {
     "仙南地域": ["角田市"]
   },
   "秋田県": {
-    "県北": ["大館市", "鹿角市", "北秋田市", "能代市", "男鹿市"], // ※分類名がなかったため便宜上補完、あるいはフラットにする場合調整
+    "県北": ["大館市", "鹿角市", "北秋田市", "能代市", "男鹿市"],
     "県央・県南": ["仙北市", "秋田市", "大仙市", "横手市", "湯沢市", "にかほ市"]
   },
   "山形県": {
@@ -108,7 +106,6 @@ export const PREFECTURE_AREAS: Record<string, Record<string, string[]>> = {
     "多摩地域（北多摩）": ["立川市", "武蔵野市", "三鷹市", "昭島市", "調布市", "小金井市", "小平市", "東村山市", "国分寺市", "国立市", "狛江市", "東大和市", "清瀬市", "東久留米市", "武蔵村山市", "西東京市"],
     "多摩地域（南多摩）": ["八王子市", "町田市", "日野市", "多摩市", "稲城市"],
     "多摩地域（西多摩）": ["青梅市", "福生市", "羽村市", "あきる野市"]
-    // ※23区は頂いたデータに含まれていませんでしたが必要であれば追加可能
   },
   "神奈川県": {
     "横浜・川崎地域": ["横浜市", "川崎市"],
@@ -330,73 +327,4 @@ export const PREFECTURE_AREAS: Record<string, Record<string, string[]>> = {
     "宮古・八重山地域": ["宮古島市", "石垣市"]
   }
 };
-
-// ▼ 3. 支援金データ生成ロジック
-export const getSupportsForCity = (prefName: string, cityName: string): SupportItem[] => {
-  // 基本セット
-  const baseSupports: SupportItem[] = [
-    {
-      id: `${prefName}_base_1`,
-      title: `${prefName}移住支援金`,
-      amount: 1000000,
-      category: "移住支援",
-      description: "東京圏から移住し、就業・起業等を行う世帯に最大100万円を支給。",
-    },
-    // 都市独自の支援金（ダミー）
-    {
-      id: `${cityName}_unique_1`,
-      title: `${cityName}定住促進奨励金`,
-      amount: 200000,
-      category: "定住",
-      description: `${cityName}への転入世帯に対し、生活用品購入費等を助成（試算）。`,
-    }
-  ];
-
-  // 都道府県ごとの独自データ(仮)
-  const specialSupports: Record<string, SupportItem[]> = {
-    "北海道": [
-      { id: "hk_1", title: "北海道わくわくテレワーク支援", amount: 300000, category: "テレワーク", description: "道外企業の仕事を継続したまま移住する方に支給。" }
-    ],
-    "宮城県": [
-      { id: "my_1", title: "みやぎ移住・定住推進補助金", amount: 500000, category: "住宅", description: "県内での住宅取得にかかる費用を一部補助。" }
-    ],
-    "東京都": [
-      { id: "tk_1", title: "創業助成事業", amount: 3000000, category: "起業", description: "都内での創業にかかる経費の一部を助成。" }
-    ],
-    "長野県": [
-      { id: "ng_1", title: "信州リゾートテレワーク支援", amount: 200000, category: "テレワーク", description: "IT人材等の移住・滞在費を補助。" },
-      { id: "ng_2", title: "空き家改修等補助金", amount: 500000, category: "住宅", description: "空き家バンク登録物件の改修費用を補助。" }
-    ],
-    "福井県": [
-      { id: "fk_1", title: "結婚新生活支援事業", amount: 600000, category: "結婚", description: "新婚世帯の引越し・家賃を補助。" },
-      { id: "fk_2", title: "多子世帯子育て応援金", amount: 100000, category: "子育て", description: "第3子以降のお子さんがいる世帯へ支給。" }
-    ],
-    "兵庫県": [
-      { id: "hg_1", title: "ひょうご五国移住支援", amount: 300000, category: "移住支援", description: "県外からの若者世帯の移住を特別支援。" }
-    ],
-    "鳥取県": [
-      { id: "tt_1", title: "とっとり住まいる支援", amount: 1000000, category: "住宅", description: "県産材を使用した住宅の新築・購入を支援。" }
-    ],
-    "高知県": [
-      { id: "kc_1", title: "二段階移住支援", amount: 200000, category: "体験", description: "まずは市街地でお試し移住するための費用を補助。" }
-    ],
-    "福岡県": [
-      { id: "fo_1", title: "福岡県空き家活用補助金", amount: 500000, category: "住宅", description: "空き家の改修工事や家財処分費用を補助。" }
-    ],
-    "沖縄県": [
-      { id: "ok_1", title: "沖縄UIターン就業サポート", amount: 200000, category: "就業", description: "県内企業への就職活動にかかる渡航費等を助成。" }
-    ],
-  };
-
-  const prefExtras = specialSupports[prefName] || [
-    {
-      id: `${prefName}_generic_1`,
-      title: `${prefName}住宅取得支援事業`,
-      amount: 300000,
-      category: "住宅",
-      description: "若者・子育て世帯の住宅取得やリフォーム費用を一部補助（試算）。",
-    },
-  ];
-
-  return [...baseSupports, ...prefExtras];
-};
+;
