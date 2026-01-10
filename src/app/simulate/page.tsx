@@ -1,13 +1,14 @@
-import { HeroSection } from "../components/HeroSection/HeroSection";
-import { FeaturesSection } from "../components/FeaturesSection/FeaturesSection";
-import { JobListings } from "../components/JobListings/JobListings";
-import { RegionSpotlight } from "../components/RegionSpotlight/RegionSpotlight";
-import { Footer } from "../components/Footer/Footer";
+"use client";
+import { HeroSection } from "@/components/HeroSection/HeroSection";
+import { FeaturesSection } from "@/components/FeaturesSection/FeaturesSection";
+import { JobListings } from "@/components/JobListings/JobListings";
+import { RegionSpotlight } from "@/components/RegionSpotlight/RegionSpotlight";
+import { Footer } from "@/components/Footer/Footer";
 
 import { Tabs, Container, Title } from "@mantine/core";
-import { LifeCostSimulator } from "../components/LifeSimulator/LifeCostSimulator";
-import { InitialCostSimulator } from "../components/LifeSimulator/InitialCostSimulator";
-import { SupportNavigator } from "../components/LifeSimulator/SupportNavigator";
+import { LifeCostSimulator } from "@/components/LifeSimulator/LifeCostSimulator";
+import { InitialCostSimulator } from "@/components/LifeSimulator/InitialCostSimulator";
+import { SupportNavigator } from "@/components/LifeSimulator/SupportNavigator";
 
 export default function HomePage() {
   return (
