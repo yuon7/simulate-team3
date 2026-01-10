@@ -7,10 +7,9 @@ import {
 import { 
   IconCalculator, IconTruck, IconMap2, IconArrowRight, IconHomeHeart 
 } from "@tabler/icons-react";
-
-import { LifeCostSimulator } from "@/components/LifeSimulator/LifeCostSimulator";
-import { InitialCostSimulator } from "@/components/LifeSimulator/InitialCostSimulator";
-import { SupportNavigator } from "@/components/LifeSimulator/SupportNavigator";
+import { LifeCostFeature } from "@/features/LifeSimulator/LifeCostFeature";
+import { InitialCostFeature } from "@/features/LifeSimulator/InitialCostFeature";
+import { SupportNavigatorFeature } from "@/features/LifeSimulator/SupportNavigatorFeature";
 
 export default function SimulatePage() {
   const [activeFeature, setActiveFeature] = useState<string | null>(null);
@@ -21,7 +20,7 @@ export default function SimulatePage() {
       desc: "現在の家計と比較し、移住後のリアルな収支差額を算出します。",
       icon: IconCalculator,
       color: "blue",
-      component: <LifeCostSimulator />
+      component: <LifeCostFeature />
     },
     {
       id: "initial",
@@ -29,7 +28,7 @@ export default function SimulatePage() {
       desc: "引越し・敷礼・車の購入など、移住スタートに必要な貯金額を計算。",
       icon: IconTruck,
       color: "orange",
-      component: <InitialCostSimulator />
+      component: <InitialCostFeature />
     },
     {
       id: "support",
@@ -37,7 +36,7 @@ export default function SimulatePage() {
       desc: "全国の自治体から、あなたが利用できる移住支援金・補助金を検索。",
       icon: IconMap2,
       color: "teal",
-      component: <SupportNavigator />
+      component: <SupportNavigatorFeature />
     }
   ];
 

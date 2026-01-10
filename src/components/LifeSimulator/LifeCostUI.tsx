@@ -1,6 +1,3 @@
-"use client";
-
-import { useState, useMemo } from "react";
 import { 
   Title, Text, Card, Stack, Group, Grid, GridCol, 
   Paper, Select, NumberInput, Divider, SegmentedControl, Alert, Badge 
@@ -12,33 +9,36 @@ import {
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer 
 } from "recharts";
-
-import { REGION_FACTORS, calculateLifeCost } from "@/features/LifeSimulator/LifeCostLogic";
-
-export function LifeCostSimulator() {
-  const [currentRent, setCurrentRent] = useState<number | string>(85000);
-  const [currentFood, setCurrentFood] = useState<number | string>(45000);
-  const [currentElec, setCurrentElec] = useState<number | string>(8000);
-  const [currentGas, setCurrentGas] = useState<number | string>(5000);
-  const [currentWater, setCurrentWater] = useState<number | string>(4000);
-  const [targetRegionKey, setTargetRegionKey] = useState<string>("nagano");
-  const [familySize, setFamilySize] = useState("1");
-  const [hasCar, setHasCar] = useState("no");
-  const [gasType, setGasType] = useState("city");
-  const result = useMemo(() => {
-    return calculateLifeCost({
-      currentRent: Number(currentRent),
-      currentFood: Number(currentFood),
-      currentElec: Number(currentElec),
-      currentGas: Number(currentGas),
-      currentWater: Number(currentWater),
-      targetRegionKey,
-      familySize: Number(familySize),
-      hasCar: hasCar === "yes",
-      gasType: gasType as 'city' | 'propane'
-    });
-  }, [currentRent, currentFood, currentElec, currentGas, currentWater, targetRegionKey, familySize, hasCar, gasType]);
-
+import { REGION_FACTORS } from "@/features/LifeSimulator/LifeCostLogic";
+import { LifeCostResultSchema } from "@/features/LifeSimulator/LifeCostSchema";
+type Props = {
+  currentRent: number | string;
+  currentFood: number | string;
+  currentElec: number | string;
+  currentGas: number | string;
+  currentWater: number | string;
+  targetRegionKey: string;
+  familySize: string;
+  hasCar: string;
+  gasType: string;
+  result: LifeCostResultSchema;
+  onChangeCurrentRent: (val: number | string) => void;
+  onChangeCurrentFood: (val: number | string) => void;
+  onChangeCurrentElec: (val: number | string) => void;
+  onChangeCurrentGas: (val: number | string) => void;
+  onChangeCurrentWater: (val: number | string) => void;
+  onChangeTargetRegionKey: (val: string) => void;
+  onChangeFamilySize: (val: string) => void;
+  onChangeHasCar: (val: string) => void;
+  onChangeGasType: (val: string) => void;
+};
+export function LifeCostUI({
+  currentRent, currentFood, currentElec, currentGas, currentWater,
+  targetRegionKey, familySize, hasCar, gasType,
+  result,
+  onChangeCurrentRent, onChangeCurrentFood, onChangeCurrentElec, onChangeCurrentGas, onChangeCurrentWater,
+  onChangeTargetRegionKey, onChangeFamilySize, onChangeHasCar, onChangeGasType
+}: Props) {
   return (
     <Card shadow="md" padding="xl" radius="md" withBorder>
       <Stack gap="xl">
@@ -51,39 +51,35 @@ export function LifeCostSimulator() {
             </Text>
           </div>
         </Group>
-        
         <Grid>
-          {/* ▼ 左側：入力パネル */}
           <GridCol span={{ base: 12, md: 4 }}>
             <Paper bg="gray.0" p="md" radius="md" h="100%">
               <Stack gap="sm">
                 <Badge color="blue" variant="light" fullWidth>Step 1: 現在の基礎支出</Badge>
                 <NumberInput
                   label="家賃" leftSection={<IconUsers size={16} />}
-                  value={currentRent} onChange={setCurrentRent} thousandSeparator suffix=" 円"
+                  value={currentRent} onChange={onChangeCurrentRent} thousandSeparator suffix=" 円"
                 />
                 <NumberInput
                   label="食費" leftSection={<IconCalculator size={16} />}
-                  value={currentFood} onChange={setCurrentFood} thousandSeparator suffix=" 円"
+                  value={currentFood} onChange={onChangeCurrentFood} thousandSeparator suffix=" 円"
                 />
                 <Text size="xs" fw={700} mt="xs">現在の光熱費 (月平均)</Text>
                 <Group gap="xs" grow>
                   <NumberInput 
                     placeholder="電気" leftSection={<IconBolt size={14} />} 
-                    value={currentElec} onChange={setCurrentElec} thousandSeparator 
+                    value={currentElec} onChange={onChangeCurrentElec} thousandSeparator 
                   />
                   <NumberInput 
                     placeholder="ガス" leftSection={<IconFlame size={14} />} 
-                    value={currentGas} onChange={setCurrentGas} thousandSeparator 
+                    value={currentGas} onChange={onChangeCurrentGas} thousandSeparator 
                   />
                   <NumberInput 
                     placeholder="水道" leftSection={<IconDroplet size={14} />} 
-                    value={currentWater} onChange={setCurrentWater} thousandSeparator 
+                    value={currentWater} onChange={onChangeCurrentWater} thousandSeparator 
                   />
                 </Group>
-
                 <Divider my="xs" />
-
                 <Badge color="teal" variant="light" fullWidth>Step 2: 移住先の条件</Badge>
                 <Select
                   label="候補地域（気候モデル）"
@@ -91,32 +87,29 @@ export function LifeCostSimulator() {
                     value: key, label: REGION_FACTORS[key].name 
                   }))}
                   value={targetRegionKey}
-                  onChange={(val) => val && setTargetRegionKey(val)}
+                  onChange={(val) => val && onChangeTargetRegionKey(val)}
                 />
-                
                 <Text size="sm" fw={500} mt="xs">世帯人数</Text>
                 <SegmentedControl
-                  value={familySize} onChange={setFamilySize}
+                  value={familySize} onChange={onChangeFamilySize}
                   data={[
                     { label: '1人', value: '1' },
                     { label: '2人', value: '2' },
                     { label: '3人~', value: '3' },
                   ]}
                 />
-
                 <Text size="sm" fw={500} mt="xs">🚗 車の所有（地方必須）</Text>
                 <SegmentedControl
-                  value={hasCar} onChange={setHasCar} fullWidth
+                  value={hasCar} onChange={onChangeHasCar} fullWidth
                   color={hasCar === "yes" ? "blue" : "gray"}
                   data={[
                     { label: 'なし', value: 'no' },
                     { label: 'あり', value: 'yes' },
                   ]}
                 />
-
                 <Text size="sm" fw={500} mt="xs">🔥 ガスの種類</Text>
                 <SegmentedControl
-                  value={gasType} onChange={setGasType} fullWidth
+                  value={gasType} onChange={onChangeGasType} fullWidth
                   color={gasType === "propane" ? "orange" : "gray"}
                   data={[
                     { label: '都市ガス', value: 'city' },
@@ -126,8 +119,6 @@ export function LifeCostSimulator() {
               </Stack>
             </Paper>
           </GridCol>
-
-          {/* ▼ 右側：結果表示エリア */}
           <GridCol span={{ base: 12, md: 8 }}>
             <Stack h="100%" justify="space-between">
               <Paper p="md" radius="md" bg={result.diff > 0 ? "teal.0" : "red.0"} withBorder>
@@ -168,11 +159,7 @@ export function LifeCostSimulator() {
                     <XAxis dataKey="name" fontSize={12} />
                     <YAxis fontSize={12} />
                     <Tooltip 
-                      formatter={(value: number | string | undefined) => {
-                        if (value === null) return "";
-                        const num = typeof value === "number" ? value : Number(value);
-                        return Number.isNaN(num) ? "" : `${num.toLocaleString()}円`;
-                      }}
+                      formatter={(value?: number) => `${(value ?? 0).toLocaleString()}円`}
                       labelStyle={{ color: "#333" }}
                     />
                     <Legend />

@@ -1,8 +1,8 @@
 "use client"
 import { Tabs } from "@mantine/core";
-import { LifeCostSimulator } from "@/components/LifeSimulator/LifeCostSimulator";
-import { InitialCostSimulator } from "@/components/LifeSimulator/InitialCostSimulator";
-import { SupportNavigator } from "@/components/LifeSimulator/SupportNavigator";
+import { LifeCostFeature } from "./LifeCostFeature";
+import { InitialCostFeature } from "./InitialCostFeature";
+import { SupportNavigatorFeature } from "./SupportNavigatorFeature";
 
 export function LifeSimulation() {
   return (
@@ -14,15 +14,15 @@ export function LifeSimulation() {
       </Tabs.List>
 
       <Tabs.Panel value="cost">
-        <LifeCostSimulator />
+        <LifeCostFeature />
       </Tabs.Panel>
 
       <Tabs.Panel value="initial">
-        <InitialCostSimulator />
+        <InitialCostFeature />
       </Tabs.Panel>
 
       <Tabs.Panel value="support">
-        <SupportNavigator />
+        <SupportNavigatorFeature />
       </Tabs.Panel>
     </Tabs>
   );

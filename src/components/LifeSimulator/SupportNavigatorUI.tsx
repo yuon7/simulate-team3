@@ -1,45 +1,28 @@
-"use client";
-
-import { useState, useMemo } from "react";
 import { Card, Title, Text, Select, Badge, Group, Stack, Alert, Grid, GridCol, Box } from "@mantine/core";
 import { IconCoin, IconMapPin, IconInfoCircle, IconBuildingCottage, IconBuildingSkyscraper, IconMap } from "@tabler/icons-react";
-import { 
-  REGIONS_DATA, 
-  getPrefectures, 
-  getAreas, 
-  getCities, 
-  calculateSupportData 
-} from "@/features/LifeSimulator/SupportLogic";
-
-export function SupportNavigator() {
-  const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
-  const [selectedPref, setSelectedPref] = useState<string | null>(null);
-  const [selectedArea, setSelectedArea] = useState<string | null>(null);
-  const [selectedCity, setSelectedCity] = useState<string | null>(null);
-  const prefectureOptions = useMemo(() => getPrefectures(selectedRegion), [selectedRegion]);
-  const areaOptions = useMemo(() => getAreas(selectedPref), [selectedPref]);
-  const cityOptions = useMemo(() => getCities(selectedPref, selectedArea), [selectedPref, selectedArea]);
-  const { filteredSupports, totalAmount } = useMemo(() => {
-    return calculateSupportData(selectedCity);
-  }, [selectedCity]);
-  const handleRegionChange = (val: string | null) => {
-    setSelectedRegion(val);
-    setSelectedPref(null);
-    setSelectedArea(null);
-    setSelectedCity(null);
-  };
-
-  const handlePrefChange = (val: string | null) => {
-    setSelectedPref(val);
-    setSelectedArea(null);
-    setSelectedCity(null);
-  };
-
-  const handleAreaChange = (val: string | null) => {
-    setSelectedArea(val);
-    setSelectedCity(null);
-  };
-
+import { REGIONS_DATA } from "@/features/LifeSimulator/SupportLogic";
+import { SupportItemSchema } from "@/features/LifeSimulator/SupportSchema";
+type Props = {
+  selectedRegion: string | null;
+  selectedPref: string | null;
+  selectedArea: string | null;
+  selectedCity: string | null;
+  prefectureOptions: string[];
+  areaOptions: string[];
+  cityOptions: string[];
+  filteredSupports: SupportItemSchema[];
+  totalAmount: number;
+  onChangeRegion: (val: string | null) => void;
+  onChangePref: (val: string | null) => void;
+  onChangeArea: (val: string | null) => void;
+  onChangeCity: (val: string | null) => void;
+};
+export function SupportNavigatorUI({
+  selectedRegion, selectedPref, selectedArea, selectedCity,
+  prefectureOptions, areaOptions, cityOptions,
+  filteredSupports, totalAmount,
+  onChangeRegion, onChangePref, onChangeArea, onChangeCity
+}: Props) {
   return (
     <Card shadow="sm" padding="lg" radius="md" withBorder>
       <Stack gap="lg">
@@ -49,7 +32,6 @@ export function SupportNavigator() {
             47都道府県・全自治体対応。地域ごとの移住支援金や独自の補助金を検索します。
           </Text>
         </div>
-        {/* ▼ 4段階選択エリア */}
         <Box p="md" bg="gray.0" style={{ borderRadius: "8px" }}>
           <Grid align="flex-end">
             <GridCol span={{ base: 12, sm: 6, md: 3 }}>
@@ -58,7 +40,7 @@ export function SupportNavigator() {
                 placeholder="地方を選択"
                 data={REGIONS_DATA.map((r) => r.region)}
                 value={selectedRegion}
-                onChange={handleRegionChange}
+                onChange={onChangeRegion}
                 leftSection={<IconMapPin size={16} />}
               />
             </GridCol>
@@ -68,7 +50,7 @@ export function SupportNavigator() {
                 placeholder={selectedRegion ? "県を選択" : "-"}
                 data={prefectureOptions}
                 value={selectedPref}
-                onChange={handlePrefChange}
+                onChange={onChangePref}
                 disabled={!selectedRegion}
                 leftSection={<IconBuildingCottage size={16} />}
               />
@@ -79,7 +61,7 @@ export function SupportNavigator() {
                 placeholder={selectedPref ? "エリアを選択" : "-"}
                 data={areaOptions}
                 value={selectedArea}
-                onChange={handleAreaChange}
+                onChange={onChangeArea}
                 disabled={!selectedPref}
                 leftSection={<IconMap size={16} />}
               />
@@ -90,7 +72,7 @@ export function SupportNavigator() {
                 placeholder={selectedArea ? "市町村を選択" : "-"}
                 data={cityOptions}
                 value={selectedCity}
-                onChange={setSelectedCity}
+                onChange={onChangeCity}
                 disabled={!selectedArea}
                 leftSection={<IconBuildingSkyscraper size={16} />}
                 searchable
@@ -98,17 +80,14 @@ export function SupportNavigator() {
             </GridCol>
           </Grid>
         </Box>
-        {/* ▼ 結果表示エリア */}
         {selectedCity ? (
           <>
             {filteredSupports.length > 0 ? (
               <>
                 <Alert 
-                  variant="light" 
-                  color="teal" 
+                  variant="light" color="teal" 
                   title={`${selectedPref} ${selectedCity} の支援額試算`} 
-                  icon={<IconCoin />}
-                  radius="md"
+                  icon={<IconCoin />} radius="md"
                 >
                   <Group align="flex-end" gap="xs">
                     <Text size="xl" fw={700} c="teal">最大</Text>
@@ -121,7 +100,6 @@ export function SupportNavigator() {
                     ※制度の適用には条件があります（世帯構成・年齢・就業等）。詳細は自治体HPをご確認ください。
                   </Text>
                 </Alert>
-
                 <Stack gap="md">
                   <Text fw={600}>利用可能な制度一覧 ({filteredSupports.length}件)</Text>
                   {filteredSupports.map((item, index) => (
