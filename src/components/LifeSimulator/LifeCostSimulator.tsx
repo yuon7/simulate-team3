@@ -45,7 +45,7 @@ export function LifeCostSimulator() {
         <Group>
           <IconCalculator size={28} />
           <div>
-            <Title order={3}>高精度・生活収支シミュレーター</Title>
+            <Title order={3}>生活収支シミュレーター</Title>
             <Text c="dimmed" size="sm">
               現在の生活費と照らし合わせ、移住後の「リアルな収支」を算出します。
             </Text>
