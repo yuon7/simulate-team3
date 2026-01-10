@@ -1,7 +1,12 @@
 "use client";
-
 import { useState } from "react";
-import { Container, Title, SimpleGrid, Card, Text, Button, Space } from "@mantine/core";
+import { 
+  Container, Title, SimpleGrid, Card, Text, Button, Space, 
+  ThemeIcon, Group, Badge, Transition, Paper 
+} from "@mantine/core";
+import { 
+  IconCalculator, IconTruck, IconMap2, IconArrowRight, IconHomeHeart 
+} from "@tabler/icons-react";
 
 import { LifeCostSimulator } from "@/components/LifeSimulator/LifeCostSimulator";
 import { InitialCostSimulator } from "@/components/LifeSimulator/InitialCostSimulator";
@@ -9,54 +14,120 @@ import { SupportNavigator } from "@/components/LifeSimulator/SupportNavigator";
 
 export default function SimulatePage() {
   const [activeFeature, setActiveFeature] = useState<string | null>(null);
+  const features = [
+    {
+      id: "cost",
+      title: "生活コスト試算",
+      desc: "現在の家計と比較し、移住後のリアルな収支差額を算出します。",
+      icon: IconCalculator,
+      color: "blue",
+      component: <LifeCostSimulator />
+    },
+    {
+      id: "initial",
+      title: "初期費用見積もり",
+      desc: "引越し・敷礼・車の購入など、移住スタートに必要な貯金額を計算。",
+      icon: IconTruck,
+      color: "orange",
+      component: <InitialCostSimulator />
+    },
+    {
+      id: "support",
+      title: "支援制度ナビ",
+      desc: "全国の自治体から、あなたが利用できる移住支援金・補助金を検索。",
+      icon: IconMap2,
+      color: "teal",
+      component: <SupportNavigator />
+    }
+  ];
 
- 
   return (
-    <Container size="lg" py="xl">
-      <Title order={2} ta="center" mb="md">
-        🏡 地方移住 生活シミュレーション
-      </Title>
-      <Text ta="center" c="dimmed" mb="xl">
-        住居費・交通費・支援制度・暮らし相談をまとめて体験できます。
-      </Text>
-
-      <SimpleGrid cols={{ base: 1, sm: 3 }} spacing="lg">
-        <Card shadow="sm" padding="lg" radius="md" withBorder>
-          <Title order={4}>💰 生活コスト試算</Title>
-          <Text mt="xs" c="dimmed">
-            地域・条件から住居費・交通費・食費などの概算を試算します。
+    <div style={{ backgroundColor: "#f8f9fa", minHeight: "100vh" }}>
+      <div style={{ backgroundColor: "white", borderBottom: "1px solid #e9ecef" }}>
+        <Container size="lg" py={50}>
+          <Group justify="center" mb="md">
+            <ThemeIcon size={60} radius="xl" variant="light" color="blue">
+              <IconHomeHeart size={34} />
+            </ThemeIcon>
+          </Group>
+          <Title order={1} ta="center" fw={900} style={{ letterSpacing: "-1px" }}>
+            地方移住シミュレーション
+          </Title>
+          <Text ta="center" c="dimmed" mt="sm" maw={600} mx="auto">
+            お金の計算から制度の検索まで。<br/>
+            あなたの移住計画を具体化する3つのツールを自由に試せます。
           </Text>
-          <Button mt="md" fullWidth onClick={() => setActiveFeature("cost")}>
-            試してみる
-          </Button>
-        </Card>
+        </Container>
+      </div>
 
-        <Card shadow="sm" padding="lg" radius="md" withBorder>
-          <Title order={4}>🚚 引っ越し・初期費用見積もり</Title>
-          <Text mt="xs" c="dimmed">
-            引越し・賃貸契約・車の準備など、移住に必要な貯金額を試算します。
-          </Text>
-          <Button mt="md" fullWidth onClick={() => setActiveFeature("initial")}>
-            試してみる
-          </Button>
-        </Card>
+      <Container size="lg" py="xl">
+        <SimpleGrid cols={{ base: 1, md: 3 }} spacing="lg">
+          {features.map((feature) => {
+            const isActive = activeFeature === feature.id;
+            return (
+              <Card 
+                key={feature.id}
+                shadow={isActive ? "md" : "sm"} 
+                padding="lg" 
+                radius="md" 
+                withBorder
+                style={{ 
+                  cursor: "pointer", 
+                  borderColor: isActive ? `var(--mantine-color-${feature.color}-6)` : undefined,
+                  backgroundColor: isActive ? `var(--mantine-color-${feature.color}-0)` : "white",
+                  transition: "all 0.2s ease"
+                }}
+                onClick={() => setActiveFeature(feature.id)}
+              >
+                <Group justify="space-between" align="start" mb="md">
+                  <ThemeIcon 
+                    size={48} 
+                    radius="md" 
+                    variant={isActive ? "filled" : "light"} 
+                    color={feature.color}
+                  >
+                    <feature.icon size={26} stroke={1.5} />
+                  </ThemeIcon>
+                  {isActive && <Badge color={feature.color}>選択中</Badge>}
+                </Group>
+                
+                <Text fw={700} size="lg" mt="xs" c={isActive ? `${feature.color}.9` : "dark"}>
+                  {feature.title}
+                </Text>
+                <Text mt="xs" c="dimmed" size="sm" style={{ flex: 1 }}>
+                  {feature.desc}
+                </Text>
 
-        <Card shadow="sm" padding="lg" radius="md" withBorder>
-          <Title order={4}>🧭 支援制度ナビ</Title>
-          <Text mt="xs" c="dimmed">
-            地域の移住支援・住宅補助など、利用可能な制度を確認できます。
-          </Text>
-          <Button mt="md" fullWidth onClick={() => setActiveFeature("support")}>
-            試してみる
-          </Button>
-        </Card>
-      </SimpleGrid>
+                <Button 
+                  fullWidth 
+                  mt="md" 
+                  variant={isActive ? "filled" : "light"} 
+                  color={feature.color}
+                  rightSection={<IconArrowRight size={16} />}
+                >
+                  {isActive ? "表示中" : "これを使う"}
+                </Button>
+              </Card>
+            );
+          })}
+        </SimpleGrid>
 
-      <Space h="xl" />
+        <Space h="xl" />
+        {activeFeature && (
+           <Paper p={0} bg="transparent">
+             <Text fw={700} size="xl" mb="md" c="dimmed" ta="center">
+               👇 シミュレーション結果
+             </Text>
+             {features.find(f => f.id === activeFeature)?.component}
+           </Paper>
+        )}
 
-      {activeFeature === "cost" && <LifeCostSimulator />}
-      {activeFeature === "initial" && <InitialCostSimulator />}
-      {activeFeature === "support" && <SupportNavigator />}
-    </Container>
+        {!activeFeature && (
+          <Paper p="xl" withBorder radius="md" ta="center" bg="white" mt="xl">
+            <Text c="dimmed">上のカードをクリックして、シミュレーターを選択してください 👆</Text>
+          </Paper>
+        )}
+      </Container>
+    </div>
   );
 }

@@ -7,8 +7,6 @@ import {
   IconHome,
   IconCar,
   IconShoppingCart,
-  IconTrendingDown,
-  IconTrendingUp,
   IconArrowRight,
   IconWallet
 } from "@tabler/icons-react"
