@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Container, Title, SimpleGrid, Card, Text, Button, Space } from "@mantine/core";
 
 import { LifeCostSimulator } from "@/components/LifeSimulator/LifeCostSimulator";
-import LifeChatAssistant from "@/components/LifeSimulator/LifeChatAssistant";
+import { InitialCostSimulator } from "@/components/LifeSimulator/InitialCostSimulator";
 import { SupportNavigator } from "@/components/LifeSimulator/SupportNavigator";
 
 export default function SimulatePage() {
@@ -32,11 +32,11 @@ export default function SimulatePage() {
         </Card>
 
         <Card shadow="sm" padding="lg" radius="md" withBorder>
-          <Title order={4}>💬 暮らし相談AI</Title>
+          <Title order={4}>🚚 引っ越し・初期費用見積もり</Title>
           <Text mt="xs" c="dimmed">
-            ChatGPTと会話しながら、理想の暮らしや移住プランを検討します。
+            引越し・賃貸契約・車の準備など、移住に必要な貯金額を試算します。
           </Text>
-          <Button mt="md" fullWidth onClick={() => setActiveFeature("chat")}>
+          <Button mt="md" fullWidth onClick={() => setActiveFeature("initial")}>
             試してみる
           </Button>
         </Card>
@@ -55,7 +55,7 @@ export default function SimulatePage() {
       <Space h="xl" />
 
       {activeFeature === "cost" && <LifeCostSimulator />}
-      {activeFeature === "chat" && <LifeChatAssistant />}
+      {activeFeature === "initial" && <InitialCostSimulator />}
       {activeFeature === "support" && <SupportNavigator />}
     </Container>
   );
