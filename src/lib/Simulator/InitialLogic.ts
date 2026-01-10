@@ -44,7 +44,7 @@ export const calculateInitialCost = (
   // 1. 住居費
   const shikikinCost = house.rent * house.shikikinMonth;
   const reikinCost = house.rent * house.reikinMonth;
-  const maeyachinCost = house.rent * 1;
+  const maeyachinCost = Number(house.rent);
   const housingTotal = shikikinCost + reikinCost + maeyachinCost;
 
   const base = ROOM_TYPES_DATA[move.roomType]?.baseCost || 50000;

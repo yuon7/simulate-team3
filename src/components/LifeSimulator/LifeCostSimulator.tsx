@@ -168,7 +168,11 @@ export function LifeCostSimulator() {
                     <XAxis dataKey="name" fontSize={12} />
                     <YAxis fontSize={12} />
                     <Tooltip 
-                      formatter={(value: number | string | undefined) => value == null ? "" : `${value.toLocaleString()}円`}
+                      formatter={(value: number | string | undefined) => {
+                        if (value === null) return "";
+                        const num = typeof value === "number" ? value : Number(value);
+                        return Number.isNaN(num) ? "" : `${num.toLocaleString()}円`;
+                      }}
                       labelStyle={{ color: "#333" }}
                     />
                     <Legend />
