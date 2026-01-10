@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { 
   Container, Title, SimpleGrid, Card, Text, Button, Space, 
-  ThemeIcon, Group, Badge, Transition, Paper 
+  ThemeIcon, Group, Badge,Paper 
 } from "@mantine/core";
 import { 
   IconCalculator, IconTruck, IconMap2, IconArrowRight, IconHomeHeart 
