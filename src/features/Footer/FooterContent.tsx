@@ -3,6 +3,7 @@
 import { Container, Grid, Stack, Text, Group, Anchor } from "@mantine/core"
 import { IconMapPin, IconMail, IconPhone } from "@tabler/icons-react"
 import footerContentStyles from "./FooterContent.module.css"
+import Link from "next/link"
 
 export function FooterContent() {
   return (
@@ -33,13 +34,13 @@ export function FooterContent() {
               <Anchor href="#" size="sm" c="dimmed" className={footerContentStyles.link}>
                 求人検索
               </Anchor>
-              <Anchor href="#" size="sm" c="dimmed" className={footerContentStyles.link}>
+              <Anchor component={Link} href="/simulate" size="sm" c="dimmed" className={footerContentStyles.link}>
                 生活シミュレーション
               </Anchor>
               <Anchor href="#" size="sm" c="dimmed" className={footerContentStyles.link}>
                 地域情報
               </Anchor>
-              <Anchor href="#" size="sm" c="dimmed" className={footerContentStyles.link}>
+              <Anchor component={Link} href="/simulate" size="sm" c="dimmed" className={footerContentStyles.link}>
                 移住支援
               </Anchor>
             </Stack>

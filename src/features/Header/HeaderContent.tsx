@@ -5,6 +5,7 @@ import { IconSearch, IconUser } from "@tabler/icons-react"
 import { useState } from "react"
 import headerContentStyles from "./HeaderContent.module.css"
 import { User } from "@supabase/supabase-js"
+import Link from "next/link"
 
 type HeaderContentProps = {
   user: User | null
@@ -21,14 +22,16 @@ export function HeaderContent({ user }: HeaderContentProps) {
             <div className={headerContentStyles.logo}>
               <span className={headerContentStyles.logoText}>地</span>
             </div>
+            <Anchor component={Link} href="/" underline="never" c="inherit">
             <span className={headerContentStyles.brandName}>地方創生</span>
+            </Anchor>
           </Group>
 
           <Group gap="lg" visibleFrom="md">
             <Anchor href="#jobs" className={headerContentStyles.navLink}>
               求人情報
             </Anchor>
-            <Anchor href="#simulator" className={headerContentStyles.navLink}>
+            <Anchor component={Link} href="/simulate" className={headerContentStyles.navLink}>
               生活シミュレーション
             </Anchor>
             <Anchor href="#regions" className={headerContentStyles.navLink}>
