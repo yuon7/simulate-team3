@@ -40,7 +40,7 @@ export function FooterContent() {
               <Anchor href="#" size="sm" c="dimmed" className={footerContentStyles.link}>
                 地域情報
               </Anchor>
-              <Anchor href="#" size="sm" c="dimmed" className={footerContentStyles.link}>
+              <Anchor component={Link} href="/simulate" size="sm" c="dimmed" className={footerContentStyles.link}>
                 移住支援
               </Anchor>
             </Stack>
