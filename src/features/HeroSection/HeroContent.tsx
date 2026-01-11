@@ -3,6 +3,7 @@
 import { Container, Title, Text, Button, Group, Grid, Stack, Paper } from "@mantine/core"
 import { IconArrowRight, IconMapPin, IconUsers, IconBriefcase } from "@tabler/icons-react"
 import heroContentStyles from "./HeroContent.module.css"
+import Link from "next/link"
 
 export function HeroContent() {
   return (
@@ -25,7 +26,7 @@ export function HeroContent() {
               <Button size="lg" rightSection={<IconArrowRight size={20} />}>
                 求人を探す
               </Button>
-              <Button size="lg" variant="outline">
+              <Button size="lg" variant="outline" component={Link} href="/simulate">
                 生活シミュレーション
               </Button>
             </Group>
