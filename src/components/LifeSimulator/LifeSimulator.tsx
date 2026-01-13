@@ -1,6 +1,6 @@
-import { Container, Title, Text, Stack } from "@mantine/core"
-import simulatorSectionStyles from "./LifeSimulator.module.css"
-import { LifeSimulation } from "../../features/LifeSimulator/LifeSimulation"
+import { Container, Title, Text, Stack } from "@mantine/core";
+import simulatorSectionStyles from "./LifeSimulator.module.css";
+import { LifeSimulation } from "../../features/LifeSimulator/LifeSimulation";
 
 export function LifeSimulator() {
   return (
@@ -18,5 +18,5 @@ export function LifeSimulator() {
         <LifeSimulation />
       </Container>
     </section>
-  )
+  );
 }

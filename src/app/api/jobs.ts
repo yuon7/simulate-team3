@@ -1,5 +1,5 @@
-import { Hono } from 'hono';
-import { prisma } from '@/lib/prisma';
+import { Hono } from "hono";
+import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
 import { User } from "@supabase/supabase-js";
 
@@ -12,7 +12,9 @@ const app = new Hono<{ Variables: Variables }>();
 // Optional auth middleware
 app.use("*", async (c, next) => {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (user) {
     c.set("user", user);
   }
@@ -20,18 +22,18 @@ app.use("*", async (c, next) => {
 });
 
 // GET /api/jobs
-app.get('/', async (c) => {
+app.get("/", async (c) => {
   const user = c.get("user");
-  const page = Number(c.req.query('page') || '1');
-  const limit = Number(c.req.query('limit') || '10');
+  const page = Number(c.req.query("page") || "1");
+  const limit = Number(c.req.query("limit") || "10");
   const skip = (page - 1) * limit;
 
   // Filters
-  const onlyMine = c.req.query('mine') === 'true';
-  const prefectureId = c.req.query('prefectureId');
-  const jobCategoryId = c.req.query('jobCategoryId');
-  const query = c.req.query('q');
-  const tags = c.req.query('tags')?.split(',');
+  const onlyMine = c.req.query("mine") === "true";
+  const prefectureId = c.req.query("prefectureId");
+  const jobCategoryId = c.req.query("jobCategoryId");
+  const query = c.req.query("q");
+  const tags = c.req.query("tags")?.split(",");
 
   try {
     let where: any = {};
@@ -63,8 +65,8 @@ app.get('/', async (c) => {
 
     if (query) {
       where.OR = [
-        { title: { contains: query, mode: 'insensitive' } },
-        { description: { contains: query, mode: 'insensitive' } },
+        { title: { contains: query, mode: "insensitive" } },
+        { description: { contains: query, mode: "insensitive" } },
       ];
     }
 
@@ -73,7 +75,7 @@ app.get('/', async (c) => {
         where,
         skip,
         take: limit,
-        orderBy: { createdAt: 'desc' },
+        orderBy: { createdAt: "desc" },
         include: {
           organization: {
             select: { id: true, name: true, logoUrl: true },
@@ -104,7 +106,7 @@ app.get('/', async (c) => {
             logoUrl: logoUrl || job.organization.logoUrl,
           },
         };
-      })
+      }),
     );
 
     return c.json({
@@ -117,36 +119,36 @@ app.get('/', async (c) => {
       },
     });
   } catch (error) {
-    console.error('Error fetching jobs:', error);
-    return c.json({ error: 'Failed to fetch jobs' }, 500);
+    console.error("Error fetching jobs:", error);
+    return c.json({ error: "Failed to fetch jobs" }, 500);
   }
 });
 
 // POST /api/jobs
-app.post('/', async (c) => {
+app.post("/", async (c) => {
   const user = c.get("user");
   if (!user) return c.json({ error: "Unauthorized" }, 401);
 
   try {
     const body = await c.req.json();
-    
+
     const staff = await prisma.staffProfile.findUnique({
       where: { userId: user.id },
     });
 
     if (!staff) return c.json({ error: "Only staff can create jobs" }, 403);
 
-    const { 
-      title, 
-      description, 
-      employmentType, 
-      tags, 
-      jobCategoryId, 
-      locationId, 
-      prefectureId, 
-      city, 
-      salaryMin, 
-      salaryMax 
+    const {
+      title,
+      description,
+      employmentType,
+      tags,
+      jobCategoryId,
+      locationId,
+      prefectureId,
+      city,
+      salaryMin,
+      salaryMax,
     } = body;
 
     let targetLocationId = locationId;
@@ -181,9 +183,9 @@ app.post('/', async (c) => {
     const job = await prisma.jobPosting.create({
       data: {
         title,
-        description: description || '',
+        description: description || "",
         organizationId: staff.organizationId,
-        employmentType: employmentType || '正社員',
+        employmentType: employmentType || "正社員",
         tags: tags || [],
         jobCategoryId: jobCategoryId || 1,
         locationId: targetLocationId!,
@@ -194,29 +196,29 @@ app.post('/', async (c) => {
 
     return c.json(job, 201);
   } catch (error) {
-    console.error('Error creating job:', error);
-    return c.json({ error: 'Failed to create job' }, 500);
+    console.error("Error creating job:", error);
+    return c.json({ error: "Failed to create job" }, 500);
   }
 });
 
 // GET /api/jobs/:id
-app.get('/:id', async (c) => {
-  const id = Number(c.req.param('id'));
-  
+app.get("/:id", async (c) => {
+  const id = Number(c.req.param("id"));
+
   try {
     const job = await prisma.jobPosting.findUnique({
       where: { id },
       include: {
         organization: true,
         location: {
-            include: { prefecture: true }
+          include: { prefecture: true },
         },
         jobCategory: true,
-      }
+      },
     });
 
     if (!job) {
-      return c.json({ error: 'Job not found' }, 404);
+      return c.json({ error: "Job not found" }, 404);
     }
 
     let logoUrl = null;
@@ -238,17 +240,17 @@ app.get('/:id', async (c) => {
 
     return c.json(jobWithSignedUrl);
   } catch (error) {
-    return c.json({ error: 'Internal server error' }, 500);
+    return c.json({ error: "Internal server error" }, 500);
   }
 });
 
 // PUT /api/jobs/:id
-app.put('/:id', async (c) => {
+app.put("/:id", async (c) => {
   const user = c.get("user");
   if (!user) return c.json({ error: "Unauthorized" }, 401);
 
-  const id = Number(c.req.param('id'));
-  
+  const id = Number(c.req.param("id"));
+
   try {
     const staff = await prisma.staffProfile.findUnique({
       where: { userId: user.id },
@@ -266,17 +268,17 @@ app.put('/:id', async (c) => {
     }
 
     const body = await c.req.json();
-    const { 
-      title, 
-      description, 
-      employmentType, 
-      tags, 
-      jobCategoryId, 
-      locationId, 
-      prefectureId, 
-      city, 
-      salaryMin, 
-      salaryMax 
+    const {
+      title,
+      description,
+      employmentType,
+      tags,
+      jobCategoryId,
+      locationId,
+      prefectureId,
+      city,
+      salaryMin,
+      salaryMax,
     } = body;
 
     let targetLocationId = locationId;
@@ -322,12 +324,12 @@ app.put('/:id', async (c) => {
 });
 
 // DELETE /api/jobs/:id
-app.delete('/:id', async (c) => {
+app.delete("/:id", async (c) => {
   const user = c.get("user");
   if (!user) return c.json({ error: "Unauthorized" }, 401);
 
-  const id = Number(c.req.param('id'));
-  
+  const id = Number(c.req.param("id"));
+
   try {
     const staff = await prisma.staffProfile.findUnique({
       where: { userId: user.id },

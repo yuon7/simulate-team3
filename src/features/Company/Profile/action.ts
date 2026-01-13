@@ -31,7 +31,9 @@ export async function updateCompanyProfile(formData: FormData) {
   const websiteUrl = formData.get("websiteUrl") as string;
   const logoPath = formData.get("logoPath") as string | null;
   const description = formData.get("description") as string;
-  const employeeCount = formData.get("employeeCount") ? parseInt(formData.get("employeeCount") as string) : null;
+  const employeeCount = formData.get("employeeCount")
+    ? parseInt(formData.get("employeeCount") as string)
+    : null;
   const capital = formData.get("capital") as string;
 
   try {
@@ -50,12 +52,14 @@ export async function updateCompanyProfile(formData: FormData) {
           capital,
         },
       }),
-      ...(logoUrl ? [
-        prisma.user.update({
-          where: { id: user.id },
-          data: { avatarUrl: logoUrl }
-        })
-      ] : [])
+      ...(logoUrl
+        ? [
+            prisma.user.update({
+              where: { id: user.id },
+              data: { avatarUrl: logoUrl },
+            }),
+          ]
+        : []),
     ]);
   } catch (error) {
     console.error("Failed to update organization:", error);

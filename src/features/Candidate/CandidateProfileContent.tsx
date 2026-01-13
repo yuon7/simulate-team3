@@ -1,7 +1,27 @@
 "use client";
 
-import { Container, Title, Text, Stack, Card, Group, Avatar, Badge, Divider, Grid, Button } from "@mantine/core";
-import { IconUser, IconMail, IconPhone, IconMapPin, IconCertificate, IconTarget, IconMessage } from "@tabler/icons-react";
+import {
+  Container,
+  Title,
+  Text,
+  Stack,
+  Card,
+  Group,
+  Avatar,
+  Badge,
+  Divider,
+  Grid,
+  Button,
+} from "@mantine/core";
+import {
+  IconUser,
+  IconMail,
+  IconPhone,
+  IconMapPin,
+  IconCertificate,
+  IconTarget,
+  IconMessage,
+} from "@tabler/icons-react";
 import { ChatModal } from "@/features/Messaging/ChatModal";
 import { useDisclosure } from "@mantine/hooks";
 import { useState } from "react";
@@ -13,29 +33,37 @@ type CandidateProfileContentProps = {
   currentUserId: string | null;
 };
 
-export function CandidateProfileContent({ candidate, avatarUrl, applicationId, currentUserId }: CandidateProfileContentProps) {
-  const [chatOpened, { open: openChat, close: closeChat }] = useDisclosure(false);
+export function CandidateProfileContent({
+  candidate,
+  avatarUrl,
+  applicationId,
+  currentUserId,
+}: CandidateProfileContentProps) {
+  const [chatOpened, { open: openChat, close: closeChat }] =
+    useDisclosure(false);
 
   return (
     <Container size="lg" py="xl">
       <Stack gap="xl">
         <Card shadow="sm" padding="xl" radius="md" withBorder>
           <Group align="flex-start" gap="xl">
-            <Avatar 
-              src={avatarUrl} 
-              size={120} 
-              radius="xl" 
+            <Avatar
+              src={avatarUrl}
+              size={120}
+              radius="xl"
               name={candidate.user.name}
             />
             <Stack gap="xs" style={{ flex: 1 }}>
               <Group justify="space-between">
                 <div>
                   <Title order={1}>{candidate.user.name}</Title>
-                  <Text c="dimmed" size="lg">{candidate.gender} / {candidate.age}歳</Text>
+                  <Text c="dimmed" size="lg">
+                    {candidate.gender} / {candidate.age}歳
+                  </Text>
                 </div>
                 {applicationId && (
-                  <Button 
-                    leftSection={<IconMessage size={18} />} 
+                  <Button
+                    leftSection={<IconMessage size={18} />}
                     variant="light"
                     onClick={openChat}
                   >
@@ -64,7 +92,9 @@ export function CandidateProfileContent({ candidate, avatarUrl, applicationId, c
           <Grid.Col span={{ base: 12, md: 8 }}>
             <Stack gap="xl">
               <section>
-                <Title order={3} mb="md">自己PR / 経歴</Title>
+                <Title order={3} mb="md">
+                  自己PR / 経歴
+                </Title>
                 <Card shadow="xs" padding="lg" radius="md" withBorder>
                   <Text style={{ whiteSpace: "pre-wrap" }}>
                     {candidate.bio || "自己紹介は未登録です。"}
@@ -73,11 +103,18 @@ export function CandidateProfileContent({ candidate, avatarUrl, applicationId, c
               </section>
 
               <section>
-                <Title order={3} mb="md">保有スキル</Title>
+                <Title order={3} mb="md">
+                  保有スキル
+                </Title>
                 <Card shadow="xs" padding="lg" radius="md" withBorder>
                   <Group gap="xs">
                     {candidate.userSkills.map((us: any) => (
-                      <Badge key={us.skillId} size="lg" variant="light" leftSection={<IconCertificate size={14} />}>
+                      <Badge
+                        key={us.skillId}
+                        size="lg"
+                        variant="light"
+                        leftSection={<IconCertificate size={14} />}
+                      >
                         {us.skill.name} ({us.proficiency})
                       </Badge>
                     ))}
@@ -91,15 +128,21 @@ export function CandidateProfileContent({ candidate, avatarUrl, applicationId, c
           </Grid.Col>
 
           <Grid.Col span={{ base: 12, md: 4 }}>
-            <Title order={3} mb="md">希望条件</Title>
+            <Title order={3} mb="md">
+              希望条件
+            </Title>
             <Card shadow="xs" padding="lg" radius="md" withBorder>
               <Stack gap="md">
                 <div>
                   <Group gap="xs" mb={4}>
                     <IconTarget size={18} color="var(--mantine-color-blue-6)" />
-                    <Text size="xs" c="dimmed" fw={700}>希望職種</Text>
+                    <Text size="xs" c="dimmed" fw={700}>
+                      希望職種
+                    </Text>
                   </Group>
-                  <Text size="sm" fw={500}>{candidate.desiredJob?.name || "未設定"}</Text>
+                  <Text size="sm" fw={500}>
+                    {candidate.desiredJob?.name || "未設定"}
+                  </Text>
                 </div>
 
                 <Divider />
@@ -107,7 +150,9 @@ export function CandidateProfileContent({ candidate, avatarUrl, applicationId, c
                 <div>
                   <Group gap="xs" mb={4}>
                     <IconMapPin size={18} color="var(--mantine-color-blue-6)" />
-                    <Text size="xs" c="dimmed" fw={700}>希望勤務地</Text>
+                    <Text size="xs" c="dimmed" fw={700}>
+                      希望勤務地
+                    </Text>
                   </Group>
                   <Stack gap={4}>
                     {candidate.desiredLocations.map((dl: any) => (
@@ -116,7 +161,9 @@ export function CandidateProfileContent({ candidate, avatarUrl, applicationId, c
                       </Text>
                     ))}
                     {candidate.desiredLocations.length === 0 && (
-                      <Text size="sm" c="dimmed">未設定</Text>
+                      <Text size="sm" c="dimmed">
+                        未設定
+                      </Text>
                     )}
                   </Stack>
                 </div>
@@ -124,9 +171,13 @@ export function CandidateProfileContent({ candidate, avatarUrl, applicationId, c
                 <Divider />
 
                 <div>
-                  <Text size="xs" c="dimmed" fw={700} mb={4}>希望年収</Text>
+                  <Text size="xs" c="dimmed" fw={700} mb={4}>
+                    希望年収
+                  </Text>
                   <Text size="sm" fw={500}>
-                    {candidate.desiredSalary ? `${candidate.desiredSalary}万円程度` : "未設定"}
+                    {candidate.desiredSalary
+                      ? `${candidate.desiredSalary}万円程度`
+                      : "未設定"}
                   </Text>
                 </div>
               </Stack>
@@ -136,7 +187,7 @@ export function CandidateProfileContent({ candidate, avatarUrl, applicationId, c
       </Stack>
 
       {applicationId && (
-        <ChatModal 
+        <ChatModal
           applicationId={applicationId}
           opened={chatOpened}
           onClose={closeChat}

@@ -13,7 +13,10 @@ const app = new Hono<{ Variables: Variables }>();
 // Middleware to get authenticated user
 app.use("*", async (c, next) => {
   const supabase = await createClient();
-  const { data: { user }, error } = await supabase.auth.getUser();
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
 
   if (error || !user) {
     return c.json({ error: "Unauthorized" }, 401);
@@ -32,7 +35,13 @@ app.get("/", async (c) => {
     // First get the user to check their role
     const dbUser = await prisma.user.findUnique({
       where: { id: userId },
-      select: { role: true, name: true, email: true, phone: true, avatarUrl: true },
+      select: {
+        role: true,
+        name: true,
+        email: true,
+        phone: true,
+        avatarUrl: true,
+      },
     });
 
     if (!dbUser) {
@@ -42,7 +51,7 @@ app.get("/", async (c) => {
     // Check role and return appropriate profile
     if (dbUser.role === "CANDIDATE") {
       const profile = await prisma.candidateProfile.findUnique({
-        where: { userId: userId },
+        where: { userId },
         include: {
           userSkills: {
             include: { skill: true },
@@ -67,7 +76,7 @@ app.get("/", async (c) => {
         email: dbUser.email,
         phone: dbUser.phone || "",
         avatarUrl: signedAvatarUrl || null,
-        hasProfile: !!profile,
+        hasProfile: Boolean(profile),
         location: "未設定",
         jobTitle: "未設定",
         bio: "",
@@ -78,13 +87,15 @@ app.get("/", async (c) => {
         formattedProfile.location = "東京都"; // TODO: Add desiredLocations
         formattedProfile.jobTitle = profile.desiredJob?.name || "未設定";
         formattedProfile.bio = profile.bio || "";
-        formattedProfile.skills = profile.userSkills.map((us: any) => us.skill.name);
+        formattedProfile.skills = profile.userSkills.map(
+          (us: any) => us.skill.name,
+        );
       }
 
       return c.json(formattedProfile);
     } else if (dbUser.role === "STAFF") {
       const profile = await prisma.staffProfile.findUnique({
-        where: { userId: userId },
+        where: { userId },
         include: {
           organization: {
             include: {
@@ -98,7 +109,8 @@ app.get("/", async (c) => {
         },
       });
 
-      const effectiveAvatarUrl = dbUser.avatarUrl || profile?.organization.logoUrl;
+      const effectiveAvatarUrl =
+        dbUser.avatarUrl || profile?.organization.logoUrl;
       let signedAvatarUrl = null;
       if (effectiveAvatarUrl) {
         const supabase = await createClient();
@@ -115,7 +127,7 @@ app.get("/", async (c) => {
         email: dbUser.email,
         phone: dbUser.phone || "",
         avatarUrl: signedAvatarUrl || null,
-        hasProfile: !!profile,
+        hasProfile: Boolean(profile),
         organizationName: "未設定",
         organizationType: "未設定",
         department: "",
@@ -125,7 +137,8 @@ app.get("/", async (c) => {
 
       if (profile) {
         formattedProfile.organizationName = profile.organization.name;
-        formattedProfile.organizationType = profile.organization.organizationType;
+        formattedProfile.organizationType =
+          profile.organization.organizationType;
         formattedProfile.department = profile.department || "";
         formattedProfile.title = profile.title || "";
         formattedProfile.location = `${profile.organization.location.prefecture.name} ${profile.organization.location.city}`;
@@ -148,7 +161,7 @@ app.put("/", async (c) => {
 
   try {
     const body = await c.req.json();
-    
+
     // Validate body (Generic manual validation for now)
     // Expect: { name, phone, bio, skills: string[], avatarUrlObjectPath?: string }
 
@@ -168,9 +181,9 @@ app.put("/", async (c) => {
       }
 
       // 2. Update CandidateProfile
-      if (typeof body.bio === 'string') {
+      if (typeof body.bio === "string") {
         await tx.candidateProfile.update({
-          where: { userId: userId },
+          where: { userId },
           data: { bio: body.bio },
         });
       }
@@ -179,7 +192,7 @@ app.put("/", async (c) => {
       if (Array.isArray(body.skills)) {
         // First disconnect all existing
         await tx.userSkill.deleteMany({
-          where: { userId: userId },
+          where: { userId },
         });
 
         for (const skillName of body.skills) {
@@ -193,7 +206,7 @@ app.put("/", async (c) => {
           // Connect UserSkill
           await tx.userSkill.create({
             data: {
-              userId: userId,
+              userId,
               skillId: skill.id,
               proficiency: "INTERMEDIATE", // Default
             },

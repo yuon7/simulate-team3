@@ -1,7 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Avatar, FileButton, ActionIcon, Stack, Text, Group, Box, Tooltip } from "@mantine/core";
+import {
+  Avatar,
+  FileButton,
+  ActionIcon,
+  Stack,
+  Text,
+  Group,
+  Box,
+  Tooltip,
+} from "@mantine/core";
 import { IconCamera, IconX } from "@tabler/icons-react";
 
 interface ImageUploadProps {
@@ -12,8 +21,16 @@ interface ImageUploadProps {
   error?: string;
 }
 
-export function ImageUpload({ initialImageUrl, onFileChange, label, size = 120, error }: ImageUploadProps) {
-  const [preview, setPreview] = useState<string | null>(initialImageUrl || null);
+export function ImageUpload({
+  initialImageUrl,
+  onFileChange,
+  label,
+  size = 120,
+  error,
+}: ImageUploadProps) {
+  const [preview, setPreview] = useState<string | null>(
+    initialImageUrl || null,
+  );
   const [file, setFile] = useState<File | null>(null);
 
   useEffect(() => {
@@ -41,17 +58,29 @@ export function ImageUpload({ initialImageUrl, onFileChange, label, size = 120, 
 
   return (
     <Stack align="center" gap="xs">
-      {label && <Text size="sm" fw={500}>{label}</Text>}
-      
+      {label && (
+        <Text size="sm" fw={500}>
+          {label}
+        </Text>
+      )}
+
       <Box pos="relative">
-        <FileButton onChange={handleFileChange} accept="image/png,image/jpeg,image/webp">
+        <FileButton
+          onChange={handleFileChange}
+          accept="image/png,image/jpeg,image/webp"
+        >
           {(props) => (
             <Avatar
               {...props}
               src={preview}
               size={size}
               radius={size}
-              style={{ cursor: "pointer", border: error ? "2px solid var(--mantine-color-red-6)" : "1px solid var(--mantine-color-gray-3)" }}
+              style={{
+                cursor: "pointer",
+                border: error
+                  ? "2px solid var(--mantine-color-red-6)"
+                  : "1px solid var(--mantine-color-gray-3)",
+              }}
             >
               <IconCamera size={size / 3} stroke={1.5} />
             </Avatar>
@@ -76,7 +105,11 @@ export function ImageUpload({ initialImageUrl, onFileChange, label, size = 120, 
         )}
       </Box>
 
-      {error && <Text c="red" size="xs">{error}</Text>}
+      {error && (
+        <Text c="red" size="xs">
+          {error}
+        </Text>
+      )}
     </Stack>
   );
 }

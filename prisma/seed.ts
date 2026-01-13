@@ -32,7 +32,7 @@ const PREFECTURES = [
 
 async function main() {
   console.log("Start seeding ...");
-  
+
   for (const pref of PREFECTURES) {
     await prisma.prefecture.upsert({
       where: { id: pref.id },
@@ -43,7 +43,16 @@ async function main() {
 
   // Categories
   const categories = [
-    "エンジニア", "デザイナー", "マーケティング", "営業", "事務・管理", "企画・経営", "接客・販売", "医療・福祉", "教育", "建設・土木"
+    "エンジニア",
+    "デザイナー",
+    "マーケティング",
+    "営業",
+    "事務・管理",
+    "企画・経営",
+    "接客・販売",
+    "医療・福祉",
+    "教育",
+    "建設・土木",
   ];
   const catModels = [];
   for (const catName of categories) {
@@ -57,32 +66,100 @@ async function main() {
 
   // Organizations & Jobs
   const orgs = [
-    { name: "テック長野株式会社", pref: "長野県", city: "松本市", type: "COMPANY", jobs: [
-      { title: "シニアフルスタックエンジニア", cat: "エンジニア", salaryMin: 6000000, salaryMax: 9000000, tags: ["リモートワーク可", "TypeScript", "自社サービス", "週休2日"] },
-      { title: "UI/UXデザイナー", cat: "デザイナー", salaryMin: 4000000, salaryMax: 7000000, tags: ["Figma", "移住支援あり", "フレックス", "残業少なめ"] }
-    ]},
-    { name: "島根アグリ・イノベーション", pref: "島根県", city: "出雲市", type: "COMPANY", jobs: [
-      { title: "スマート農業の企画・運用", cat: "企画・経営", salaryMin: 3500000, salaryMax: 5000000, tags: ["未経験歓迎", "農業IT", "地域貢献", "学歴不問", "転勤なし"] }
-    ]},
-    { name: "福岡ライフケアサポート", pref: "福岡県", city: "福岡市", type: "COMPANY", jobs: [
-      { title: "介護福祉士（ユニット型）", cat: "医療・福祉", salaryMin: 3000000, salaryMax: 4500000, tags: ["資格手当あり", "福岡移住", "寮完備", "賞与あり", "週休2日"] }
-    ]},
-    { name: "京都伝統工芸デジタル販売", pref: "京都府", city: "京都市", type: "COMPANY", jobs: [
-      { title: "海外向けECマーケーター", cat: "マーケティング", salaryMin: 4500000, salaryMax: 8000000, tags: ["英語活かせる", "伝統工芸", "フレックス", "服装自由"] }
-    ]},
-    { name: "北海道アウトドア観光局", pref: "北海道", city: "富良野市", type: "COMPANY", jobs: [
-      { title: "アウトドアガイド・ツアー企画", cat: "企画・経営", salaryMin: 2800000, salaryMax: 4000000, tags: ["自然が好き", "英語", "寮完備", "未経験歓迎", "賞与あり"] }
-    ]}
+    {
+      name: "テック長野株式会社",
+      pref: "長野県",
+      city: "松本市",
+      type: "COMPANY",
+      jobs: [
+        {
+          title: "シニアフルスタックエンジニア",
+          cat: "エンジニア",
+          salaryMin: 6000000,
+          salaryMax: 9000000,
+          tags: ["リモートワーク可", "TypeScript", "自社サービス", "週休2日"],
+        },
+        {
+          title: "UI/UXデザイナー",
+          cat: "デザイナー",
+          salaryMin: 4000000,
+          salaryMax: 7000000,
+          tags: ["Figma", "移住支援あり", "フレックス", "残業少なめ"],
+        },
+      ],
+    },
+    {
+      name: "島根アグリ・イノベーション",
+      pref: "島根県",
+      city: "出雲市",
+      type: "COMPANY",
+      jobs: [
+        {
+          title: "スマート農業の企画・運用",
+          cat: "企画・経営",
+          salaryMin: 3500000,
+          salaryMax: 5000000,
+          tags: ["未経験歓迎", "農業IT", "地域貢献", "学歴不問", "転勤なし"],
+        },
+      ],
+    },
+    {
+      name: "福岡ライフケアサポート",
+      pref: "福岡県",
+      city: "福岡市",
+      type: "COMPANY",
+      jobs: [
+        {
+          title: "介護福祉士（ユニット型）",
+          cat: "医療・福祉",
+          salaryMin: 3000000,
+          salaryMax: 4500000,
+          tags: ["資格手当あり", "福岡移住", "寮完備", "賞与あり", "週休2日"],
+        },
+      ],
+    },
+    {
+      name: "京都伝統工芸デジタル販売",
+      pref: "京都府",
+      city: "京都市",
+      type: "COMPANY",
+      jobs: [
+        {
+          title: "海外向けECマーケーター",
+          cat: "マーケティング",
+          salaryMin: 4500000,
+          salaryMax: 8000000,
+          tags: ["英語活かせる", "伝統工芸", "フレックス", "服装自由"],
+        },
+      ],
+    },
+    {
+      name: "北海道アウトドア観光局",
+      pref: "北海道",
+      city: "富良野市",
+      type: "COMPANY",
+      jobs: [
+        {
+          title: "アウトドアガイド・ツアー企画",
+          cat: "企画・経営",
+          salaryMin: 2800000,
+          salaryMax: 4000000,
+          tags: ["自然が好き", "英語", "寮完備", "未経験歓迎", "賞与あり"],
+        },
+      ],
+    },
   ];
 
-  // Clear existing jobs to avoid duplication with IDs if needed, 
+  // Clear existing jobs to avoid duplication with IDs if needed,
   // but better to just skip if they already exist or upsert if we had unique keys.
   // For seeding, let's just create them if they don't exist by title?
   // Actually, let's clear JobPosting for a clean seed of jobs.
   await prisma.jobPosting.deleteMany({});
 
   for (const orgData of orgs) {
-    const pref = await prisma.prefecture.findFirst({ where: { name: orgData.pref } });
+    const pref = await prisma.prefecture.findFirst({
+      where: { name: orgData.pref },
+    });
     if (!pref) continue;
 
     const location = await prisma.location.upsert({
@@ -113,7 +190,7 @@ async function main() {
     });
 
     // Create a staff user for each org for testing
-    const email = `${orgData.name.replace(/\s+/g, '').toLowerCase()}@example.com`;
+    const email = `${orgData.name.replace(/\s+/g, "").toLowerCase()}@example.com`;
     const user = await prisma.user.upsert({
       where: { email },
       update: {},
@@ -136,11 +213,11 @@ async function main() {
     });
 
     for (const jobData of orgData.jobs) {
-      const cat = catModels.find(c => c.name === jobData.cat);
+      const cat = catModels.find((c) => c.name === jobData.cat);
       await prisma.jobPosting.create({
         data: {
           title: jobData.title,
-          description: jobData.title + "の募集です。詳細についてはお問い合わせください。地域の魅力を活かした働き方を提案しています。",
+          description: `${jobData.title}の募集です。詳細についてはお問い合わせください。地域の魅力を活かした働き方を提案しています。`,
           organizationId: org.id,
           employmentType: "正社員",
           jobCategoryId: cat?.id || catModels[0].id,
@@ -148,7 +225,7 @@ async function main() {
           salaryMin: jobData.salaryMin,
           salaryMax: jobData.salaryMax,
           tags: jobData.tags,
-        }
+        },
       });
     }
   }

@@ -12,7 +12,10 @@ const app = new Hono<{ Variables: Variables }>();
 // Middleware to get authenticated user
 app.use("*", async (c, next) => {
   const supabase = await createClient();
-  const { data: { user }, error } = await supabase.auth.getUser();
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
 
   if (error || !user) {
     return c.json({ error: "Unauthorized" }, 401);
@@ -36,7 +39,7 @@ app.get("/", async (c) => {
       where: { id: applicationId },
       include: {
         jobPosting: true,
-      }
+      },
     });
 
     if (!application) {
@@ -49,7 +52,9 @@ app.get("/", async (c) => {
     });
 
     const isApplicant = application.candidateId === user.id;
-    const isOurStaff = staff && staff.organizationId === (application as any).jobPosting.organizationId;
+    const isOurStaff =
+      staff &&
+      staff.organizationId === (application as any).jobPosting.organizationId;
 
     if (!isApplicant && !isOurStaff) {
       return c.json({ error: "Forbidden" }, 403);
@@ -81,7 +86,7 @@ app.post("/", async (c) => {
       where: { id: Number(applicationId) },
       include: {
         jobPosting: true,
-      }
+      },
     });
 
     if (!application) {
@@ -94,7 +99,9 @@ app.post("/", async (c) => {
     });
 
     const isApplicant = application.candidateId === user.id;
-    const isOurStaff = staff && staff.organizationId === (application as any).jobPosting.organizationId;
+    const isOurStaff =
+      staff &&
+      staff.organizationId === (application as any).jobPosting.organizationId;
 
     if (!isApplicant && !isOurStaff) {
       return c.json({ error: "Forbidden" }, 403);
@@ -139,7 +146,9 @@ app.patch("/read", async (c) => {
     });
 
     const isApplicant = application.candidateId === user.id;
-    const isOurStaff = staff && staff.organizationId === (application as any).jobPosting?.organizationId;
+    const isOurStaff =
+      staff &&
+      staff.organizationId === (application as any).jobPosting?.organizationId;
 
     // Note: Since we only know organizationId after include, let's just use the application check
     // or fetch it properly if needed. For now, simple check.
@@ -161,6 +170,6 @@ app.patch("/read", async (c) => {
     console.error(error);
     return c.json({ error: "Internal server error" }, 500);
   }
-})
+});
 
 export default app;

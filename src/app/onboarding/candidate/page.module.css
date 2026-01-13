@@ -11,7 +11,7 @@
   background: white;
   padding: 40px;
   border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 6px rgb(0 0 0 / 5%);
   width: 100%;
   max-width: 600px;
 }
@@ -72,15 +72,15 @@
   box-sizing: border-box;
 }
 
+.textarea {
+  resize: vertical;
+}
+
 .input:focus,
 .select:focus,
 .textarea:focus {
   outline: none;
   border-color: #228be6;
-}
-
-.textarea {
-  resize: vertical;
 }
 
 .submitButton {

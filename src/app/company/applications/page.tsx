@@ -1,6 +1,17 @@
 "use client";
 
-import { Container, Title, Text, Card, Table, Badge, Group, Button, Divider, Indicator } from "@mantine/core";
+import {
+  Container,
+  Title,
+  Text,
+  Card,
+  Table,
+  Badge,
+  Group,
+  Button,
+  Divider,
+  Indicator,
+} from "@mantine/core";
 import Link from "next/link";
 import { IconExternalLink, IconMessage } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
@@ -10,10 +21,15 @@ import { fetcher } from "@/lib/fetcher";
 import { ChatModal } from "@/features/Messaging/ChatModal";
 
 export default function CompanyApplicationsPage() {
-  const { data: applications, error, isLoading } = useSWR("/api/applications", fetcher);
+  const {
+    data: applications,
+    error,
+    isLoading,
+  } = useSWR("/api/applications", fetcher);
   const { data: profile } = useSWR("/api/profile", fetcher);
-  
-  const [chatOpened, { open: openChat, close: closeChat }] = useDisclosure(false);
+
+  const [chatOpened, { open: openChat, close: closeChat }] =
+    useDisclosure(false);
   const [selectedApp, setSelectedApp] = useState<any>(null);
 
   const handleOpenChat = (app: any) => {
@@ -23,7 +39,9 @@ export default function CompanyApplicationsPage() {
 
   return (
     <Container size="xl" py="xl">
-      <Title order={1} mb="xl">応募状況確認</Title>
+      <Title order={1} mb="xl">
+        応募状況確認
+      </Title>
 
       {isLoading ? (
         <Text>読み込み中...</Text>
@@ -45,12 +63,12 @@ export default function CompanyApplicationsPage() {
               {applications?.map((app: any) => (
                 <Table.Tr key={app.id}>
                   <Table.Td>
-                    <Text 
-                      fw={500} 
-                      component={Link} 
+                    <Text
+                      fw={500}
+                      component={Link}
                       href={`/candidates/${app.candidateId}`}
                       c="blue"
-                      style={{ textDecoration: 'none' }}
+                      style={{ textDecoration: "none" }}
                     >
                       {app.candidate?.user?.name || "名前なし"}
                     </Text>
@@ -70,24 +88,24 @@ export default function CompanyApplicationsPage() {
                   </Table.Td>
                   <Table.Td>
                     <Group gap="xs">
-                      <Button 
-                        variant="subtle" 
-                        size="xs" 
+                      <Button
+                        variant="subtle"
+                        size="xs"
                         leftSection={<IconExternalLink size={14} />}
                         component={Link}
                         href={`/candidates/${app.candidateId}`}
                       >
                         プロフィール
                       </Button>
-                      <Indicator 
-                        disabled={!app.unreadCount || app.unreadCount === 0} 
-                        color="red" 
-                        size={10} 
+                      <Indicator
+                        disabled={!app.unreadCount || app.unreadCount === 0}
+                        color="red"
+                        size={10}
                         offset={2}
                       >
-                        <Button 
-                          variant="light" 
-                          size="xs" 
+                        <Button
+                          variant="light"
+                          size="xs"
                           leftSection={<IconMessage size={14} />}
                           onClick={() => handleOpenChat(app)}
                         >
@@ -101,7 +119,9 @@ export default function CompanyApplicationsPage() {
               {(!applications || applications.length === 0) && (
                 <Table.Tr>
                   <Table.Td colSpan={5}>
-                    <Text ta="center" py="xl" c="dimmed">現在、応募はありません。</Text>
+                    <Text ta="center" py="xl" c="dimmed">
+                      現在、応募はありません。
+                    </Text>
                   </Table.Td>
                 </Table.Tr>
               )}
@@ -110,7 +130,7 @@ export default function CompanyApplicationsPage() {
         </Card>
       )}
 
-      <ChatModal 
+      <ChatModal
         applicationId={selectedApp?.id}
         opened={chatOpened}
         onClose={closeChat}

@@ -1,7 +1,27 @@
 "use client";
 
-import { Container, Title, Stack, Group, TextInput, Select, Grid, Card, Text, Badge, Button, Loader, Center, Pagination } from "@mantine/core";
-import { IconSearch, IconMapPin, IconBriefcase, IconCurrencyDollar } from "@tabler/icons-react";
+import {
+  Container,
+  Title,
+  Stack,
+  Group,
+  TextInput,
+  Select,
+  Grid,
+  Card,
+  Text,
+  Badge,
+  Button,
+  Loader,
+  Center,
+  Pagination,
+} from "@mantine/core";
+import {
+  IconSearch,
+  IconMapPin,
+  IconBriefcase,
+  IconCurrencyDollar,
+} from "@tabler/icons-react";
 import { useState, useEffect } from "react";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetcher";
@@ -31,19 +51,39 @@ export default function JobSearchPage() {
     return params.toString();
   };
 
-  const { data: jobsData, isLoading } = useSWR(`/api/jobs?${buildQuery()}`, fetcher);
+  const { data: jobsData, isLoading } = useSWR(
+    `/api/jobs?${buildQuery()}`,
+    fetcher,
+  );
 
-  const prefectureData = prefectures?.map((p: any) => ({ value: p.id.toString(), label: p.name })) || [];
-  const categoryData = categories?.map((c: any) => ({ value: c.id.toString(), label: c.name })) || [];
-  
-  const commonTags = ["リモートワーク可", "フレックス", "未経験歓迎", "賞与あり", "移住支援あり", "寮完備", "週休2日", "転勤なし"];
+  const prefectureData =
+    prefectures?.map((p: any) => ({ value: p.id.toString(), label: p.name })) ||
+    [];
+  const categoryData =
+    categories?.map((c: any) => ({ value: c.id.toString(), label: c.name })) ||
+    [];
+
+  const commonTags = [
+    "リモートワーク可",
+    "フレックス",
+    "未経験歓迎",
+    "賞与あり",
+    "移住支援あり",
+    "寮完備",
+    "週休2日",
+    "転勤なし",
+  ];
 
   return (
     <Container size="xl" py="xl">
       <Stack gap="xl">
         <div>
-          <Title order={1} mb="xs">求人を探す</Title>
-          <Text c="dimmed">地域や職種、タグからあなたにぴったりの仕事を見つけましょう。</Text>
+          <Title order={1} mb="xs">
+            求人を探す
+          </Title>
+          <Text c="dimmed">
+            地域や職種、タグからあなたにぴったりの仕事を見つけましょう。
+          </Text>
         </div>
 
         <Card withBorder radius="md" p="md" shadow="sm">
@@ -92,29 +132,37 @@ export default function JobSearchPage() {
                 />
               </Grid.Col>
               <Grid.Col span={{ base: 12, md: 1 }}>
-                 <Button fullWidth variant="light" onClick={() => {
-                   setQuery("");
-                   setPrefectureId(null);
-                   setCategoryId(null);
-                   setSelectedTags([]);
-                   setPage(1);
-                 }}>
-                   リセット
-                 </Button>
+                <Button
+                  fullWidth
+                  variant="light"
+                  onClick={() => {
+                    setQuery("");
+                    setPrefectureId(null);
+                    setCategoryId(null);
+                    setSelectedTags([]);
+                    setPage(1);
+                  }}
+                >
+                  リセット
+                </Button>
               </Grid.Col>
             </Grid>
-            
+
             <Group gap="xs">
-              <Text size="sm" fw={500}>タグで絞り込む:</Text>
+              <Text size="sm" fw={500}>
+                タグで絞り込む:
+              </Text>
               <Group gap={8}>
-                {commonTags.map(tag => (
-                  <Badge 
-                    key={tag} 
+                {commonTags.map((tag) => (
+                  <Badge
+                    key={tag}
                     variant={selectedTags.includes(tag) ? "filled" : "outline"}
                     style={{ cursor: "pointer" }}
                     onClick={() => {
-                      setSelectedTags(prev => 
-                        prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
+                      setSelectedTags((prev) =>
+                        prev.includes(tag)
+                          ? prev.filter((t) => t !== tag)
+                          : [...prev, tag],
                       );
                       setPage(1);
                     }}
@@ -133,65 +181,95 @@ export default function JobSearchPage() {
           </Center>
         ) : (
           <Stack gap="xl">
-            <Text fw={500}>{jobsData?.meta?.total || 0} 件の求人が見つかりました</Text>
-            
+            <Text fw={500}>
+              {jobsData?.meta?.total || 0} 件の求人が見つかりました
+            </Text>
+
             <Grid>
-               {jobsData?.data?.map((job: any) => (
-                 <Grid.Col key={job.id} span={{ base: 12, sm: 6, lg: 4 }}>
-                   <Card withBorder radius="md" p="md" h="100%" component={Link} href={`/jobs/${job.id}`} style={{ textDecoration: 'none' }}>
-                     <Stack justify="space-between" h="100%">
-                       <div>
-                         <Group justify="space-between" mb="xs" wrap="nowrap">
-                           <Text fw={700} size="lg" truncate="end" style={{ flex: 1 }}>{job.title}</Text>
-                           <Badge variant="light">{job.employmentType}</Badge>
-                         </Group>
-                         
-                         <Group gap="xs" mb="xs">
-                           <Text size="sm" c="blue" fw={500}>{job.organization.name}</Text>
-                         </Group>
+              {jobsData?.data?.map((job: any) => (
+                <Grid.Col key={job.id} span={{ base: 12, sm: 6, lg: 4 }}>
+                  <Card
+                    withBorder
+                    radius="md"
+                    p="md"
+                    h="100%"
+                    component={Link}
+                    href={`/jobs/${job.id}`}
+                    style={{ textDecoration: "none" }}
+                  >
+                    <Stack justify="space-between" h="100%">
+                      <div>
+                        <Group justify="space-between" mb="xs" wrap="nowrap">
+                          <Text
+                            fw={700}
+                            size="lg"
+                            truncate="end"
+                            style={{ flex: 1 }}
+                          >
+                            {job.title}
+                          </Text>
+                          <Badge variant="light">{job.employmentType}</Badge>
+                        </Group>
 
-                         <Group gap="xs" mb="xs">
-                           <IconMapPin size={14} color="gray" />
-                           <Text size="xs" c="dimmed">
-                             {job.location.prefecture.name} {job.location.city}
-                           </Text>
-                         </Group>
+                        <Group gap="xs" mb="xs">
+                          <Text size="sm" c="blue" fw={500}>
+                            {job.organization.name}
+                          </Text>
+                        </Group>
 
-                         <Group gap="xs" mb="md">
-                           <IconCurrencyDollar size={14} color="gray" />
-                           <Text size="xs" c="dimmed">
-                             {job.salaryMin ? `${(job.salaryMin / 10000).toLocaleString()}万円` : '下限なし'} 
-                             〜 
-                             {job.salaryMax ? `${(job.salaryMax / 10000).toLocaleString()}万円` : '上限なし'}
-                           </Text>
-                         </Group>
+                        <Group gap="xs" mb="xs">
+                          <IconMapPin size={14} color="gray" />
+                          <Text size="xs" c="dimmed">
+                            {job.location.prefecture.name} {job.location.city}
+                          </Text>
+                        </Group>
 
-                         <Text size="sm" lineClamp={3} c="gray.7">
-                           {job.description}
-                         </Text>
-                       </div>
+                        <Group gap="xs" mb="md">
+                          <IconCurrencyDollar size={14} color="gray" />
+                          <Text size="xs" c="dimmed">
+                            {job.salaryMin
+                              ? `${(job.salaryMin / 10000).toLocaleString()}万円`
+                              : "下限なし"}
+                            〜
+                            {job.salaryMax
+                              ? `${(job.salaryMax / 10000).toLocaleString()}万円`
+                              : "上限なし"}
+                          </Text>
+                        </Group>
 
-                       <Group gap={4} mt="md">
-                         {job.tags?.slice(0, 3).map((tag: string) => (
-                           <Badge key={tag} variant="outline" size="xs" color="gray">{tag}</Badge>
-                         ))}
-                       </Group>
-                     </Stack>
-                   </Card>
-                 </Grid.Col>
-               ))}
+                        <Text size="sm" lineClamp={3} c="gray.7">
+                          {job.description}
+                        </Text>
+                      </div>
+
+                      <Group gap={4} mt="md">
+                        {job.tags?.slice(0, 3).map((tag: string) => (
+                          <Badge
+                            key={tag}
+                            variant="outline"
+                            size="xs"
+                            color="gray"
+                          >
+                            {tag}
+                          </Badge>
+                        ))}
+                      </Group>
+                    </Stack>
+                  </Card>
+                </Grid.Col>
+              ))}
             </Grid>
 
             {jobsData?.meta?.totalPages > 1 && (
               <Center mt="xl">
-                <Pagination 
-                  total={jobsData.meta.totalPages} 
-                  value={page} 
-                  onChange={setPage} 
+                <Pagination
+                  total={jobsData.meta.totalPages}
+                  value={page}
+                  onChange={setPage}
                 />
               </Center>
             )}
-            
+
             {jobsData?.data?.length === 0 && (
               <Center h={200}>
                 <Text c="dimmed">条件に一致する求人はありませんでした。</Text>

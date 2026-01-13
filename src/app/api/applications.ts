@@ -14,7 +14,10 @@ const app = new Hono<{ Variables: Variables }>();
 // Middleware to get authenticated user
 app.use("*", async (c, next) => {
   const supabase = await createClient();
-  const { data: { user }, error } = await supabase.auth.getUser();
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
 
   if (error || !user) {
     return c.json({ error: "Unauthorized" }, 401);
@@ -27,7 +30,7 @@ app.use("*", async (c, next) => {
 // GET /api/applications
 app.get("/", async (c) => {
   const user = c.get("user") as any;
-  
+
   try {
     // Check if user is STAFF and get their organization
     const staff = await prisma.staffProfile.findUnique({
@@ -36,8 +39,8 @@ app.get("/", async (c) => {
     });
 
     if (!staff) {
-      // If not staff, maybe they are candidate? 
-      // Let's assume this endpoint is for staff for now, 
+      // If not staff, maybe they are candidate?
+      // Let's assume this endpoint is for staff for now,
       // or return candidate's own applications if candidate.
       const applications = await (prisma as any).application.findMany({
         where: { candidateId: user.id },
@@ -49,11 +52,11 @@ app.get("/", async (c) => {
             where: {
               senderId: { not: user.id },
               readAt: null,
-            }
-          }
+            },
+          },
         },
       });
-      
+
       const formattedApplications = applications.map((app: any) => ({
         ...app,
         unreadCount: app.messages.length,
@@ -79,8 +82,8 @@ app.get("/", async (c) => {
           where: {
             senderId: { not: user.id },
             readAt: null,
-          }
-        }
+          },
+        },
       },
       orderBy: { createdAt: "desc" },
     });

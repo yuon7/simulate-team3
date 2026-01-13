@@ -1,14 +1,36 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Container, Card, Text, Avatar, Group, Stack, Badge, Divider, Button, Title } from '@mantine/core';
-import { IconMail, IconPhone, IconMapPin, IconEdit, IconBuilding } from '@tabler/icons-react';
-import useSWR from 'swr';
-import { fetcher } from '@/lib/fetcher';
-import { useRouter } from 'next/navigation';
+import {
+  Container,
+  Card,
+  Text,
+  Avatar,
+  Group,
+  Stack,
+  Badge,
+  Divider,
+  Button,
+  Title,
+} from "@mantine/core";
+import {
+  IconMail,
+  IconPhone,
+  IconMapPin,
+  IconEdit,
+  IconBuilding,
+} from "@tabler/icons-react";
+import useSWR from "swr";
+import { fetcher } from "@/lib/fetcher";
+import { useRouter } from "next/navigation";
 
 export default function CompanyProfilePage() {
-  const { data: profile, error, isLoading, mutate } = useSWR('/api/profile', fetcher);
+  const {
+    data: profile,
+    error,
+    isLoading,
+    mutate,
+  } = useSWR("/api/profile", fetcher);
   const router = useRouter();
 
   // Revalidate on focus or mount to ensure fresh data
@@ -34,8 +56,10 @@ export default function CompanyProfilePage() {
 
   return (
     <Container size="md" py="xl">
-      <Title order={1} mb="xl">企業プロフィール</Title>
-      
+      <Title order={1} mb="xl">
+        企業プロフィール
+      </Title>
+
       <Card shadow="lg" padding="xl" radius="md" withBorder>
         <Group justify="space-between" mb="md">
           <Group>
@@ -51,10 +75,10 @@ export default function CompanyProfilePage() {
               </Text>
             </div>
           </Group>
-          <Button 
-            leftSection={<IconEdit size={16} />} 
-            variant="light" 
-            onClick={() => router.push('/company/profile/edit')}
+          <Button
+            leftSection={<IconEdit size={16} />}
+            variant="light"
+            onClick={() => router.push("/company/profile/edit")}
           >
             編集
           </Button>
@@ -72,7 +96,7 @@ export default function CompanyProfilePage() {
                 <IconBuilding size={16} color="gray" />
                 <Text size="sm">{profile.organizationName}</Text>
                 <Badge variant="light">
-                  {profile.organizationType === 'COMPANY' ? '企業' : '自治体'}
+                  {profile.organizationType === "COMPANY" ? "企業" : "自治体"}
                 </Badge>
               </Group>
               <Group gap="xs">
@@ -100,9 +124,7 @@ export default function CompanyProfilePage() {
               {profile.department && (
                 <Text size="sm">部署: {profile.department}</Text>
               )}
-              {profile.title && (
-                <Text size="sm">役職: {profile.title}</Text>
-              )}
+              {profile.title && <Text size="sm">役職: {profile.title}</Text>}
             </Stack>
           </div>
         </Stack>

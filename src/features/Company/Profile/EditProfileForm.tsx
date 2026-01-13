@@ -5,7 +5,9 @@ import { EditProfileFormClient } from "./EditProfileFormClient";
 
 export async function EditProfileForm() {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   if (!user) redirect("/auth/login");
 
@@ -37,8 +39,8 @@ export async function EditProfileForm() {
   }
 
   return (
-    <EditProfileFormClient 
-      organization={organization as any} 
+    <EditProfileFormClient
+      organization={organization as any}
       initialLogoUrl={signedLogoUrl}
     />
   );

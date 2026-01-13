@@ -3,29 +3,35 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { CandidateProfileContent } from "@/features/Candidate/CandidateProfileContent";
 
-export default async function CandidateProfilePage({ params }: { params: any }) {
+export default async function CandidateProfilePage({
+  params,
+}: {
+  params: any;
+}) {
   const resolvedParams = await params;
   const id = resolvedParams.id;
 
   const supabase = await createClient();
-  const { data: { user: currentUser } } = await supabase.auth.getUser();
+  const {
+    data: { user: currentUser },
+  } = await supabase.auth.getUser();
 
   const candidate = await prisma.candidateProfile.findUnique({
     where: { userId: id },
     include: {
       user: true,
       userSkills: {
-        include: { skill: true }
+        include: { skill: true },
       },
       desiredLocations: {
         include: {
           location: {
-            include: { prefecture: true }
-          }
-        }
+            include: { prefecture: true },
+          },
+        },
       },
       desiredJob: true,
-    }
+    },
   });
 
   if (!candidate) {
@@ -55,17 +61,17 @@ export default async function CandidateProfilePage({ params }: { params: any }) 
             organizationId: staff.organizationId,
           },
         },
-        orderBy: { createdAt: 'desc' },
+        orderBy: { createdAt: "desc" },
       });
       applicationId = (application as any)?.id || null;
     }
   }
 
   return (
-    <CandidateProfileContent 
-      candidate={candidate} 
-      avatarUrl={avatarUrl} 
-      applicationId={applicationId} 
+    <CandidateProfileContent
+      candidate={candidate}
+      avatarUrl={avatarUrl}
+      applicationId={applicationId}
       currentUserId={currentUser?.id || null}
     />
   );

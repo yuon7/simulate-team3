@@ -1,6 +1,15 @@
-import { Card, Text, Avatar, Group, Button, Stack, Badge, Divider } from '@mantine/core';
-import { IconMail, IconPhone, IconMapPin, IconEdit } from '@tabler/icons-react';
-import styles from './ProfileCard.module.css';
+import {
+  Card,
+  Text,
+  Avatar,
+  Group,
+  Button,
+  Stack,
+  Badge,
+  Divider,
+} from "@mantine/core";
+import { IconMail, IconPhone, IconMapPin, IconEdit } from "@tabler/icons-react";
+import styles from "./ProfileCard.module.css";
 
 interface ProfileCardProps {
   name: string;
@@ -26,7 +35,13 @@ export default function ProfileCard({
   onEdit,
 }: ProfileCardProps) {
   return (
-    <Card shadow="lg" padding="xl" radius="md" withBorder className={styles.card}>
+    <Card
+      shadow="lg"
+      padding="xl"
+      radius="md"
+      withBorder
+      className={styles.card}
+    >
       <Group justify="space-between" mb="md">
         <Group>
           <Avatar size="xl" radius="md" color="blue" src={avatarUrl}>
@@ -41,7 +56,11 @@ export default function ProfileCard({
             </Text>
           </div>
         </Group>
-        <Button leftSection={<IconEdit size={16} />} variant="light" onClick={onEdit}>
+        <Button
+          leftSection={<IconEdit size={16} />}
+          variant="light"
+          onClick={onEdit}
+        >
           編集
         </Button>
       </Group>

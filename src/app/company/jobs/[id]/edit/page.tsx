@@ -1,6 +1,14 @@
 "use client";
 
-import { Container, Title, Card, Text, Center, Loader, Alert } from "@mantine/core";
+import {
+  Container,
+  Title,
+  Card,
+  Text,
+  Center,
+  Loader,
+  Alert,
+} from "@mantine/core";
 import { IconInfoCircle } from "@tabler/icons-react";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetcher";
@@ -10,7 +18,7 @@ import { JobForm } from "@/features/Company/Job/JobForm";
 export default function EditJobPage() {
   const params = useParams();
   const id = params.id;
-  
+
   const { data: job, error, isLoading } = useSWR(`/api/jobs/${id}`, fetcher);
 
   if (isLoading) {
@@ -40,16 +48,20 @@ export default function EditJobPage() {
     tags: job.tags,
     salaryMin: job.salaryMin,
     salaryMax: job.salaryMax,
-    location: job.location ? {
-      prefectureId: job.location.prefectureId,
-      city: job.location.city,
-    } : null,
+    location: job.location
+      ? {
+          prefectureId: job.location.prefectureId,
+          city: job.location.city,
+        }
+      : null,
   };
 
   return (
     <Container size="sm" py="xl">
-      <Title order={1} mb="xl">求人を編集</Title>
-      
+      <Title order={1} mb="xl">
+        求人を編集
+      </Title>
+
       <Card shadow="sm" padding="xl" radius="md" withBorder>
         <JobForm mode="edit" initialValues={initialValues} />
       </Card>

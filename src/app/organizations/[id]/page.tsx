@@ -3,7 +3,11 @@ import { notFound } from "next/navigation";
 import { OrganizationProfileContent } from "@/features/Organization/OrganizationProfileContent";
 import { createClient } from "@/lib/supabase/server";
 
-export default async function OrganizationProfilePage({ params }: { params: any }) {
+export default async function OrganizationProfilePage({
+  params,
+}: {
+  params: any;
+}) {
   const resolvedParams = await params;
   const id = parseInt(resolvedParams.id);
 
@@ -15,17 +19,17 @@ export default async function OrganizationProfilePage({ params }: { params: any 
     where: { id },
     include: {
       location: {
-        include: { prefecture: true }
+        include: { prefecture: true },
       },
       jobPostings: {
         include: {
           location: {
-            include: { prefecture: true }
-          }
+            include: { prefecture: true },
+          },
         },
-        orderBy: { createdAt: 'desc' }
-      }
-    }
+        orderBy: { createdAt: "desc" },
+      },
+    },
   });
 
   if (!organization) {
@@ -46,5 +50,7 @@ export default async function OrganizationProfilePage({ params }: { params: any 
     logoUrl: logoUrl || organization.logoUrl,
   };
 
-  return <OrganizationProfileContent organization={organizationWithSignedUrl} />;
+  return (
+    <OrganizationProfileContent organization={organizationWithSignedUrl} />
+  );
 }

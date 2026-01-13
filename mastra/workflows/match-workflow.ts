@@ -1,7 +1,10 @@
 import { createStep, createWorkflow } from "@mastra/core/workflows";
 import { z } from "zod";
-import { calculateLocationScore, calculateSalaryScore, calculateSkillScore } from "../tools/scoring";
-
+import {
+  calculateLocationScore,
+  calculateSalaryScore,
+  calculateSkillScore,
+} from "../tools/scoring";
 
 // スキルマスタ (ネスト用)
 const skillSchema = z.object({
@@ -41,45 +44,51 @@ const getUserInfoStep = createStep({
     desiredLocations: z.array(locationSchema),
     desiredSalary,
     priority: z.enum(["skills", "location", "salary"]),
-    mockCompanies: z.array(z.object({
-      id: z.number(),
-      name: z.string(),
-      title: z.string(),
-      location: z.string(),
-      salaryMin: z.number().nullable(),
-      salaryMax: z.number().nullable(),
-      requiredSkills: z.array(
-        z.object({
-          name: z.string(),
-          level: z.string().nullable(),
-        })
-      ),
-    })),
+    mockCompanies: z.array(
+      z.object({
+        id: z.number(),
+        name: z.string(),
+        title: z.string(),
+        location: z.string(),
+        salaryMin: z.number().nullable(),
+        salaryMax: z.number().nullable(),
+        requiredSkills: z.array(
+          z.object({
+            name: z.string(),
+            level: z.string().nullable(),
+          }),
+        ),
+      }),
+    ),
   }),
   outputSchema: z.object({
     skills: z.array(z.string()),
     desiredLocations: z.array(z.string()),
     desiredSalary: z.number().nullable(),
     priority: z.enum(["skills", "location", "salary"]),
-    mockCompanies: z.array(z.object({
-      id: z.number(),
-      name: z.string(),
-      title: z.string(),
-      location: z.string(),
-      salaryMin: z.number().nullable(),
-      salaryMax: z.number().nullable(),
-      requiredSkills: z.array(
-        z.object({
-          name: z.string(),
-          level: z.string().nullable(),
-        })
-      ),
-    })),
+    mockCompanies: z.array(
+      z.object({
+        id: z.number(),
+        name: z.string(),
+        title: z.string(),
+        location: z.string(),
+        salaryMin: z.number().nullable(),
+        salaryMax: z.number().nullable(),
+        requiredSkills: z.array(
+          z.object({
+            name: z.string(),
+            level: z.string().nullable(),
+          }),
+        ),
+      }),
+    ),
   }),
   execute: async ({ inputData }) => {
     try {
       const skills = inputData.skill ? [inputData.skill.name] : [];
-      const desiredLocations = (inputData.desiredLocations ?? []).map(loc => loc.name);
+      const desiredLocations = (inputData.desiredLocations ?? []).map(
+        (loc) => loc.name,
+      );
       const desiredSalary =
         inputData.desiredSalary && inputData.desiredSalary !== null
           ? inputData.desiredSalary
@@ -99,26 +108,29 @@ const getUserInfoStep = createStep({
 });
 const matchStep = createStep({
   id: "match-companies",
-  description: "ユーザーのスキル、希望勤務地、希望年収、優先度に基づいて、最適な企業をスコアリングし、推薦順にリストアップします。",
+  description:
+    "ユーザーのスキル、希望勤務地、希望年収、優先度に基づいて、最適な企業をスコアリングし、推薦順にリストアップします。",
   inputSchema: z.object({
     skills: z.array(z.string()),
     desiredLocations: z.array(z.string()),
     desiredSalary: z.number().nullable(),
     priority: z.enum(["skills", "location", "salary"]),
-    mockCompanies: z.array(z.object({
-      id: z.number(),
-      name: z.string(),
-      title: z.string(),
-      location: z.string(),
-      salaryMin: z.number().nullable(),
-      salaryMax: z.number().nullable(),
-      requiredSkills: z.array(
-        z.object({
-          name: z.string(),
-          level: z.string().nullable(),
-        })
-      ),
-    })),
+    mockCompanies: z.array(
+      z.object({
+        id: z.number(),
+        name: z.string(),
+        title: z.string(),
+        location: z.string(),
+        salaryMin: z.number().nullable(),
+        salaryMax: z.number().nullable(),
+        requiredSkills: z.array(
+          z.object({
+            name: z.string(),
+            level: z.string().nullable(),
+          }),
+        ),
+      }),
+    ),
   }),
   outputSchema: z.array(
     z.object({
@@ -129,7 +141,7 @@ const matchStep = createStep({
       salaryMin: z.number().nullable(),
       salaryMax: z.number().nullable(),
       matchScore: z.number(),
-    })
+    }),
   ),
   execute: async ({ inputData }) => {
     const prioritiesMap = {
@@ -140,24 +152,24 @@ const matchStep = createStep({
     const priorities = prioritiesMap[inputData.priority];
 
     // スコアリング
-    return inputData.mockCompanies.map(job => {
+    return inputData.mockCompanies.map((job) => {
       const skillScore = calculateSkillScore(
         job.requiredSkills,
-        inputData.skills
+        inputData.skills,
       );
       const locationScore = calculateLocationScore(
         job.location,
-        inputData.desiredLocations
+        inputData.desiredLocations,
       );
       const salaryScore = calculateSalaryScore(
         job.salaryMin,
         job.salaryMax,
-        inputData.desiredSalary ?? null
+        inputData.desiredSalary ?? null,
       );
       const matchScore =
-        (skillScore * priorities.skills) +
-        (locationScore * priorities.location) +
-        (salaryScore * priorities.salary);
+        skillScore * priorities.skills +
+        locationScore * priorities.location +
+        salaryScore * priorities.salary;
 
       return {
         id: job.id,
@@ -185,7 +197,7 @@ const sortAndSelectStep = createStep({
       salaryMin: z.number().nullable(),
       salaryMax: z.number().nullable(),
       matchScore: z.number(),
-    })
+    }),
   ),
   outputSchema: z.array(
     z.object({
@@ -196,7 +208,7 @@ const sortAndSelectStep = createStep({
       salaryMin: z.number().nullable(),
       salaryMax: z.number().nullable(),
       matchScore: z.number(),
-    })
+    }),
   ),
   execute: async ({ inputData }) => {
     const sorted = inputData.sort((a, b) => b.matchScore - a.matchScore);
@@ -204,29 +216,32 @@ const sortAndSelectStep = createStep({
   },
 });
 
-// マッチングワークフローの定義 
+// マッチングワークフローの定義
 export const matchWorkflow = createWorkflow({
   id: "match-workflow",
-  description: "ユーザーのスキル、希望勤務地、希望年収、優先度に基づいて最適な企業を推薦します。",
+  description:
+    "ユーザーのスキル、希望勤務地、希望年収、優先度に基づいて最適な企業を推薦します。",
   inputSchema: z.object({
     skill: skillSchema,
     desiredLocations: z.array(locationSchema),
     desiredSalary: z.number().nullable(),
     priority: z.enum(["skills", "location", "salary"]),
-    mockCompanies: z.array(z.object({
-      id: z.number(),
-      name: z.string(),
-      title: z.string(),
-      location: z.string(),
-      salaryMin: z.number().nullable(),
-      salaryMax: z.number().nullable(),
-      requiredSkills: z.array(
-        z.object({
-          name: z.string(),
-          level: z.string().nullable(),
-        })
-      ),
-    })),
+    mockCompanies: z.array(
+      z.object({
+        id: z.number(),
+        name: z.string(),
+        title: z.string(),
+        location: z.string(),
+        salaryMin: z.number().nullable(),
+        salaryMax: z.number().nullable(),
+        requiredSkills: z.array(
+          z.object({
+            name: z.string(),
+            level: z.string().nullable(),
+          }),
+        ),
+      }),
+    ),
   }),
   outputSchema: z.array(
     z.object({
@@ -237,7 +252,7 @@ export const matchWorkflow = createWorkflow({
       salaryMin: z.number().nullable(),
       salaryMax: z.number().nullable(),
       matchScore: z.number(),
-    })
+    }),
   ),
 })
   .then(getUserInfoStep)

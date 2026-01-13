@@ -1,6 +1,19 @@
 "use client";
 
-import { Container, Title, Text, Card, Table, Badge, Group, Button, Loader, Center, Stack, Indicator } from "@mantine/core";
+import {
+  Container,
+  Title,
+  Text,
+  Card,
+  Table,
+  Badge,
+  Group,
+  Button,
+  Loader,
+  Center,
+  Stack,
+  Indicator,
+} from "@mantine/core";
 import { IconMessage, IconBuilding } from "@tabler/icons-react";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetcher";
@@ -10,10 +23,15 @@ import { useState } from "react";
 import { ChatModal } from "@/features/Messaging/ChatModal";
 
 export default function CandidateApplicationsPage() {
-  const { data: applications, error, isLoading } = useSWR("/api/applications", fetcher);
+  const {
+    data: applications,
+    error,
+    isLoading,
+  } = useSWR("/api/applications", fetcher);
   const { data: profile } = useSWR("/api/profile", fetcher);
-  
-  const [chatOpened, { open: openChat, close: closeChat }] = useDisclosure(false);
+
+  const [chatOpened, { open: openChat, close: closeChat }] =
+    useDisclosure(false);
   const [selectedApp, setSelectedApp] = useState<any>(null);
 
   const handleOpenChat = (app: any) => {
@@ -33,8 +51,12 @@ export default function CandidateApplicationsPage() {
     <Container size="lg" py="xl">
       <Stack gap="xl">
         <div>
-          <Title order={2} mb="xs">応募履歴・メッセージ</Title>
-          <Text c="dimmed">これまでに募集に応募した求人の一覧と、企業とのやり取りを確認できます。</Text>
+          <Title order={2} mb="xs">
+            応募履歴・メッセージ
+          </Title>
+          <Text c="dimmed">
+            これまでに募集に応募した求人の一覧と、企業とのやり取りを確認できます。
+          </Text>
         </div>
 
         <Card shadow="sm" radius="md" withBorder>
@@ -53,22 +75,25 @@ export default function CandidateApplicationsPage() {
                 <Table.Tr key={app.id}>
                   <Table.Td>
                     <Group gap="xs">
-                      <IconBuilding size={16} color="var(--mantine-color-dimmed)" />
-                      <Text 
-                        fw={500} 
-                        component={Link} 
+                      <IconBuilding
+                        size={16}
+                        color="var(--mantine-color-dimmed)"
+                      />
+                      <Text
+                        fw={500}
+                        component={Link}
                         href={`/organizations/${app.jobPosting.organizationId}`}
                         c="blue"
-                        style={{ textDecoration: 'none' }}
+                        style={{ textDecoration: "none" }}
                       >
                         {app.jobPosting.organization.name}
                       </Text>
                     </Group>
                   </Table.Td>
                   <Table.Td>
-                    <Text 
-                      size="sm" 
-                      component={Link} 
+                    <Text
+                      size="sm"
+                      component={Link}
                       href={`/jobs/${app.jobPostingId}`}
                       c="gray.7"
                     >
@@ -76,11 +101,13 @@ export default function CandidateApplicationsPage() {
                     </Text>
                   </Table.Td>
                   <Table.Td>
-                    <Badge 
+                    <Badge
                       color={
-                        app.status === "PENDING" ? "yellow" : 
-                        app.status === "APPROVED" ? "green" : 
-                        "gray"
+                        app.status === "PENDING"
+                          ? "yellow"
+                          : app.status === "APPROVED"
+                            ? "green"
+                            : "gray"
                       }
                       variant="light"
                     >
@@ -88,18 +115,20 @@ export default function CandidateApplicationsPage() {
                     </Badge>
                   </Table.Td>
                   <Table.Td>
-                    <Text size="sm">{new Date(app.createdAt).toLocaleDateString()}</Text>
+                    <Text size="sm">
+                      {new Date(app.createdAt).toLocaleDateString()}
+                    </Text>
                   </Table.Td>
                   <Table.Td>
-                    <Indicator 
-                      disabled={!app.unreadCount || app.unreadCount === 0} 
-                      color="red" 
-                      size={10} 
+                    <Indicator
+                      disabled={!app.unreadCount || app.unreadCount === 0}
+                      color="red"
+                      size={10}
                       offset={2}
                     >
-                      <Button 
-                        variant="light" 
-                        leftSection={<IconMessage size={14} />} 
+                      <Button
+                        variant="light"
+                        leftSection={<IconMessage size={14} />}
                         size="xs"
                         onClick={() => handleOpenChat(app)}
                       >
@@ -112,7 +141,9 @@ export default function CandidateApplicationsPage() {
               {(!applications || applications.length === 0) && (
                 <Table.Tr>
                   <Table.Td colSpan={5}>
-                    <Text ta="center" py="xl" c="dimmed">まだ応募した求人はありません。</Text>
+                    <Text ta="center" py="xl" c="dimmed">
+                      まだ応募した求人はありません。
+                    </Text>
                   </Table.Td>
                 </Table.Tr>
               )}
@@ -121,12 +152,14 @@ export default function CandidateApplicationsPage() {
         </Card>
       </Stack>
 
-      <ChatModal 
+      <ChatModal
         applicationId={selectedApp?.id}
         opened={chatOpened}
         onClose={closeChat}
         currentUserId={profile?.id}
-        otherPartyName={selectedApp?.jobPosting?.organization?.name || "企業担当者"}
+        otherPartyName={
+          selectedApp?.jobPosting?.organization?.name || "企業担当者"
+        }
       />
     </Container>
   );

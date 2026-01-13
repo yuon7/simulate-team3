@@ -1,6 +1,18 @@
 "use client";
 
-import { Modal, Stack, ScrollArea, TextInput, ActionIcon, Group, Text, Paper, Loader, Center, Divider } from "@mantine/core";
+import {
+  Modal,
+  Stack,
+  ScrollArea,
+  TextInput,
+  ActionIcon,
+  Group,
+  Text,
+  Paper,
+  Loader,
+  Center,
+  Divider,
+} from "@mantine/core";
 import { IconSend, IconUser } from "@tabler/icons-react";
 import { useState, useEffect, useRef } from "react";
 import useSWR, { mutate } from "swr";
@@ -24,7 +36,13 @@ type ChatModalProps = {
   otherPartyName: string;
 };
 
-export function ChatModal({ applicationId, opened, onClose, currentUserId, otherPartyName }: ChatModalProps) {
+export function ChatModal({
+  applicationId,
+  opened,
+  onClose,
+  currentUserId,
+  otherPartyName,
+}: ChatModalProps) {
   const [content, setContent] = useState("");
   const [sending, setSending] = useState(false);
   const viewport = useRef<HTMLDivElement>(null);
@@ -32,12 +50,15 @@ export function ChatModal({ applicationId, opened, onClose, currentUserId, other
 
   const { data: messages, isLoading } = useSWR<Message[]>(
     applicationId ? `/api/messages?applicationId=${applicationId}` : null,
-    fetcher
+    fetcher,
   );
 
   const scrollToBottom = () => {
     if (viewport.current) {
-      viewport.current.scrollTo({ top: viewport.current.scrollHeight, behavior: 'smooth' });
+      viewport.current.scrollTo({
+        top: viewport.current.scrollHeight,
+        behavior: "smooth",
+      });
     }
   };
 
@@ -86,7 +107,7 @@ export function ChatModal({ applicationId, opened, onClose, currentUserId, other
         () => {
           // Re-fetch messages when a new one is inserted
           mutate(`/api/messages?applicationId=${applicationId}`);
-        }
+        },
       )
       .subscribe();
 
@@ -118,10 +139,10 @@ export function ChatModal({ applicationId, opened, onClose, currentUserId, other
   };
 
   return (
-    <Modal 
-      opened={opened} 
-      onClose={onClose} 
-      title={`${otherPartyName} さんとのメッセージ`} 
+    <Modal
+      opened={opened}
+      onClose={onClose}
+      title={`${otherPartyName} さんとのメッセージ`}
       size="lg"
       styles={{ body: { padding: 0 } }}
     >
@@ -136,39 +157,54 @@ export function ChatModal({ applicationId, opened, onClose, currentUserId, other
               {messages?.map((msg) => {
                 const isMe = msg.senderId === currentUserId;
                 return (
-                  <Group key={msg.id} justify={isMe ? "flex-end" : "flex-start"} align="flex-end" gap="xs">
+                  <Group
+                    key={msg.id}
+                    justify={isMe ? "flex-end" : "flex-start"}
+                    align="flex-end"
+                    gap="xs"
+                  >
                     {!isMe && (
-                       <Paper radius="xl" p={4} withBorder>
-                         <IconUser size={16} />
-                       </Paper>
+                      <Paper radius="xl" p={4} withBorder>
+                        <IconUser size={16} />
+                      </Paper>
                     )}
-                    
+
                     {isMe && (
                       <Text size="xs" opacity={0.5} mb={2}>
-                        {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        {new Date(msg.createdAt).toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
                       </Text>
                     )}
 
-                    <Paper 
-                      p="xs" 
-                      radius="md" 
+                    <Paper
+                      p="xs"
+                      radius="md"
                       bg={isMe ? "blue" : "gray.1"}
                       c={isMe ? "white" : "black"}
                       style={{ maxWidth: "70%" }}
                     >
-                      <Text size="sm" style={{ wordBreak: 'break-word' }}>{msg.content}</Text>
+                      <Text size="sm" style={{ wordBreak: "break-word" }}>
+                        {msg.content}
+                      </Text>
                     </Paper>
 
                     {!isMe && (
                       <Text size="xs" opacity={0.5} mb={2}>
-                        {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        {new Date(msg.createdAt).toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
                       </Text>
                     )}
                   </Group>
                 );
               })}
               {messages?.length === 0 && (
-                <Text c="dimmed" ta="center" mt="xl">まだメッセージはありません。</Text>
+                <Text c="dimmed" ta="center" mt="xl">
+                  まだメッセージはありません。
+                </Text>
               )}
             </Stack>
           )}
@@ -177,8 +213,8 @@ export function ChatModal({ applicationId, opened, onClose, currentUserId, other
         <Divider />
 
         <Group p="md" gap="xs">
-          <TextInput 
-            placeholder="メッセージを入力..." 
+          <TextInput
+            placeholder="メッセージを入力..."
             style={{ flex: 1 }}
             value={content}
             onChange={(e) => setContent(e.currentTarget.value)}
@@ -190,10 +226,10 @@ export function ChatModal({ applicationId, opened, onClose, currentUserId, other
             }}
             disabled={sending}
           />
-          <ActionIcon 
-            variant="filled" 
-            color="blue" 
-            size="lg" 
+          <ActionIcon
+            variant="filled"
+            color="blue"
+            size="lg"
             onClick={handleSend}
             loading={sending}
             disabled={!content.trim()}

@@ -13,18 +13,18 @@
   padding: 2rem;
   background-color: #000;
   border-radius: 0.5rem;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 10px rgb(0 0 0 / 30%);
 }
 
 .title {
   font-size: 1.5rem;
   font-weight: bold;
   margin-bottom: 1rem;
-  color: #ffffff;
+  color: #fff;
 }
 
 .text {
-  color: #ffffff;
+  color: #fff;
   margin-bottom: 1.5rem;
 }
 

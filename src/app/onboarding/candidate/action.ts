@@ -6,7 +6,10 @@ import { redirect } from "next/navigation";
 
 const prisma = new PrismaClient();
 
-export async function createCandidateProfile(prevState: any, formData: FormData) {
+export async function createCandidateProfile(
+  prevState: any,
+  formData: FormData,
+) {
   const supabase = await createClient();
   const {
     data: { user },
@@ -34,18 +37,18 @@ export async function createCandidateProfile(prevState: any, formData: FormData)
 
     // Upload avatar if provided
     if (avatarFile && avatarFile.size > 0) {
-      const fileExt = avatarFile.name.split('.').pop();
+      const fileExt = avatarFile.name.split(".").pop();
       const fileName = `${user.id}/${Math.random().toString(36).substring(7)}.${fileExt}`;
-      
+
       const { error: uploadError } = await supabase.storage
-        .from('avatars')
+        .from("avatars")
         .upload(fileName, avatarFile, { upsert: true });
 
       if (uploadError) {
         console.error("Avatar upload error:", uploadError);
         return { error: "画像のアップロードに失敗しました" };
       }
-      
+
       avatarUrl = fileName;
     }
 
@@ -54,7 +57,7 @@ export async function createCandidateProfile(prevState: any, formData: FormData)
       // 1. Update User name and avatar
       await tx.user.upsert({
         where: { id: user.id },
-        update: { 
+        update: {
           name,
           ...(avatarUrl && { avatarUrl }),
         },

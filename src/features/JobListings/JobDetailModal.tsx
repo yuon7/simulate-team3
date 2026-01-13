@@ -1,7 +1,23 @@
 "use client";
 
-import { Modal, Button, Text, Group, Badge, Stack, Title, Divider, LoadingOverlay } from "@mantine/core";
-import { IconBuilding, IconMapPin, IconCurrencyYen, IconCheck, IconX } from "@tabler/icons-react";
+import {
+  Modal,
+  Button,
+  Text,
+  Group,
+  Badge,
+  Stack,
+  Title,
+  Divider,
+  LoadingOverlay,
+} from "@mantine/core";
+import {
+  IconBuilding,
+  IconMapPin,
+  IconCurrencyYen,
+  IconCheck,
+  IconX,
+} from "@tabler/icons-react";
 import { useState } from "react";
 import { notifications } from "@mantine/notifications";
 
@@ -90,11 +106,15 @@ export function JobDetailModal({ job, opened, onClose }: JobDetailModalProps) {
         <Group justify="space-between" align="start">
           <div>
             <Title order={3}>{job.title}</Title>
-            <Text 
-              size="sm" 
-              component="a" 
+            <Text
+              size="sm"
+              component="a"
               href={`/organizations/${job.organization.id}`}
-              style={{ color: "var(--mantine-color-blue-6)", fontWeight: 600, textDecoration: "none" }}
+              style={{
+                color: "var(--mantine-color-blue-6)",
+                fontWeight: 600,
+                textDecoration: "none",
+              }}
             >
               {job.organization.name}
             </Text>
@@ -106,15 +126,19 @@ export function JobDetailModal({ job, opened, onClose }: JobDetailModalProps) {
           <Group gap="xs" style={{ flex: 1 }}>
             <IconMapPin size={18} />
             <Text size="sm">
-              {job.location ? `${job.location.prefecture.name} ${job.location.city}` : '勤務地未定'}
+              {job.location
+                ? `${job.location.prefecture.name} ${job.location.city}`
+                : "勤務地未定"}
             </Text>
           </Group>
           <Group gap="xs" style={{ flex: 1 }}>
             <IconCurrencyYen size={18} />
             <Text size="sm">
-              {job.salaryMin ? (
-                job.salaryMax ? `${job.salaryMin}〜${job.salaryMax}万円` : `${job.salaryMin}万円〜`
-              ) : "応相談"}
+              {job.salaryMin
+                ? job.salaryMax
+                  ? `${job.salaryMin}〜${job.salaryMax}万円`
+                  : `${job.salaryMin}万円〜`
+                : "応相談"}
             </Text>
           </Group>
         </Group>
@@ -122,7 +146,9 @@ export function JobDetailModal({ job, opened, onClose }: JobDetailModalProps) {
         <Divider />
 
         <div>
-          <Text fw={500} mb="xs">仕事内容</Text>
+          <Text fw={500} mb="xs">
+            仕事内容
+          </Text>
           <Text size="sm" style={{ whiteSpace: "pre-wrap" }}>
             {job.description}
           </Text>
@@ -130,16 +156,20 @@ export function JobDetailModal({ job, opened, onClose }: JobDetailModalProps) {
 
         <Group gap="xs">
           {job.tags.map((tag) => (
-            <Badge key={tag} variant="outline">{tag}</Badge>
+            <Badge key={tag} variant="outline">
+              {tag}
+            </Badge>
           ))}
         </Group>
 
         <Divider />
 
         <Group justify="flex-end" mt="md">
-          <Button variant="default" onClick={onClose}>閉じる</Button>
-          <Button 
-            onClick={handleApply} 
+          <Button variant="default" onClick={onClose}>
+            閉じる
+          </Button>
+          <Button
+            onClick={handleApply}
             disabled={applied}
             color={applied ? "green" : "blue"}
           >

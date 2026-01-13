@@ -1,7 +1,7 @@
-import { Container, Title, Text, Stack, Group, Button } from "@mantine/core"
-import Link from "next/link"
-import jobSectionStyles from "./JobListings.module.css"
-import { JobCards } from "../../features/JobListings/JobCards"
+import { Container, Title, Text, Stack, Group, Button } from "@mantine/core";
+import Link from "next/link";
+import jobSectionStyles from "./JobListings.module.css";
+import { JobCards } from "../../features/JobListings/JobCards";
 
 export function JobListings() {
   return (
@@ -25,5 +25,5 @@ export function JobListings() {
         </Group>
       </Container>
     </section>
-  )
+  );
 }

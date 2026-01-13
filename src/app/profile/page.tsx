@@ -1,17 +1,17 @@
 "use client";
 
-import { Modal, Container, Center, Loader, Alert } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
-import ProfileCard from '@/components/ProfileCard/ProfileCard';
-import { EditProfileForm } from '@/features/Profile/EditProfileForm';
-import styles from './profile.module.css';
-import useSWR from 'swr';
-import { fetcher } from '@/lib/fetcher';
-import { IconInfoCircle } from '@tabler/icons-react';
+import { Modal, Container, Center, Loader, Alert } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import ProfileCard from "@/components/ProfileCard/ProfileCard";
+import { EditProfileForm } from "@/features/Profile/EditProfileForm";
+import styles from "./profile.module.css";
+import useSWR from "swr";
+import { fetcher } from "@/lib/fetcher";
+import { IconInfoCircle } from "@tabler/icons-react";
 
 export default function ProfilePage() {
   const [opened, { open, close }] = useDisclosure(false);
-  const { data, error, isLoading } = useSWR('/api/profile', fetcher);
+  const { data, error, isLoading } = useSWR("/api/profile", fetcher);
 
   if (isLoading) {
     return (
@@ -24,7 +24,7 @@ export default function ProfilePage() {
   if (error) {
     return (
       <Container py="xl">
-         <Alert icon={<IconInfoCircle />} title="エラー" color="red">
+        <Alert icon={<IconInfoCircle />} title="エラー" color="red">
           プロフィールの取得に失敗しました。
         </Alert>
       </Container>
@@ -36,7 +36,7 @@ export default function ProfilePage() {
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>プロフィール</h1>
-      
+
       <ProfileCard
         name={profile.name}
         email={profile.email}

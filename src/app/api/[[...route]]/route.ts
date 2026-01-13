@@ -13,13 +13,12 @@ export const runtime = "edge";
 const app = new Hono().basePath("/api");
 const prisma = new PrismaClient();
 
-app.route('/jobs', jobsApp);
-app.route('/profile', profileApp);
-app.route('/applications', applicationsApp);
-app.route('/messages', messagesApp);
-app.route('/prefectures', prefecturesApp);
-app.route('/categories', categoriesApp);
-
+app.route("/jobs", jobsApp);
+app.route("/profile", profileApp);
+app.route("/applications", applicationsApp);
+app.route("/messages", messagesApp);
+app.route("/prefectures", prefecturesApp);
+app.route("/categories", categoriesApp);
 
 // app.get("/todos", async (c) => {
 //   const todos = await prisma.todo.findMany();

@@ -21,14 +21,15 @@ export async function GET(request: NextRequest) {
     error = verifyError;
   } else if (code) {
     try {
-      const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(
-        code,
-      );
+      const { error: exchangeError } =
+        await supabase.auth.exchangeCodeForSession(code);
       error = exchangeError;
     } catch (err) {
       console.error("Auth Code Exchange Failed:", err);
       // Manually construct an error object if catch block behaves unexpectedly or redirects to error page
-      error = { message: "Authentication failed. Please try logging in again." };
+      error = {
+        message: "Authentication failed. Please try logging in again.",
+      };
     }
   } else {
     // No valid parameters found
@@ -84,7 +85,11 @@ export async function GET(request: NextRequest) {
 
   // redirect the user to an error page with some instructions
   // Redirect to login with error details
-  const errorMsg = error ? (error as any).message || "Verification failed" : "Verification failed";
+  const errorMsg = error
+    ? (error as any).message || "Verification failed"
+    : "Verification failed";
   console.error("Verification Error:", errorMsg);
-  redirect(`/auth/login?error=verification_failed&message=${encodeURIComponent(errorMsg)}`);
+  redirect(
+    `/auth/login?error=verification_failed&message=${encodeURIComponent(errorMsg)}`,
+  );
 }

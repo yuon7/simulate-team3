@@ -2,19 +2,19 @@
 
 import { useFormState } from "react-dom";
 import { createCandidateProfile } from "./action";
-import { 
-  Container, 
-  Card, 
-  Title, 
-  Text, 
-  TextInput, 
-  Select, 
-  Textarea, 
-  Button, 
-  FileInput, 
+import {
+  Container,
+  Card,
+  Title,
+  Text,
+  TextInput,
+  Select,
+  Textarea,
+  Button,
+  FileInput,
   Stack,
   Group,
-  Alert
+  Alert,
 } from "@mantine/core";
 import { IconPhoto, IconAlertCircle } from "@tabler/icons-react";
 import { PREFECTURES } from "@/constants/prefectures";
@@ -25,18 +25,28 @@ const initialState = {
 };
 
 export default function CandidateOnboardingPage() {
-  const [state, formAction] = useFormState(createCandidateProfile, initialState);
+  const [state, formAction] = useFormState(
+    createCandidateProfile,
+    initialState,
+  );
 
   return (
     <Container size="md" py="xl">
       <Card shadow="lg" padding="xl" radius="md" withBorder>
-        <Title order={1} mb="md">求職者プロフィール登録</Title>
+        <Title order={1} mb="md">
+          求職者プロフィール登録
+        </Title>
         <Text c="dimmed" mb="xl">
           あなたにぴったりの仕事や移住先を見つけるために、プロフィールを入力してください。
         </Text>
 
         {state?.error && (
-          <Alert icon={<IconAlertCircle size={16} />} title="エラー" color="red" mb="md">
+          <Alert
+            icon={<IconAlertCircle size={16} />}
+            title="エラー"
+            color="red"
+            mb="md"
+          >
             {state.error}
           </Alert>
         )}
@@ -48,7 +58,9 @@ export default function CandidateOnboardingPage() {
                 label="プロフィール画像"
                 onFileChange={(file: File | null) => {
                   // Standard form submission needs the file in an input
-                  const input = document.querySelector('input[name="avatar"]') as HTMLInputElement;
+                  const input = document.querySelector(
+                    'input[name="avatar"]',
+                  ) as HTMLInputElement;
                   if (input) {
                     const dataTransfer = new DataTransfer();
                     if (file) dataTransfer.items.add(file);
@@ -56,7 +68,12 @@ export default function CandidateOnboardingPage() {
                   }
                 }}
               />
-              <input type="file" name="avatar" style={{ display: "none" }} accept="image/png,image/jpeg,image/jpg" />
+              <input
+                type="file"
+                name="avatar"
+                style={{ display: "none" }}
+                accept="image/png,image/jpeg,image/jpg"
+              />
             </Stack>
 
             <TextInput

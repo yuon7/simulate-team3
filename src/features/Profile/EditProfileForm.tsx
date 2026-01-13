@@ -1,7 +1,16 @@
 "use client";
 
 import { useForm } from "@mantine/form";
-import { TextInput, Textarea, Button, Group, Box, LoadingOverlay, TagsInput, FileInput } from "@mantine/core";
+import {
+  TextInput,
+  Textarea,
+  Button,
+  Group,
+  Box,
+  LoadingOverlay,
+  TagsInput,
+  FileInput,
+} from "@mantine/core";
 import { useState, useEffect } from "react";
 import { mutate } from "swr";
 import { createClient } from "@/lib/supabase/client";
@@ -22,7 +31,11 @@ type EditProfileFormProps = {
   onCancel: () => void;
 };
 
-export function EditProfileForm({ initialData, onSuccess, onCancel }: EditProfileFormProps) {
+export function EditProfileForm({
+  initialData,
+  onSuccess,
+  onCancel,
+}: EditProfileFormProps) {
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState<File | null>(null);
 
@@ -45,14 +58,16 @@ export function EditProfileForm({ initialData, onSuccess, onCancel }: EditProfil
 
       if (file) {
         const supabase = createClient();
-        const { data: { user } } = await supabase.auth.getUser();
-        
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+
         if (user) {
-          const fileExt = file.name.split('.').pop();
+          const fileExt = file.name.split(".").pop();
           const fileName = `${user.id}/${Math.random().toString(36).substring(7)}.${fileExt}`;
-          
+
           const { error: uploadError } = await supabase.storage
-            .from('avatars')
+            .from("avatars")
             .upload(fileName, file, { upsert: true });
 
           if (uploadError) throw uploadError;
@@ -72,7 +87,7 @@ export function EditProfileForm({ initialData, onSuccess, onCancel }: EditProfil
 
       // Revalidate SWR cache
       await mutate("/api/profile");
-      
+
       onSuccess();
     } catch (error) {
       console.error(error);
@@ -86,7 +101,6 @@ export function EditProfileForm({ initialData, onSuccess, onCancel }: EditProfil
     <Box pos="relative">
       <LoadingOverlay visible={loading} />
       <form onSubmit={form.onSubmit(handleSubmit)}>
-        
         <ImageUpload
           initialImageUrl={initialData.avatarUrl}
           onFileChange={setFile}
@@ -100,11 +114,7 @@ export function EditProfileForm({ initialData, onSuccess, onCancel }: EditProfil
           {...form.getInputProps("name")}
         />
 
-        <TextInput
-          label="電話番号"
-          mb="md"
-          {...form.getInputProps("phone")}
-        />
+        <TextInput label="電話番号" mb="md" {...form.getInputProps("phone")} />
 
         <Textarea
           label="自己紹介"
@@ -116,13 +126,23 @@ export function EditProfileForm({ initialData, onSuccess, onCancel }: EditProfil
         <TagsInput
           label="スキル"
           placeholder="スキルを入力してEnterで追加"
-          data={["React", "Next.js", "TypeScript", "Node.js", "Python", "Go", "Java"]}
+          data={[
+            "React",
+            "Next.js",
+            "TypeScript",
+            "Node.js",
+            "Python",
+            "Go",
+            "Java",
+          ]}
           mb="xl"
           {...form.getInputProps("skills")}
         />
 
         <Group justify="flex-end">
-          <Button variant="default" onClick={onCancel}>キャンセル</Button>
+          <Button variant="default" onClick={onCancel}>
+            キャンセル
+          </Button>
           <Button type="submit">保存する</Button>
         </Group>
       </form>

@@ -30,13 +30,20 @@ export default function CompanyOnboardingPage() {
   return (
     <Container size="md" py="xl">
       <Card shadow="lg" padding="xl" radius="md" withBorder>
-        <Title order={1} mb="md">企業・自治体情報登録</Title>
+        <Title order={1} mb="md">
+          企業・自治体情報登録
+        </Title>
         <Text c="dimmed" mb="xl">
           求人を掲載するために、組織情報と担当者情報を登録してください。
         </Text>
 
         {state?.error && (
-          <Alert icon={<IconAlertCircle size={16} />} title="エラー" color="red" mb="md">
+          <Alert
+            icon={<IconAlertCircle size={16} />}
+            title="エラー"
+            color="red"
+            mb="md"
+          >
             {state.error}
           </Alert>
         )}
@@ -47,7 +54,9 @@ export default function CompanyOnboardingPage() {
               <ImageUpload
                 label="組織ロゴ / プロフィール画像"
                 onFileChange={(file: File | null) => {
-                  const input = document.querySelector('input[name="avatar"]') as HTMLInputElement;
+                  const input = document.querySelector(
+                    'input[name="avatar"]',
+                  ) as HTMLInputElement;
                   if (input) {
                     const dataTransfer = new DataTransfer();
                     if (file) dataTransfer.items.add(file);
@@ -55,13 +64,20 @@ export default function CompanyOnboardingPage() {
                   }
                 }}
               />
-              <input type="file" name="avatar" style={{ display: "none" }} accept="image/png,image/jpeg,image/jpg" />
+              <input
+                type="file"
+                name="avatar"
+                style={{ display: "none" }}
+                accept="image/png,image/jpeg,image/jpg"
+              />
             </Stack>
 
             {/* Organization Section */}
             <div>
-              <Title order={3} mb="md">組織情報</Title>
-              
+              <Title order={3} mb="md">
+                組織情報
+              </Title>
+
               <Stack gap="md">
                 <TextInput
                   label="組織名 (企業名・自治体名)"
@@ -112,8 +128,10 @@ export default function CompanyOnboardingPage() {
 
             {/* Staff Information Section */}
             <div>
-              <Title order={3} mb="md">担当者情報</Title>
-              
+              <Title order={3} mb="md">
+                担当者情報
+              </Title>
+
               <Stack gap="md">
                 <TextInput
                   label="担当者名"
@@ -130,11 +148,7 @@ export default function CompanyOnboardingPage() {
                     name="department"
                   />
 
-                  <TextInput
-                    label="役職"
-                    placeholder="採用担当"
-                    name="title"
-                  />
+                  <TextInput label="役職" placeholder="採用担当" name="title" />
                 </Group>
               </Stack>
             </div>
