@@ -17,7 +17,7 @@ import {
   IconBriefcase,
 } from "@tabler/icons-react";
 import heroContentStyles from "./HeroContent.module.css";
-import Link from "next/link"
+import Link from "next/link";
 
 export function HeroContent() {
   return (
@@ -28,7 +28,9 @@ export function HeroContent() {
             <Stack gap="md">
               <Title className={heroContentStyles.title}>
                 LocalLinkで、
-                <span className={heroContentStyles.highlight}>あなたらしい</span>
+                <span className={heroContentStyles.highlight}>
+                  あなたらしい
+                </span>
                 地方生活を
               </Title>
               <Text
@@ -44,7 +46,12 @@ export function HeroContent() {
               <Button size="lg" rightSection={<IconArrowRight size={20} />}>
                 求人を探す
               </Button>
-              <Button size="lg" variant="outline" component={Link} href="/simulate">
+              <Button
+                size="lg"
+                variant="outline"
+                component={Link}
+                href="/life-simulator"
+              >
                 生活シミュレーション
               </Button>
             </Group>

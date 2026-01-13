@@ -24,9 +24,19 @@ export function LifeCostFeature() {
       targetRegionKey,
       familySize: Number(familySize),
       hasCar: hasCar === "yes",
-      gasType: gasType as 'city' | 'propane'
+      gasType: gasType as "city" | "propane",
     });
-  }, [currentRent, currentFood, currentElec, currentGas, currentWater, targetRegionKey, familySize, hasCar, gasType]);
+  }, [
+    currentRent,
+    currentFood,
+    currentElec,
+    currentGas,
+    currentWater,
+    targetRegionKey,
+    familySize,
+    hasCar,
+    gasType,
+  ]);
   return (
     <LifeCostUI
       currentRent={currentRent}

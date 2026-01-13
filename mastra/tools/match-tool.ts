@@ -33,12 +33,16 @@ export const matchTool = createTool({
     location: z
       .array(z.string())
       .optional()
-      .describe('希望する勤務地のリスト（都道府県名）。例: ["東京都", "長野県"]'),
+      .describe(
+        '希望する勤務地のリスト（都道府県名）。例: ["東京都", "長野県"]',
+      ),
     desiredSalary: z.number().optional().describe("希望年収（円）"),
     keywords: z
       .array(z.string())
       .optional()
-      .describe('ユーザーの入力に含まれる特徴的なキーワード。例: ["伝統工芸", "英語", "古い街並み", "マーケティング"]'),
+      .describe(
+        'ユーザーの入力に含まれる特徴的なキーワード。例: ["伝統工芸", "英語", "古い街並み", "マーケティング"]',
+      ),
   }),
 
   outputSchema: z.array(scoredCompanySchema),
@@ -47,7 +51,12 @@ export const matchTool = createTool({
     // チャットからのユーザー入力を取得
     const { skills, location, desiredSalary, keywords } = context;
 
-    const defaultPriorities = { skills: 0.4, location: 0.2, salary: 0.1, keywords: 0.3 };
+    const defaultPriorities = {
+      skills: 0.4,
+      location: 0.2,
+      salary: 0.1,
+      keywords: 0.3,
+    };
     const effectivePriorities = defaultPriorities;
 
     try {
@@ -76,10 +85,7 @@ export const matchTool = createTool({
           level: rs.level === "MUST" ? "必須" : "歓迎",
         }));
 
-        const skillScore = calculateSkillScore(
-          formattedSkills,
-          skills || [],
-        );
+        const skillScore = calculateSkillScore(formattedSkills, skills || []);
 
         const locationScore = calculateLocationScore(
           job.location.prefecture.name, // 都道府県名で比較
@@ -92,19 +98,16 @@ export const matchTool = createTool({
           desiredSalary ?? null,
         );
 
-        const keywordScore = calculateKeywordScore(
-          keywords || [],
-          [
-            job.title,
-            job.description,
-            ...(job.tags || []),
-            job.organization.name,
-            job.organization.description,
-            job.organization.industry,
-            job.location.prefecture.name,
-            job.location.city
-          ]
-        );
+        const keywordScore = calculateKeywordScore(keywords || [], [
+          job.title,
+          job.description,
+          ...(job.tags || []),
+          job.organization.name,
+          job.organization.description,
+          job.organization.industry,
+          job.location.prefecture.name,
+          job.location.city,
+        ]);
 
         // 総合スコアを計算
         const matchScore =
@@ -126,20 +129,23 @@ export const matchTool = createTool({
 
       // マッチ度が高い順にソート（0.1以上のものに限定）
       const sortedCompanies = scoredCompanies
-        .filter(c => c.matchScore > 0.1)
+        .filter((c) => c.matchScore > 0.1)
         .sort((a, b) => b.matchScore - a.matchScore);
 
       // 上位5件をAIに返す
       const result = sortedCompanies.slice(0, 5);
 
-      const fs = require('fs');
+      const fs = require("fs");
       try {
-        fs.appendFileSync('/home/yuon/simulate/match-debug.log', JSON.stringify({
-          timestamp: new Date().toISOString(),
-          status: "real-server-success",
-          count: result.length
-        }) + '\n');
-      } catch (e) { }
+        fs.appendFileSync(
+          "/home/yuon/simulate/match-debug.log",
+          `${JSON.stringify({
+            timestamp: new Date().toISOString(),
+            status: "real-server-success",
+            count: result.length,
+          })}\n`,
+        );
+      } catch (e) {}
 
       return result;
     } catch (error) {

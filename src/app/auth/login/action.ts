@@ -40,13 +40,19 @@ export async function login(formData: FormData) {
       });
 
       if (seededUser) {
-        console.log(`Matching seeded user found for ${user.email}. Syncing IDs...`);
-        await prisma.$transaction(async (tx) => {
-          const staff = await tx.staffProfile.findUnique({ where: { userId: seededUser.id } });
-          const candidate = await tx.candidateProfile.findUnique({ where: { userId: seededUser.id } });
+        console.log(
+          `Matching seeded user found for ${user.email}. Syncing IDs...`,
+        );
+        (await prisma.$transaction(async (tx) => {
+          const staff = await tx.staffProfile.findUnique({
+            where: { userId: seededUser.id },
+          });
+          const candidate = await tx.candidateProfile.findUnique({
+            where: { userId: seededUser.id },
+          });
 
           await tx.user.delete({ where: { id: seededUser.id } });
-          
+
           existingUser = await tx.user.create({
             data: {
               id: user.id,
@@ -65,7 +71,7 @@ export async function login(formData: FormData) {
                 organizationId: staff.organizationId,
                 department: staff.department ?? null,
                 title: staff.title ?? null,
-              }
+              },
             });
           }
           if (candidate) {
@@ -75,10 +81,10 @@ export async function login(formData: FormData) {
                 bio: candidate.bio ?? null,
                 gender: candidate.gender,
                 age: candidate.age,
-              }
+              },
             });
           }
-        }) as any;
+        })) as any;
       } else {
         // User signed up but didn't complete /auth/confirm flow properly (or side-stepped)
         // Create user from metadata
@@ -106,7 +112,7 @@ export async function login(formData: FormData) {
     }
 
     if (!existingUser) {
-       redirect("/auth/login?error=sync_failed");
+      redirect("/auth/login?error=sync_failed");
     }
 
     // User exists, but verify profile

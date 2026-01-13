@@ -1,99 +1,99 @@
 .wrapper {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 1000;
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 1000;
 }
 
 .trigger {
-    width: 60px;
-    height: 60px;
-    border-radius: 30px;
-    background-color: var(--primary-green);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    cursor: pointer;
-    transition: transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  color: white;
+  cursor: pointer;
+  background-color: var(--primary-green);
+  border-radius: 30px;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
+  transition: transform 0.2s ease;
 }
 
 .trigger:hover {
-    transform: scale(1.05);
+  transform: scale(1.05);
 }
 
 .chatWindow {
-    position: absolute;
-    bottom: 80px;
-    right: 0;
-    width: 350px;
-    height: 500px;
-    background-color: white;
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    border: 1px solid var(--primary-green-light);
+  position: absolute;
+  right: 0;
+  bottom: 80px;
+  display: flex;
+  flex-direction: column;
+  width: 350px;
+  height: 500px;
+  overflow: hidden;
+  background-color: white;
+  border: 1px solid var(--primary-green-light);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 20%);
 }
 
 .header {
-    padding: 16px;
-    background-color: var(--primary-green);
-    color: white;
-    font-weight: 700;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  font-weight: 700;
+  color: white;
+  background-color: var(--primary-green);
 }
 
 .messageList {
-    flex: 1;
-    padding: 16px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  overflow-y: auto;
 }
 
 .message {
-    max-width: 80%;
-    padding: 10px 14px;
-    border-radius: 12px;
-    font-size: 14px;
-    line-height: 1.4;
+  max-width: 80%;
+  padding: 10px 14px;
+  font-size: 14px;
+  line-height: 1.4;
+  border-radius: 12px;
 }
 
 .userMessage {
-    align-self: flex-end;
-    background-color: var(--primary-green);
-    color: white;
-    border-bottom-right-radius: 2px;
+  align-self: flex-end;
+  color: white;
+  background-color: var(--primary-green);
+  border-bottom-right-radius: 2px;
 }
 
 .aiMessage {
-    align-self: flex-start;
-    background-color: var(--primary-green-light);
-    color: var(--primary-green-dark);
-    border-bottom-left-radius: 2px;
+  align-self: flex-start;
+  color: var(--primary-green-dark);
+  background-color: var(--primary-green-light);
+  border-bottom-left-radius: 2px;
 }
 
 .inputArea {
-    padding: 16px;
-    border-top: 1px solid #eee;
+  padding: 16px;
+  border-top: 1px solid #eee;
 }
 
 .matchList {
-    margin-top: 8px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
 }
 
 .matchItem {
-    background-color: white;
-    padding: 8px;
-    border-radius: 8px;
-    border: 1px solid var(--primary-green);
+  padding: 8px;
+  background-color: white;
+  border: 1px solid var(--primary-green);
+  border-radius: 8px;
 }

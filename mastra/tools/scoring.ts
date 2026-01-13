@@ -69,7 +69,11 @@ export const calculateLocationScore = (
 
   // 求人の勤務地が希望リストに含まれていれば1点 (部分一致も許容)
   // 例: "東京" for "東京都"
-  return desiredLocationNames.some(desired => jobLocationName.includes(desired)) ? 1 : 0;
+  return desiredLocationNames.some((desired) =>
+    jobLocationName.includes(desired),
+  )
+    ? 1
+    : 0;
 };
 
 // 給与スコア（最低よりも高ければ1点、希望なしで1点、企業の給与設定なしは0.5点、その他0点）

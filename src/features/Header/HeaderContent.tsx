@@ -34,7 +34,7 @@ import headerContentStyles from "./HeaderContent.module.css";
 import { User } from "@supabase/supabase-js";
 import { Logout } from "@/app/auth/logout/action";
 import { useRouter } from "next/navigation";
-import Link from "next/link"
+import Link from "next/link";
 
 type ExtendedUser = User & {
   role?: string;
