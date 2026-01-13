@@ -26,16 +26,16 @@ export function HeroContent() {
           <Stack gap="xl">
             <Stack gap="md">
               <Title className={heroContentStyles.title}>
-                地方と人材を
-                <span className={heroContentStyles.highlight}>つなぐ</span>
-                プラットフォーム
+                LocalLinkで、
+                <span className={heroContentStyles.highlight}>あなたらしい</span>
+                地方生活を
               </Title>
               <Text
                 size="xl"
                 c="dimmed"
                 className={heroContentStyles.description}
               >
-                あなたの理想の働き方と生活を地方で実現。生活シミュレーション機能で移住前に具体的な生活イメージを描けます。
+                LocalLinkは、地方での新しいキャリアと理想の暮らしをつなぐプラットフォーム。AIがあなたのスキルと感性にぴったりの求人と地域を提案します。
               </Text>
             </Stack>
 

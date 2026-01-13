@@ -4,7 +4,7 @@
   justify-content: center;
   width: 32px;
   height: 32px;
-  background-color: var(--mantine-color-blue-6);
+  background-color: var(--primary-green);
   border-radius: var(--mantine-radius-sm);
 }
 
@@ -25,12 +25,13 @@
 }
 
 .navLink:hover {
-  color: var(--mantine-color-blue-6);
+  color: var(--primary-green);
   text-decoration: none;
 }
 
 .searchInput {
-  width: 250px; /* Adjust as needed */
+  width: 250px;
+  /* Adjust as needed */
 }
 
 .profileLink {

@@ -114,9 +114,9 @@ export function HeaderContent({ user, avatarUrl }: HeaderContentProps) {
           <Anchor href="/" underline="never" c="inherit">
             <Group gap="xs">
               <div className={headerContentStyles.logo}>
-                <span className={headerContentStyles.logoText}>地</span>
+                <span className={headerContentStyles.logoText}>L</span>
               </div>
-              <span className={headerContentStyles.brandName}>地方創生</span>
+              <span className={headerContentStyles.brandName}>LocalLink</span>
             </Group>
           </Anchor>
 

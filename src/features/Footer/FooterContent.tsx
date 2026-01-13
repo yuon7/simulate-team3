@@ -13,15 +13,15 @@ export function FooterContent() {
             <Group gap="xs">
               <div className={footerContentStyles.logo}>
                 <Text fw={700} c="white">
-                  地
+                  L
                 </Text>
               </div>
               <Text fw={700} size="lg">
-                地方創生プラットフォーム
+                LocalLink
               </Text>
             </Group>
             <Text size="sm" c="dimmed">
-              地方と人材をつなぎ、新しい働き方と生活を実現するプラットフォームです。
+              地方での新しいキャリアと理想の暮らしをつなぐ、AIマッチングプラットフォームです。
             </Text>
           </Stack>
         </Grid.Col>
@@ -113,19 +113,19 @@ export function FooterContent() {
               <Group gap="xs">
                 <IconMail size={16} className={footerContentStyles.icon} />
                 <Text size="sm" c="dimmed">
-                  info@chihou-platform.jp
+                  support@locallink.jp
                 </Text>
               </Group>
               <Group gap="xs">
                 <IconPhone size={16} className={footerContentStyles.icon} />
                 <Text size="sm" c="dimmed">
-                  03-1234-5678
+                  03-xxxx-xxxx
                 </Text>
               </Group>
               <Group gap="xs">
                 <IconMapPin size={16} className={footerContentStyles.icon} />
                 <Text size="sm" c="dimmed">
-                  東京都渋谷区
+                  LocalLink 運営事務局
                 </Text>
               </Group>
             </Stack>
@@ -135,7 +135,7 @@ export function FooterContent() {
 
       <div className={footerContentStyles.copyright}>
         <Text size="sm" c="dimmed" ta="center">
-          &copy; 2025 地方創生プラットフォーム. All rights reserved.
+          &copy; 2026 LocalLink. All rights reserved.
         </Text>
       </div>
     </Container>
