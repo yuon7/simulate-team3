@@ -9,8 +9,8 @@
   font-size: 56px;
   font-weight: 900;
   line-height: 1.1;
-  text-align: left;
   color: var(--mantine-color-text);
+  text-align: left;
 }
 
 @media (max-width: 755px) {
@@ -61,22 +61,22 @@
 }
 
 .imageWrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 100%;
 }
 
 .imagePaper {
+  position: relative;
   width: 100%;
   max-width: 500px;
   overflow: hidden;
-  position: relative;
 }
 
 .image {
+  display: block;
   width: 100%;
   height: auto;
-  display: block;
 }

@@ -1,11 +1,11 @@
 .jobCard {
-  transition: transform 0.2s ease-in-out;
   border: 1px solid var(--mantine-color-gray-2);
+  transition: transform 0.2s ease-in-out;
 }
 
 .jobCard:hover {
-  transform: translateY(-5px);
   box-shadow: var(--mantine-shadow-md);
+  transform: translateY(-5px);
 }
 
 .icon {
@@ -13,10 +13,10 @@
 }
 
 .orgLink {
+  display: inline-block;
+  font-weight: 600;
   color: var(--mantine-color-blue-6);
   text-decoration: none;
-  font-weight: 600;
-  display: inline-block;
 }
 
 .orgLink:hover {

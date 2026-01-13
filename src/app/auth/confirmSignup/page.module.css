@@ -1,8 +1,8 @@
 .container {
-  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
+  min-height: 100vh;
 }
 
 .card {
@@ -14,15 +14,15 @@
 }
 
 .title {
+  margin-bottom: 1rem;
   font-size: 1.5rem;
   font-weight: bold;
-  margin-bottom: 1rem;
   color: #fff;
 }
 
 .text {
-  color: #fff;
   margin-bottom: 1.5rem;
+  color: #fff;
 }
 
 .link {

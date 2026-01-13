@@ -4,8 +4,8 @@
   justify-content: center;
   width: 32px;
   height: 32px;
-  border-radius: var(--mantine-radius-sm);
   background-color: var(--mantine-color-blue-6);
+  border-radius: var(--mantine-radius-sm);
 }
 
 .link {
@@ -21,7 +21,7 @@
 }
 
 .copyright {
-  margin-top: var(--mantine-spacing-xl);
   padding-top: var(--mantine-spacing-md);
+  margin-top: var(--mantine-spacing-xl);
   border-top: 1px solid var(--mantine-color-gray-2);
 }

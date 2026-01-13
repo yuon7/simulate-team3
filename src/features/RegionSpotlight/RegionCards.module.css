@@ -1,11 +1,11 @@
 .regionCard {
-  transition: transform 0.2s ease-in-out;
   border: 1px solid var(--mantine-color-gray-2);
+  transition: transform 0.2s ease-in-out;
 }
 
 .regionCard:hover {
-  transform: translateY(-5px);
   box-shadow: var(--mantine-shadow-md);
+  transform: translateY(-5px);
 }
 
 .imageWrapper {
@@ -26,8 +26,8 @@
   position: absolute;
   top: var(--mantine-spacing-md);
   right: var(--mantine-spacing-md);
-  background-color: var(--mantine-color-yellow-filled);
   color: var(--mantine-color-white);
+  background-color: var(--mantine-color-yellow-filled);
 }
 
 .iconPrimary {
