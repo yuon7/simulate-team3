@@ -1,10 +1,10 @@
 import { Container, Title, Text, Stack } from "@mantine/core";
 import simulatorSectionStyles from "./LifeSimulator.module.css";
-import { LifeSimulation } from "../../features/LifeSimulator/LifeSimulator"; 
+import { LifeSimulation } from "../../features/LifeSimulator/LifeSimulator";
 
 export function LifeSimulator() {
   return (
-    <section id="simulator" className={simulatorSectionStyles.section}>
+    <section className={simulatorSectionStyles.section}>
       <Container size="xl">
         <Stack align="center" gap="md" mb={60}>
           <Title order={2} className={simulatorSectionStyles.title}>

@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { InitialCostUI } from "@/components/LifeSimulator/InitialCostUI";
-import { REGIONS, PREFECTURE_AREAS } from "./supportData"; 
+import { REGIONS, PREFECTURE_AREAS } from "./supportData";
 import { getDistFactor, calculateInitialCost } from "./InitialLogic";
 
 export function InitialCostFeature() {
@@ -17,23 +17,46 @@ export function InitialCostFeature() {
   const [reikin, setReikin] = useState<number | string>(1);
   const [carPlan, setCarPlan] = useState("none");
   const [familySize, setFamilySize] = useState("1");
-  const prefOptions = useMemo(() => REGIONS.flatMap(r => r.prefs), []);
+  const prefOptions = useMemo(() => REGIONS.flatMap((r) => r.prefs), []);
   const cityOptions = useMemo(() => {
     if (!targetPref || !PREFECTURE_AREAS[targetPref]) return [];
     return Object.values(PREFECTURE_AREAS[targetPref]).flat();
   }, [targetPref]);
   const result = useMemo(() => {
     const distFactor = getDistFactor(currentPref, targetPref);
-    const isSnowy = ["北海道", "青森県", "秋田県", "岩手県", "山形県", "新潟県", "長野県"].includes(targetPref || "");
-    const isOverseas = ["北海道", "沖縄県"].includes(currentPref || "") || ["北海道", "沖縄県"].includes(targetPref || "");
-    const distGroupMatch = distFactor < 2.0; 
+    const isSnowy = [
+      "北海道",
+      "青森県",
+      "秋田県",
+      "岩手県",
+      "山形県",
+      "新潟県",
+      "長野県",
+    ].includes(targetPref || "");
+    const isOverseas =
+      ["北海道", "沖縄県"].includes(currentPref || "") ||
+      ["北海道", "沖縄県"].includes(targetPref || "");
+    const distGroupMatch = distFactor < 2.0;
     return calculateInitialCost(
       { roomType, distFactor, isPeak: isPeakSeason },
-      { rent: Number(targetRent), shikikinMonth: Number(shikikin), reikinMonth: Number(reikin) },
-      { plan: carPlan as 'none'|'bring'|'buy', distGroupMatch, isOverseas },
-      isSnowy
+      {
+        rent: Number(targetRent),
+        shikikinMonth: Number(shikikin),
+        reikinMonth: Number(reikin),
+      },
+      { plan: carPlan as "none" | "bring" | "buy", distGroupMatch, isOverseas },
+      isSnowy,
     );
-  }, [roomType, isPeakSeason, currentPref, targetPref, targetRent, shikikin, reikin, carPlan]);
+  }, [
+    roomType,
+    isPeakSeason,
+    currentPref,
+    targetPref,
+    targetRent,
+    shikikin,
+    reikin,
+    carPlan,
+  ]);
   return (
     <InitialCostUI
       currentPref={currentPref}

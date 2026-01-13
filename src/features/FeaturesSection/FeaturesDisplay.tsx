@@ -69,9 +69,9 @@ export function FeaturesDisplay() {
             padding="lg"
             radius="md"
             className={displayStyles.featureCard}
-            component={feature.link ? (Link as any) : "div"}     
-            href={feature.link ? feature.link : undefined} 
-            style={{ cursor: feature.link ? "pointer" : "default" }} 
+            component={feature.link ? (Link as any) : "div"}
+            href={feature.link ? feature.link : undefined}
+            style={{ cursor: feature.link ? "pointer" : "default" }}
           >
             <Stack gap="md">
               <div

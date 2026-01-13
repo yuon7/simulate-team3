@@ -9,8 +9,9 @@ import "@mantine/notifications/styles.css";
 import { Notifications } from "@mantine/notifications";
 
 export const metadata: Metadata = {
-  title: "Next-Hono-Template",
-  description: "A modern template combining Next.js and Hono.",
+  title: "LocalLink",
+  description:
+    "地方と人材をつなぐ、シミュレーション型求人マッチングプラットフォーム",
 };
 
 export default function RootLayout({
@@ -24,7 +25,25 @@ export default function RootLayout({
         <ColorSchemeScript defaultColorScheme="light" />
       </head>
       <body>
-        <MantineProvider>
+        <MantineProvider
+          theme={{
+            primaryColor: "emerald",
+            colors: {
+              emerald: [
+                "#ecfdf5",
+                "#d1fae5",
+                "#a7f3d0",
+                "#6ee7b7",
+                "#34d399",
+                "#10b981",
+                "#059669",
+                "#047857",
+                "#065f46",
+                "#064e3b",
+              ],
+            },
+          }}
+        >
           <Notifications />
           {/* <HeaderMegaMenu /> を <Header /> に変更 */}
           <Header />

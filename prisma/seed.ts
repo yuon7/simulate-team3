@@ -33,6 +33,29 @@ const PREFECTURES = [
 async function main() {
   console.log("Start seeding ...");
 
+  // Clean up existing data to avoid desync
+  console.log("Cleaning up existing data...");
+
+  // 1. Delete leaf relations (most dependent)
+  await prisma.message.deleteMany();
+  await prisma.matchingScore.deleteMany();
+  await prisma.application.deleteMany();
+  await prisma.jobPostingSkill.deleteMany();
+  await prisma.userSkill.deleteMany();
+  await prisma.desiredLocation.deleteMany();
+
+  // 2. Delete mid-level entities
+  await prisma.jobPosting.deleteMany();
+  await prisma.staffProfile.deleteMany();
+  await prisma.candidateProfile.deleteMany();
+
+  // 3. Delete base entities
+  await prisma.organization.deleteMany();
+  await prisma.user.deleteMany();
+  await prisma.location.deleteMany();
+
+  console.log("Cleanup finished. Starting fresh seeding...");
+
   for (const pref of PREFECTURES) {
     await prisma.prefecture.upsert({
       where: { id: pref.id },
@@ -43,7 +66,16 @@ async function main() {
 
   // Categories
   const categories = [
-    "エンジニア", "デザイナー", "マーケティング", "営業", "事務・管理", "企画・経営", "接客・販売", "医療・福祉", "教育", "建設・土木"
+    "エンジニア",
+    "デザイナー",
+    "マーケティング",
+    "営業",
+    "事務・管理",
+    "企画・経営",
+    "接客・販売",
+    "医療・福祉",
+    "教育",
+    "建設・土木",
   ];
   const catModels: any[] = [];
   for (const catName of categories) {
@@ -56,7 +88,16 @@ async function main() {
   }
 
   // Skills
-  const skills = ["JavaScript", "TypeScript", "React", "Node.js", "Python", "Figma", "English", "Agile"];
+  const skills = [
+    "JavaScript",
+    "TypeScript",
+    "React",
+    "Node.js",
+    "Python",
+    "Figma",
+    "English",
+    "Agile",
+  ];
   const skillModels: any = {};
   for (const skillName of skills) {
     const s = await prisma.skill.upsert({
@@ -69,26 +110,131 @@ async function main() {
 
   // Organizations & Jobs
   const orgs = [
-    { name: "テック長野株式会社", pref: "長野県", city: "松本市", type: "COMPANY", jobs: [
-      { title: "シニアフルスタックエンジニア", cat: "エンジニア", salaryMin: 6000000, salaryMax: 9000000, tags: ["リモートワーク可", "TypeScript", "自社サービス", "週休2日"] },
-      { title: "UI/UXデザイナー", cat: "デザイナー", salaryMin: 4000000, salaryMax: 7000000, tags: ["Figma", "移住支援あり", "フレックス", "残業少なめ"] }
-    ]},
-    { name: "島根アグリ・イノベーション", pref: "島根県", city: "出雲市", type: "COMPANY", jobs: [
-      { title: "スマート農業の企画・運用", cat: "企画・経営", salaryMin: 3500000, salaryMax: 5000000, tags: ["未経験歓迎", "農業IT", "地域貢献", "学歴不問", "転勤なし"] }
-    ]},
-    { name: "福岡ライフケアサポート", pref: "福岡県", city: "福岡市", type: "COMPANY", jobs: [
-      { title: "介護福祉士（ユニット型）", cat: "医療・福祉", salaryMin: 3000000, salaryMax: 4500000, tags: ["資格手当あり", "福岡移住", "寮完備", "賞与あり", "週休2日"] }
-    ]},
-    { name: "京都伝統工芸デジタル販売", pref: "京都府", city: "京都市", type: "COMPANY", jobs: [
-      { title: "海外向けECマーケーター", cat: "マーケティング", salaryMin: 4500000, salaryMax: 8000000, tags: ["英語活かせる", "伝統工芸", "フレックス", "服装自由"] }
-    ]},
-    { name: "北海道アウトドア観光局", pref: "北海道", city: "富良野市", type: "COMPANY", jobs: [
-      { title: "アウトドアガイド・ツアー企画", cat: "企画・経営", salaryMin: 2800000, salaryMax: 4000000, tags: ["自然が好き", "英語", "寮完備", "未経験歓迎", "賞与あり"] }
-    ]}
+    {
+      name: "テック長野株式会社",
+      pref: "長野県",
+      city: "松本市",
+      type: "COMPANY",
+      jobs: [
+        {
+          title: "シニアフルスタックエンジニア",
+          cat: "エンジニア",
+          salaryMin: 6000000,
+          salaryMax: 9000000,
+          tags: ["リモートワーク可", "TypeScript", "自社サービス", "週休2日"],
+        },
+        {
+          title: "UI/UXデザイナー",
+          cat: "デザイナー",
+          salaryMin: 4000000,
+          salaryMax: 7000000,
+          tags: ["Figma", "移住支援あり", "フレックス", "残業少なめ"],
+        },
+      ],
+    },
+    {
+      name: "島根アグリ・イノベーション",
+      pref: "島根県",
+      city: "出雲市",
+      type: "COMPANY",
+      jobs: [
+        {
+          title: "スマート農業の企画・運用",
+          cat: "企画・経営",
+          salaryMin: 3500000,
+          salaryMax: 5000000,
+          tags: ["未経験歓迎", "農業IT", "地域貢献", "学歴不問", "転勤なし"],
+        },
+      ],
+    },
+    {
+      name: "福岡ライフケアサポート",
+      pref: "福岡県",
+      city: "福岡市",
+      type: "COMPANY",
+      jobs: [
+        {
+          title: "介護福祉士（ユニット型）",
+          cat: "医療・福祉",
+          salaryMin: 3000000,
+          salaryMax: 4500000,
+          tags: ["資格手当あり", "福岡移住", "寮完備", "賞与あり", "週休2日"],
+        },
+      ],
+    },
+    {
+      name: "京都伝統工芸デジタル販売",
+      pref: "京都府",
+      city: "京都市",
+      type: "COMPANY",
+      jobs: [
+        {
+          title: "海外向けECマーケーター",
+          cat: "マーケティング",
+          salaryMin: 4500000,
+          salaryMax: 8000000,
+          tags: ["英語活かせる", "伝統工芸", "フレックス", "服装自由"],
+        },
+      ],
+    },
+    {
+      name: "北海道アウトドア観光局",
+      pref: "北海道",
+      city: "富良野市",
+      type: "COMPANY",
+      jobs: [
+        {
+          title: "アウトドアガイド・ツアー企画",
+          cat: "企画・経営",
+          salaryMin: 2800000,
+          salaryMax: 4000000,
+          tags: ["自然が好き", "英語", "寮完備", "未経験歓迎", "賞与あり"],
+        },
+      ],
+    },
+    {
+      name: "沖縄リモートワークベース",
+      pref: "沖縄県",
+      city: "那覇市",
+      type: "COMPANY",
+      jobs: [
+        {
+          title: "コミュニティマネージャー",
+          cat: "事務・管理",
+          salaryMin: 3000000,
+          salaryMax: 4500000,
+          tags: ["海が近い", "副業可", "コワーキング運営", "英語"],
+        },
+        {
+          title: "ブリッジSE",
+          cat: "エンジニア",
+          salaryMin: 5000000,
+          salaryMax: 7500000,
+          tags: ["アジア展開", "リモート推奨", "ワーケーション推奨"],
+        },
+      ],
+    },
+    {
+      name: "宮城復興まちづくりNPO",
+      pref: "宮城県",
+      city: "石巻市",
+      type: "COMPANY",
+      jobs: [
+        {
+          title: "地域コーディネーター",
+          cat: "企画・経営",
+          salaryMin: 3000000,
+          salaryMax: 4200000,
+          tags: ["社会貢献", "NPO", "未経験歓迎", "地域活性化"],
+        },
+      ],
+    },
   ];
 
   for (const orgData of orgs) {
-    const pref = await prisma.prefecture.findFirst({ where: { name: orgData.pref } });
+    const pref = await prisma.prefecture.findFirst({
+      where: { name: orgData.pref },
+    });
     if (!pref) continue;
 
     const location = await prisma.location.upsert({
@@ -119,9 +265,10 @@ async function main() {
     });
 
     // Create a staff user for each org for testing
-    const email = orgData.name === "テック長野株式会社" 
-      ? "technagano@example.com" 
-      : `${orgData.name.replace(/\s+/g, '').toLowerCase()}@example.com`;
+    const email =
+      orgData.name === "テック長野株式会社"
+        ? "technagano@example.com"
+        : `${orgData.name.replace(/\s+/g, "").toLowerCase()}@example.com`;
 
     const user = await prisma.user.upsert({
       where: { email },
@@ -140,47 +287,52 @@ async function main() {
       create: {
         userId: user.id,
         organizationId: org.id,
-        title: orgData.name === "テック長野株式会社" ? "採用担当者" : "HRマネージャー",
+        title:
+          orgData.name === "テック長野株式会社"
+            ? "採用担当者"
+            : "HRマネージャー",
       },
     });
 
     for (const jobData of orgData.jobs) {
-      const cat = catModels.find(c => c.name === jobData.cat);
-      await prisma.jobPosting.upsert({
-        where: { id: -1 }, // This won't work for upsert without unique fields, let's just create if not exists
-        update: {},
-        create: {
-          title: jobData.title,
-          description: `${jobData.title}の募集です。詳細についてはお問い合わせください。地域の魅力を活かした働き方を提案しています。`,
-          organizationId: org.id,
-          employmentType: "正社員",
-          jobCategoryId: cat?.id || catModels[0].id,
-          locationId: location.id,
-          salaryMin: jobData.salaryMin,
-          salaryMax: jobData.salaryMax,
-          tags: jobData.tags,
-        }
-      }).catch(async () => {
-        // Fallback for JobPosting since it doesn't have a natural unique key in this seed
-        const exists = await prisma.jobPosting.findFirst({
-           where: { title: jobData.title, organizationId: org.id }
-        });
-        if (!exists) {
-           await prisma.jobPosting.create({
-            data: {
-              title: jobData.title,
-              description: `${jobData.title}の募集です。詳細についてはお問い合わせください。地域の魅力を活かした働き方を提案しています。`,
-              organizationId: org.id,
-              employmentType: "正社員",
-              jobCategoryId: cat?.id || catModels[0].id,
-              locationId: location.id,
-              salaryMin: jobData.salaryMin,
-              salaryMax: jobData.salaryMax,
-              tags: jobData.tags,
-            }
+      const cat = catModels.find((c) => c.name === jobData.cat);
+      await prisma.jobPosting
+        .upsert({
+          where: { id: -1 }, // This won't work for upsert without unique fields, let's just create if not exists
+          update: {},
+          create: {
+            title: jobData.title,
+            description: `${jobData.title}の募集です。詳細についてはお問い合わせください。地域の魅力を活かした働き方を提案しています。`,
+            organizationId: org.id,
+            employmentType: "正社員",
+            jobCategoryId: cat?.id || catModels[0].id,
+            locationId: location.id,
+            salaryMin: jobData.salaryMin,
+            salaryMax: jobData.salaryMax,
+            tags: jobData.tags,
+          },
+        })
+        .catch(async () => {
+          // Fallback for JobPosting since it doesn't have a natural unique key in this seed
+          const exists = await prisma.jobPosting.findFirst({
+            where: { title: jobData.title, organizationId: org.id },
           });
-        }
-      });
+          if (!exists) {
+            await prisma.jobPosting.create({
+              data: {
+                title: jobData.title,
+                description: `${jobData.title}の募集です。詳細についてはお問い合わせください。地域の魅力を活かした働き方を提案しています。`,
+                organizationId: org.id,
+                employmentType: "正社員",
+                jobCategoryId: cat?.id || catModels[0].id,
+                locationId: location.id,
+                salaryMin: jobData.salaryMin,
+                salaryMax: jobData.salaryMax,
+                tags: jobData.tags,
+              },
+            });
+          }
+        });
     }
   }
 
@@ -199,19 +351,25 @@ async function main() {
 
   await prisma.candidateProfile.upsert({
     where: { userId: candidateUser.id },
-    update: { bio: "フルスタックエンジニアを目指して学習中です。地方での働き方に興味があります。" },
+    update: {
+      bio: "フルスタックエンジニアを目指して学習中です。地方での働き方に興味があります。",
+    },
     create: {
       userId: candidateUser.id,
       bio: "フルスタックエンジニアを目指して学習中です。地方での働き方に興味があります。",
       gender: "男性",
       age: 28,
-    }
+    },
   });
 
   console.log("Seeding finished.");
   console.log("\n--- Mock Login Info ---");
-  console.log("Staff Example: technagano@example.com / password123 (Needs manual creation in Supabase)");
-  console.log("Candidate: candidate@example.com / password123 (Needs manual creation in Supabase)");
+  console.log(
+    "Staff Example: technagano@example.com / password123 (Needs manual creation in Supabase)",
+  );
+  console.log(
+    "Candidate: candidate@example.com / password123 (Needs manual creation in Supabase)",
+  );
   console.log("-----------------------\n");
 }
 

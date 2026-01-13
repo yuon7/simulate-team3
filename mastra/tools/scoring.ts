@@ -67,8 +67,13 @@ export const calculateLocationScore = (
     desiredLocationNames.map((name) => name.toLowerCase()),
   );
 
-  // 求人の勤務地が希望リストに含まれていれば1点
-  return desiredSet.has(jobLocationName.toLowerCase()) ? 1 : 0;
+  // 求人の勤務地が希望リストに含まれていれば1点 (部分一致も許容)
+  // 例: "東京" for "東京都"
+  return desiredLocationNames.some((desired) =>
+    jobLocationName.includes(desired),
+  )
+    ? 1
+    : 0;
 };
 
 // 給与スコア（最低よりも高ければ1点、希望なしで1点、企業の給与設定なしは0.5点、その他0点）
@@ -82,4 +87,29 @@ export const calculateSalaryScore = (
   if (jobSalaryMax && jobSalaryMax >= userDesiredSalary) return 1;
   if (jobSalaryMin && jobSalaryMin >= userDesiredSalary) return 1;
   return 0;
+};
+// キーワードスコア（タイトル、詳細、タグ、企業名などにキーワードが含まれていれば加点）
+export const calculateKeywordScore = (
+  keywords: string[],
+  textFields: (string | null | undefined)[],
+): number => {
+  if (!keywords || keywords.length === 0) return 0;
+
+  const keywordSet = new Set(keywords.map((k) => k.toLowerCase()));
+  let matchCount = 0;
+
+  // 全テキストフィールドを結合して検索対象にする
+  const targetText = textFields
+    .filter((f) => f) // null/undefined除去
+    .join(" ")
+    .toLowerCase();
+
+  keywordSet.forEach((keyword) => {
+    if (targetText.includes(keyword)) {
+      matchCount++;
+    }
+  });
+
+  // マッチしたキーワードの割合を返す
+  return matchCount / keywords.length;
 };

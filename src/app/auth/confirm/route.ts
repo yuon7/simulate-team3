@@ -64,20 +64,26 @@ export async function GET(request: NextRequest) {
           });
 
           if (seededUser) {
-            console.log(`Matching seeded user found for ${user.email}. Syncing IDs...`);
-            
+            console.log(
+              `Matching seeded user found for ${user.email}. Syncing IDs...`,
+            );
+
             // Re-create user with the correct Supabase ID, transferring role and name
             // Note: Since we use Prisma Client and the ID is the PK, we need to handle it carefully.
-            // A simple way is to delete the seeded one and create the new one, 
+            // A simple way is to delete the seeded one and create the new one,
             // but we need to preserve relations (like StaffProfile).
-            
+
             await prisma.$transaction(async (tx) => {
               // Extract relations before deleting
-              const staff = await tx.staffProfile.findUnique({ where: { userId: seededUser.id } });
-              const candidate = await tx.candidateProfile.findUnique({ where: { userId: seededUser.id } });
+              const staff = await tx.staffProfile.findUnique({
+                where: { userId: seededUser.id },
+              });
+              const candidate = await tx.candidateProfile.findUnique({
+                where: { userId: seededUser.id },
+              });
 
               await tx.user.delete({ where: { id: seededUser.id } });
-              
+
               await tx.user.create({
                 data: {
                   id: user.id,
@@ -85,7 +91,7 @@ export async function GET(request: NextRequest) {
                   passwordHash: seededUser.passwordHash,
                   role: seededUser.role,
                   name: seededUser.name,
-                }
+                },
               });
 
               if (staff) {
@@ -95,7 +101,7 @@ export async function GET(request: NextRequest) {
                     organizationId: staff.organizationId,
                     department: staff.department ?? null,
                     title: staff.title ?? null,
-                  }
+                  },
                 });
               }
               if (candidate) {
@@ -106,7 +112,7 @@ export async function GET(request: NextRequest) {
                     gender: candidate.gender,
                     age: candidate.age,
                     // Note: UserSkills might need more complex migration if we use it heavily
-                  }
+                  },
                 });
               }
             });

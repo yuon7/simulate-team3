@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { Tabs } from "@mantine/core";
 import { LifeCostFeature } from "./LifeCostFeature";
 import { InitialCostFeature } from "./InitialCostFeature";

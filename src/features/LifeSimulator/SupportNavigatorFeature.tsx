@@ -1,11 +1,11 @@
 "use client";
 import { useState, useMemo } from "react";
 import { SupportNavigatorUI } from "@/components/LifeSimulator/SupportNavigatorUI";
-import { 
-  getPrefectures, 
-  getAreas, 
-  getCities, 
-  calculateSupportData 
+import {
+  getPrefectures,
+  getAreas,
+  getCities,
+  calculateSupportData,
 } from "./SupportLogic";
 
 export function SupportNavigatorFeature() {
@@ -13,9 +13,15 @@ export function SupportNavigatorFeature() {
   const [selectedPref, setSelectedPref] = useState<string | null>(null);
   const [selectedArea, setSelectedArea] = useState<string | null>(null);
   const [selectedCity, setSelectedCity] = useState<string | null>(null);
-  const prefectureOptions = useMemo(() => getPrefectures(selectedRegion), [selectedRegion]);
+  const prefectureOptions = useMemo(
+    () => getPrefectures(selectedRegion),
+    [selectedRegion],
+  );
   const areaOptions = useMemo(() => getAreas(selectedPref), [selectedPref]);
-  const cityOptions = useMemo(() => getCities(selectedPref, selectedArea), [selectedPref, selectedArea]);
+  const cityOptions = useMemo(
+    () => getCities(selectedPref, selectedArea),
+    [selectedPref, selectedArea],
+  );
   const { filteredSupports, totalAmount } = useMemo(() => {
     return calculateSupportData(selectedCity);
   }, [selectedCity]);

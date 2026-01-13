@@ -1,5 +1,24 @@
-import { Card, Title, Text, Select, Badge, Group, Stack, Alert, Grid, GridCol, Box } from "@mantine/core";
-import { IconCoin, IconMapPin, IconInfoCircle, IconBuildingCottage, IconBuildingSkyscraper, IconMap } from "@tabler/icons-react";
+import {
+  Card,
+  Title,
+  Text,
+  Select,
+  Badge,
+  Group,
+  Stack,
+  Alert,
+  Grid,
+  GridCol,
+  Box,
+} from "@mantine/core";
+import {
+  IconCoin,
+  IconMapPin,
+  IconInfoCircle,
+  IconBuildingCottage,
+  IconBuildingSkyscraper,
+  IconMap,
+} from "@tabler/icons-react";
 import { REGIONS_DATA } from "@/features/LifeSimulator/SupportLogic";
 import { SupportItemSchema } from "@/features/LifeSimulator/SupportSchema";
 type Props = {
@@ -18,16 +37,27 @@ type Props = {
   onChangeCity: (val: string | null) => void;
 };
 export function SupportNavigatorUI({
-  selectedRegion, selectedPref, selectedArea, selectedCity,
-  prefectureOptions, areaOptions, cityOptions,
-  filteredSupports, totalAmount,
-  onChangeRegion, onChangePref, onChangeArea, onChangeCity
+  selectedRegion,
+  selectedPref,
+  selectedArea,
+  selectedCity,
+  prefectureOptions,
+  areaOptions,
+  cityOptions,
+  filteredSupports,
+  totalAmount,
+  onChangeRegion,
+  onChangePref,
+  onChangeArea,
+  onChangeCity,
 }: Props) {
   return (
     <Card shadow="sm" padding="lg" radius="md" withBorder>
       <Stack gap="lg">
         <div>
-          <Title order={4} mb="xs">🧭 支援制度ナビ</Title>
+          <Title order={4} mb="xs">
+            🧭 支援制度ナビ
+          </Title>
           <Text c="dimmed" size="sm">
             47都道府県・全自治体対応。地域ごとの移住支援金や独自の補助金を検索します。
           </Text>
@@ -84,33 +114,61 @@ export function SupportNavigatorUI({
           <>
             {filteredSupports.length > 0 ? (
               <>
-                <Alert 
-                  variant="light" color="teal" 
-                  title={`${selectedPref} ${selectedCity} の支援額試算`} 
-                  icon={<IconCoin />} radius="md"
+                <Alert
+                  variant="light"
+                  color="teal"
+                  title={`${selectedPref} ${selectedCity} の支援額試算`}
+                  icon={<IconCoin />}
+                  radius="md"
                 >
                   <Group align="flex-end" gap="xs">
-                    <Text size="xl" fw={700} c="teal">最大</Text>
-                    <Text size="3rem" fw={900} c="teal" style={{ lineHeight: 1 }}>
+                    <Text size="xl" fw={700} c="teal">
+                      最大
+                    </Text>
+                    <Text
+                      size="3rem"
+                      fw={900}
+                      c="teal"
+                      style={{ lineHeight: 1 }}
+                    >
                       {(totalAmount / 10000).toLocaleString()}
                     </Text>
-                    <Text size="xl" fw={700} c="teal">万円</Text>
+                    <Text size="xl" fw={700} c="teal">
+                      万円
+                    </Text>
                   </Group>
                   <Text size="xs" mt="sm">
                     ※制度の適用には条件があります（世帯構成・年齢・就業等）。詳細は自治体HPをご確認ください。
                   </Text>
                 </Alert>
                 <Stack gap="md">
-                  <Text fw={600}>利用可能な制度一覧 ({filteredSupports.length}件)</Text>
+                  <Text fw={600}>
+                    利用可能な制度一覧 ({filteredSupports.length}件)
+                  </Text>
                   {filteredSupports.map((item, index) => (
-                    <Card key={`${item.city}-${index}`} withBorder padding="sm" radius="md">
-                      <Group justify="space-between" align="start" wrap="nowrap">
+                    <Card
+                      key={`${item.city}-${index}`}
+                      withBorder
+                      padding="sm"
+                      radius="md"
+                    >
+                      <Group
+                        justify="space-between"
+                        align="start"
+                        wrap="nowrap"
+                      >
                         <Stack gap="xs" style={{ flex: 1 }}>
                           <Group gap="xs">
-                            <Badge color="blue" variant="light">{item.category}</Badge>
-                            <Text fw={600} size="sm">{item.title}</Text>
+                            <Badge color="blue" variant="light">
+                              {item.category}
+                            </Badge>
+                            <Text fw={600} size="sm">
+                              {item.title}
+                            </Text>
                           </Group>
-                          <Text size="xs" c="dimmed">{item.description}</Text>
+                          <Text size="xs" c="dimmed">
+                            {item.description}
+                          </Text>
                         </Stack>
                         <Badge size="lg" color="green" variant="outline">
                           {item.amount.toLocaleString()}円
@@ -122,7 +180,8 @@ export function SupportNavigatorUI({
               </>
             ) : (
               <Alert color="gray" icon={<IconInfoCircle />}>
-                {selectedCity} の詳細な支援金データは現在登録されていません。<br />
+                {selectedCity} の詳細な支援金データは現在登録されていません。
+                <br />
                 （※一般的な国の移住支援金制度などが利用できる可能性があります）
               </Alert>
             )}

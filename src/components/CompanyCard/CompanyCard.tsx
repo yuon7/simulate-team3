@@ -81,11 +81,11 @@ export function CompanyCard({
       <Text mt="md">{description}</Text>
 
       <Group mt="md">
-        {services.map((service) => (
+        {services?.map((service) => (
           <Badge key={service} color="blue" variant="light">
             {service}
           </Badge>
-        ))}
+        )) ?? null}
       </Group>
 
       <JobCards company={name} />

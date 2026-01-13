@@ -1,0 +1,99 @@
+.wrapper {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 1000;
+}
+
+.trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  color: white;
+  cursor: pointer;
+  background-color: var(--primary-green);
+  border-radius: 30px;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
+  transition: transform 0.2s ease;
+}
+
+.trigger:hover {
+  transform: scale(1.05);
+}
+
+.chatWindow {
+  position: absolute;
+  right: 0;
+  bottom: 80px;
+  display: flex;
+  flex-direction: column;
+  width: 350px;
+  height: 500px;
+  overflow: hidden;
+  background-color: white;
+  border: 1px solid var(--primary-green-light);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 20%);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  font-weight: 700;
+  color: white;
+  background-color: var(--primary-green);
+}
+
+.messageList {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.message {
+  max-width: 80%;
+  padding: 10px 14px;
+  font-size: 14px;
+  line-height: 1.4;
+  border-radius: 12px;
+}
+
+.userMessage {
+  align-self: flex-end;
+  color: white;
+  background-color: var(--primary-green);
+  border-bottom-right-radius: 2px;
+}
+
+.aiMessage {
+  align-self: flex-start;
+  color: var(--primary-green-dark);
+  background-color: var(--primary-green-light);
+  border-bottom-left-radius: 2px;
+}
+
+.inputArea {
+  padding: 16px;
+  border-top: 1px solid #eee;
+}
+
+.matchList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.matchItem {
+  padding: 8px;
+  background-color: white;
+  border: 1px solid var(--primary-green);
+  border-radius: 8px;
+}

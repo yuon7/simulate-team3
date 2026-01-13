@@ -30,23 +30,31 @@ export async function Header() {
       },
     })) as any;
 
-    // Fallback: If user exists in Supabase but not in Prisma with that ID, 
+    // Fallback: If user exists in Supabase but not in Prisma with that ID,
     // try to match by email (for pre-seeded mock users)
     if (!dbUser && user.email) {
-      console.log(`User ${user.email} not found by ID in Prisma. Attempting email match...`);
+      console.log(
+        `User ${user.email} not found by ID in Prisma. Attempting email match...`,
+      );
       const seededUser = await prisma.user.findUnique({
         where: { email: user.email },
       });
 
       if (seededUser) {
-        console.log(`Found seeded user for ${user.email}. Syncing IDs in Header...`);
+        console.log(
+          `Found seeded user for ${user.email}. Syncing IDs in Header...`,
+        );
         try {
           await prisma.$transaction(async (tx) => {
-            const staff = await tx.staffProfile.findUnique({ where: { userId: seededUser.id } });
-            const candidate = await tx.candidateProfile.findUnique({ where: { userId: seededUser.id } });
+            const staff = await tx.staffProfile.findUnique({
+              where: { userId: seededUser.id },
+            });
+            const candidate = await tx.candidateProfile.findUnique({
+              where: { userId: seededUser.id },
+            });
 
             await tx.user.delete({ where: { id: seededUser.id } });
-            
+
             await tx.user.create({
               data: {
                 id: user.id,
@@ -54,7 +62,7 @@ export async function Header() {
                 passwordHash: seededUser.passwordHash,
                 role: seededUser.role,
                 name: seededUser.name,
-              }
+              },
             });
 
             if (staff) {
@@ -64,7 +72,7 @@ export async function Header() {
                   organizationId: staff.organizationId,
                   department: staff.department ?? null,
                   title: staff.title ?? null,
-                }
+                },
               });
             }
             if (candidate) {
@@ -74,11 +82,11 @@ export async function Header() {
                   bio: candidate.bio ?? null,
                   gender: candidate.gender,
                   age: candidate.age,
-                }
+                },
               });
             }
           });
-          
+
           // Re-fetch dbUser after sync
           dbUser = (await prisma.user.findUnique({
             where: { id: user.id },
@@ -96,7 +104,9 @@ export async function Header() {
               },
             },
           })) as any;
-          console.log(`Successfully synced seeded user ${user.email} in Header.`);
+          console.log(
+            `Successfully synced seeded user ${user.email} in Header.`,
+          );
         } catch (syncError) {
           console.error("Failed to sync seeded user in Header:", syncError);
         }
@@ -124,7 +134,7 @@ export async function Header() {
       userDetail = {
         ...user,
         role: user.user_metadata.role || "CANDIDATE",
-        name: user.user_metadata.full_name || user.email?.split('@')[0],
+        name: user.user_metadata.full_name || user.email?.split("@")[0],
       };
     }
   }
