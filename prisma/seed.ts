@@ -11,44 +11,22 @@ const PREFECTURES = [
   { id: 6, name: "山形県", code: "06" },
   { id: 7, name: "福島県", code: "07" },
   { id: 8, name: "茨城県", code: "08" },
-  { id: 9, name: "栃木県", code: "09" },
   { id: 10, name: "群馬県", code: "10" },
   { id: 11, name: "埼玉県", code: "11" },
   { id: 12, name: "千葉県", code: "12" },
   { id: 13, name: "東京都", code: "13" },
   { id: 14, name: "神奈川県", code: "14" },
   { id: 15, name: "新潟県", code: "15" },
-  { id: 16, name: "富山県", code: "16" },
-  { id: 17, name: "石川県", code: "17" },
-  { id: 18, name: "福井県", code: "18" },
-  { id: 19, name: "山梨県", code: "19" },
   { id: 20, name: "長野県", code: "20" },
-  { id: 21, name: "岐阜県", code: "21" },
-  { id: 22, name: "静岡県", code: "22" },
   { id: 23, name: "愛知県", code: "23" },
-  { id: 24, name: "三重県", code: "24" },
-  { id: 25, name: "滋賀県", code: "25" },
   { id: 26, name: "京都府", code: "26" },
   { id: 27, name: "大阪府", code: "27" },
   { id: 28, name: "兵庫県", code: "28" },
-  { id: 29, name: "奈良県", code: "29" },
-  { id: 30, name: "和歌山県", code: "30" },
-  { id: 31, name: "鳥取県", code: "31" },
   { id: 32, name: "島根県", code: "32" },
   { id: 33, name: "岡山県", code: "33" },
   { id: 34, name: "広島県", code: "34" },
-  { id: 35, name: "山口県", code: "35" },
-  { id: 36, name: "徳島県", code: "36" },
-  { id: 37, name: "香川県", code: "37" },
-  { id: 38, name: "愛媛県", code: "38" },
-  { id: 39, name: "高知県", code: "39" },
   { id: 40, name: "福岡県", code: "40" },
-  { id: 41, name: "佐賀県", code: "41" },
-  { id: 42, name: "長崎県", code: "42" },
   { id: 43, name: "熊本県", code: "43" },
-  { id: 44, name: "大分県", code: "44" },
-  { id: 45, name: "宮崎県", code: "45" },
-  { id: 46, name: "鹿児島県", code: "46" },
   { id: 47, name: "沖縄県", code: "47" },
 ];
 
@@ -63,95 +41,116 @@ async function main() {
     });
   }
 
-  // Create or find Tokyo Location
-  const tokyoPref = await prisma.prefecture.findFirst({ where: { name: "東京都" } });
-  if (tokyoPref) {
+  // Categories
+  const categories = [
+    "エンジニア", "デザイナー", "マーケティング", "営業", "事務・管理", "企画・経営", "接客・販売", "医療・福祉", "教育", "建設・土木"
+  ];
+  const catModels = [];
+  for (const catName of categories) {
+    const cat = await prisma.jobCategory.upsert({
+      where: { name: catName },
+      update: {},
+      create: { name: catName },
+    });
+    catModels.push(cat);
+  }
+
+  // Organizations & Jobs
+  const orgs = [
+    { name: "テック長野株式会社", pref: "長野県", city: "松本市", type: "COMPANY", jobs: [
+      { title: "シニアフルスタックエンジニア", cat: "エンジニア", salaryMin: 6000000, salaryMax: 9000000, tags: ["リモートワーク可", "TypeScript", "自社サービス", "週休2日"] },
+      { title: "UI/UXデザイナー", cat: "デザイナー", salaryMin: 4000000, salaryMax: 7000000, tags: ["Figma", "移住支援あり", "フレックス", "残業少なめ"] }
+    ]},
+    { name: "島根アグリ・イノベーション", pref: "島根県", city: "出雲市", type: "COMPANY", jobs: [
+      { title: "スマート農業の企画・運用", cat: "企画・経営", salaryMin: 3500000, salaryMax: 5000000, tags: ["未経験歓迎", "農業IT", "地域貢献", "学歴不問", "転勤なし"] }
+    ]},
+    { name: "福岡ライフケアサポート", pref: "福岡県", city: "福岡市", type: "COMPANY", jobs: [
+      { title: "介護福祉士（ユニット型）", cat: "医療・福祉", salaryMin: 3000000, salaryMax: 4500000, tags: ["資格手当あり", "福岡移住", "寮完備", "賞与あり", "週休2日"] }
+    ]},
+    { name: "京都伝統工芸デジタル販売", pref: "京都府", city: "京都市", type: "COMPANY", jobs: [
+      { title: "海外向けECマーケーター", cat: "マーケティング", salaryMin: 4500000, salaryMax: 8000000, tags: ["英語活かせる", "伝統工芸", "フレックス", "服装自由"] }
+    ]},
+    { name: "北海道アウトドア観光局", pref: "北海道", city: "富良野市", type: "COMPANY", jobs: [
+      { title: "アウトドアガイド・ツアー企画", cat: "企画・経営", salaryMin: 2800000, salaryMax: 4000000, tags: ["自然が好き", "英語", "寮完備", "未経験歓迎", "賞与あり"] }
+    ]}
+  ];
+
+  // Clear existing jobs to avoid duplication with IDs if needed, 
+  // but better to just skip if they already exist or upsert if we had unique keys.
+  // For seeding, let's just create them if they don't exist by title?
+  // Actually, let's clear JobPosting for a clean seed of jobs.
+  await prisma.jobPosting.deleteMany({});
+
+  for (const orgData of orgs) {
+    const pref = await prisma.prefecture.findFirst({ where: { name: orgData.pref } });
+    if (!pref) continue;
+
     const location = await prisma.location.upsert({
       where: {
         prefectureId_city_street: {
-          prefectureId: tokyoPref.id,
-          city: "千代田区",
-          street: "丸の内1-1",
+          prefectureId: pref.id,
+          city: orgData.city,
+          street: "メイン通り1-1",
         },
       },
       update: {},
       create: {
-        prefectureId: tokyoPref.id,
-        city: "千代田区",
-        street: "丸の内1-1",
+        prefectureId: pref.id,
+        city: orgData.city,
+        street: "メイン通り1-1",
       },
     });
 
-    // Create Organization
-    await prisma.organization.upsert({
-      where: { name: "株式会社地方マッチング" },
-      update: {},
+    const org = await prisma.organization.upsert({
+      where: { name: orgData.name },
+      update: { locationId: location.id },
       create: {
-        name: "株式会社地方マッチング",
-        organizationType: "COMPANY", // Enum value
+        name: orgData.name,
+        organizationType: orgData.type as any,
         locationId: location.id,
-        description: "地方創生を目指す企業です。",
+        description: `${orgData.pref}${orgData.city}を拠点に活動する${orgData.name}です。地域社会への貢献を目指しています。`,
       },
     });
-  }
 
-  // Create JobCategory
-  await prisma.jobCategory.upsert({
-    where: { name: "エンジニア" },
-    update: {},
-    create: { name: "エンジニア" },
-  });
-  
-  // Create Skills
-  const skills = ["React", "Next.js", "TypeScript", "Mantine", "Node.js"];
-  for (const skillName of skills) {
-    await prisma.skill.upsert({
-      where: { name: skillName },
-      update: {},
-      create: { name: skillName },
-    });
-  }
-
-  // Create Test User (Candidate)
-  const testUserId = "testid-candidate";
-  const testUser = await prisma.user.upsert({
-    where: { id: testUserId },
-    update: {},
-    create: {
-      id: testUserId,
-      email: "candidate@example.com",
-      passwordHash: "mock-hash", // Mock password
-      role: "CANDIDATE",
-      name: "テスト候補者",
-      phone: "090-0000-0000",
-    },
-  });
-
-  // Create Candidate Profile
-  await prisma.candidateProfile.upsert({
-    where: { userId: testUserId },
-    update: {},
-    create: {
-      userId: testUserId,
-      gender: "その他",
-      age: 25,
-      bio: "地方移住に興味があるエンジニアです。リモートワーク中心の働き方を希望しています。",
-      desiredJobId: 1, // エンジニア
-    },
-  });
-  
-  // Link Skills to Candidate
-  const reactSkill = await prisma.skill.findUnique({ where: { name: "React" } });
-  if (reactSkill) {
-    await prisma.userSkill.upsert({
-      where: { userId_skillId: { userId: testUserId, skillId: reactSkill.id } },
+    // Create a staff user for each org for testing
+    const email = `${orgData.name.replace(/\s+/g, '').toLowerCase()}@example.com`;
+    const user = await prisma.user.upsert({
+      where: { email },
       update: {},
       create: {
-        userId: testUserId,
-        skillId: reactSkill.id,
-        proficiency: "INTERMEDIATE",
+        email,
+        passwordHash: "mock-hash",
+        role: "STAFF",
+        name: `${orgData.name} 採用担当`,
       },
     });
+
+    await prisma.staffProfile.upsert({
+      where: { userId: user.id },
+      update: { organizationId: org.id },
+      create: {
+        userId: user.id,
+        organizationId: org.id,
+        title: "HRマネージャー",
+      },
+    });
+
+    for (const jobData of orgData.jobs) {
+      const cat = catModels.find(c => c.name === jobData.cat);
+      await prisma.jobPosting.create({
+        data: {
+          title: jobData.title,
+          description: jobData.title + "の募集です。詳細についてはお問い合わせください。地域の魅力を活かした働き方を提案しています。",
+          organizationId: org.id,
+          employmentType: "正社員",
+          jobCategoryId: cat?.id || catModels[0].id,
+          locationId: location.id,
+          salaryMin: jobData.salaryMin,
+          salaryMax: jobData.salaryMax,
+          tags: jobData.tags,
+        }
+      });
+    }
   }
 
   console.log("Seeding finished.");
