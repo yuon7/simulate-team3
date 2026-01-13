@@ -3,7 +3,6 @@ import "@mantine/core/styles.css";
 import "../../styles/globals.css";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { Header } from "@/components/Header/Header";
-import { ChatAssistant } from "@/components/ChatAssistant/ChatAssistant";
 import { Analytics } from "@vercel/analytics/next";
 
 import "@mantine/notifications/styles.css";
@@ -30,7 +29,6 @@ export default function RootLayout({
           {/* <HeaderMegaMenu /> を <Header /> に変更 */}
           <Header />
           {children}
-          <ChatAssistant />
           <Analytics />
         </MantineProvider>
       </body>

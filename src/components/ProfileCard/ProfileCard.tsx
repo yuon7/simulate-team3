@@ -45,11 +45,11 @@ export default function ProfileCard({
       <Group justify="space-between" mb="md">
         <Group>
           <Avatar size="xl" radius="md" color="blue" src={avatarUrl}>
-            {name.charAt(0)}
+            {name?.charAt(0) ?? ""}
           </Avatar>
           <div>
             <Text size="xl" fw={700}>
-              {name}
+              {name ?? "名無し"}
             </Text>
             <Text size="sm" color="dimmed">
               {role}
@@ -73,7 +73,7 @@ export default function ProfileCard({
             自己紹介
           </Text>
           <Text size="sm" color="dimmed">
-            {bio}
+            {bio ?? "自己紹介はありません"}
           </Text>
         </div>
 
@@ -84,15 +84,15 @@ export default function ProfileCard({
           <Stack gap="xs">
             <Group gap="xs">
               <IconMail size={16} color="gray" />
-              <Text size="sm">{email}</Text>
+              <Text size="sm">{email ?? "未登録"}</Text>
             </Group>
             <Group gap="xs">
               <IconPhone size={16} color="gray" />
-              <Text size="sm">{phone}</Text>
+              <Text size="sm">{phone ?? "未登録"}</Text>
             </Group>
             <Group gap="xs">
               <IconMapPin size={16} color="gray" />
-              <Text size="sm">{location}</Text>
+              <Text size="sm">{location ?? "未登録"}</Text>
             </Group>
           </Stack>
         </div>
@@ -102,11 +102,11 @@ export default function ProfileCard({
             スキル
           </Text>
           <Group gap="xs">
-            {skills.map((skill) => (
+            {skills?.map((skill) => (
               <Badge key={skill} variant="light" color="blue">
                 {skill}
               </Badge>
-            ))}
+            )) ?? null}
           </Group>
         </div>
       </Stack>

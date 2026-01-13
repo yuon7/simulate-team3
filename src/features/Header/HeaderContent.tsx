@@ -27,6 +27,7 @@ import {
   IconHome,
   IconList,
   IconMapPin,
+  IconMessage,
 } from "@tabler/icons-react";
 import { useState } from "react";
 import headerContentStyles from "./HeaderContent.module.css";
@@ -119,71 +120,23 @@ export function HeaderContent({ user, avatarUrl }: HeaderContentProps) {
               <span className={headerContentStyles.brandName}>LocalLink</span>
             </Group>
           </Anchor>
-
-          <Group gap="lg" visibleFrom="md">
-            <Anchor href="/jobs" className={headerContentStyles.navLink}>
-              求人を探す
-            </Anchor>
-            <Anchor href="/#simulator" className={headerContentStyles.navLink}>
-              生活シミュレーション
-            </Anchor>
-            <Anchor href="/#regions" className={headerContentStyles.navLink}>
-              地域紹介
-            </Anchor>
-          </Group>
+          {/* Desktop Nav removed as per request to use Hamburger always */}
         </Group>
 
         <Group gap="md">
+          {/* Search Input hidden for cleaner look or kept specific? User said "other headers are clear". Let's keep search for now but hide buttons */}
           <TextInput
             placeholder="地域や職種で検索..."
             leftSection={<IconSearch size={16} />}
             className={headerContentStyles.searchInput}
             visibleFrom="md"
           />
-
-          {!user && (
-            <>
-              <Button
-                variant="outline"
-                size="sm"
-                leftSection={<IconUser size={16} />}
-                visibleFrom="md"
-                component="a"
-                href="/auth/login"
-              >
-                ログイン
-              </Button>
-
-              <Button
-                size="sm"
-                visibleFrom="md"
-                component="a"
-                href="/auth/select-role"
-              >
-                新規登録
-              </Button>
-            </>
-          )}
-
+          {/* visibleFrom="md" removed from Burger to show always */}
           <Burger
             opened={opened}
             onClick={() => setOpened(!opened)}
-            hiddenFrom="md"
             size="sm"
           />
-
-          {user && (
-            <Avatar
-              src={avatarUrl}
-              size="md"
-              visibleFrom="md"
-              component="a"
-              href={user.role === "STAFF" ? "/company/profile" : "/profile"}
-              style={{ cursor: "pointer" }}
-            >
-              {!avatarUrl && (user.name?.[0] || <IconUser size={20} />)}
-            </Avatar>
-          )}
         </Group>
       </Group>
 
@@ -227,6 +180,13 @@ export function HeaderContent({ user, avatarUrl }: HeaderContentProps) {
                 href="/faq"
                 onClick={handleLinkClick}
               />
+              <NavLink
+                label="AIチャット相談"
+                leftSection={<IconMessage size={16} stroke={1.5} />}
+                component="a"
+                href="/chat"
+                onClick={handleLinkClick}
+              />
               <Divider />
               <Button
                 component="a"
@@ -262,7 +222,7 @@ export function HeaderContent({ user, avatarUrl }: HeaderContentProps) {
                     label="生活シミュレーション"
                     leftSection={<IconDeviceGamepad size={16} stroke={1.5} />}
                     component="a"
-                    href="/#simulator"
+                    href="/life-simulator"
                     onClick={handleLinkClick}
                   />
                   <NavLink
@@ -272,6 +232,14 @@ export function HeaderContent({ user, avatarUrl }: HeaderContentProps) {
                     href="/#regions"
                     onClick={handleLinkClick}
                   />
+                  <NavLink
+                    label="AIチャット相談"
+                    leftSection={<IconMessage size={16} stroke={1.5} />}
+                    component="a"
+                    href="/chat"
+                    onClick={handleLinkClick}
+                  />
+                  <Divider my="sm" />
                 </>
               )}
 
@@ -298,6 +266,14 @@ export function HeaderContent({ user, avatarUrl }: HeaderContentProps) {
                     href="/company/applications"
                     onClick={handleLinkClick}
                   />
+                  <NavLink
+                    label="AIチャット相談"
+                    leftSection={<IconMessage size={16} stroke={1.5} />}
+                    component="a"
+                    href="/chat"
+                    onClick={handleLinkClick}
+                  />
+                  <Divider my="sm" />
                 </>
               )}
 

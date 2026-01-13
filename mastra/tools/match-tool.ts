@@ -4,6 +4,7 @@ import {
   calculateSkillScore,
   calculateLocationScore,
   calculateSalaryScore,
+  calculateKeywordScore,
 } from "./scoring";
 import { PrismaClient } from "@prisma/client";
 
@@ -34,23 +35,20 @@ export const matchTool = createTool({
       .optional()
       .describe('希望する勤務地のリスト（都道府県名）。例: ["東京都", "長野県"]'),
     desiredSalary: z.number().optional().describe("希望年収（円）"),
-    priorities: z
-      .object({
-        skills: z.number(),
-        location: z.number(),
-        salary: z.number(),
-      })
+    keywords: z
+      .array(z.string())
       .optional()
-      .describe("スコアリングの優先度（合計1.0になるように指定）"),
+      .describe('ユーザーの入力に含まれる特徴的なキーワード。例: ["伝統工芸", "英語", "古い街並み", "マーケティング"]'),
   }),
 
   outputSchema: z.array(scoredCompanySchema),
 
   execute: async ({ context }) => {
     // チャットからのユーザー入力を取得
-    const { skills, location, desiredSalary, priorities } = context;
-    const defaultPriorities = { skills: 0.5, location: 0.3, salary: 0.2 };
-    const effectivePriorities = priorities || defaultPriorities;
+    const { skills, location, desiredSalary, keywords } = context;
+
+    const defaultPriorities = { skills: 0.4, location: 0.2, salary: 0.1, keywords: 0.3 };
+    const effectivePriorities = defaultPriorities;
 
     try {
       // データベースから求人情報を取得（関連スキルと組織・場所情報を含める）
@@ -94,11 +92,26 @@ export const matchTool = createTool({
           desiredSalary ?? null,
         );
 
+        const keywordScore = calculateKeywordScore(
+          keywords || [],
+          [
+            job.title,
+            job.description,
+            ...(job.tags || []),
+            job.organization.name,
+            job.organization.description,
+            job.organization.industry,
+            job.location.prefecture.name,
+            job.location.city
+          ]
+        );
+
         // 総合スコアを計算
         const matchScore =
           skillScore * effectivePriorities.skills +
           locationScore * effectivePriorities.location +
-          salaryScore * effectivePriorities.salary;
+          salaryScore * effectivePriorities.salary +
+          keywordScore * effectivePriorities.keywords;
 
         return {
           id: job.id,
@@ -117,7 +130,18 @@ export const matchTool = createTool({
         .sort((a, b) => b.matchScore - a.matchScore);
 
       // 上位5件をAIに返す
-      return sortedCompanies.slice(0, 5);
+      const result = sortedCompanies.slice(0, 5);
+
+      const fs = require('fs');
+      try {
+        fs.appendFileSync('/home/yuon/simulate/match-debug.log', JSON.stringify({
+          timestamp: new Date().toISOString(),
+          status: "real-server-success",
+          count: result.length
+        }) + '\n');
+      } catch (e) { }
+
+      return result;
     } catch (error) {
       console.error("Error in matchTool db query:", error);
       return [];

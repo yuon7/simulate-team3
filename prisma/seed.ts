@@ -117,6 +117,17 @@ async function main() {
       name: "北海道アウトドア観光局", pref: "北海道", city: "富良野市", type: "COMPANY", jobs: [
         { title: "アウトドアガイド・ツアー企画", cat: "企画・経営", salaryMin: 2800000, salaryMax: 4000000, tags: ["自然が好き", "英語", "寮完備", "未経験歓迎", "賞与あり"] }
       ]
+    },
+    {
+      name: "沖縄リモートワークベース", pref: "沖縄県", city: "那覇市", type: "COMPANY", jobs: [
+        { title: "コミュニティマネージャー", cat: "事務・管理", salaryMin: 3000000, salaryMax: 4500000, tags: ["海が近い", "副業可", "コワーキング運営", "英語"] },
+        { title: "ブリッジSE", cat: "エンジニア", salaryMin: 5000000, salaryMax: 7500000, tags: ["アジア展開", "リモート推奨", "ワーケーション推奨"] }
+      ]
+    },
+    {
+      name: "宮城復興まちづくりNPO", pref: "宮城県", city: "石巻市", type: "COMPANY", jobs: [
+        { title: "地域コーディネーター", cat: "企画・経営", salaryMin: 3000000, salaryMax: 4200000, tags: ["社会貢献", "NPO", "未経験歓迎", "地域活性化"] }
+      ]
     }
   ];
 
