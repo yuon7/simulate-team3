@@ -10,6 +10,7 @@ import {
   IconShield,
 } from "@tabler/icons-react";
 import displayStyles from "./FeaturesDisplay.module.css";
+import Link from "next/link";
 
 const features = [
   {
@@ -18,6 +19,7 @@ const features = [
     description:
       "移住前に生活コストや環境を詳細にシミュレーション。期待と現実のギャップを解消します。",
     color: "green",
+    link: "/simulate",
   },
   {
     icon: IconMapPin,
@@ -25,6 +27,7 @@ const features = [
     description:
       "全国47都道府県の地方企業・団体の求人情報を網羅。あなたに最適な働く場所を見つけます。",
     color: "blue",
+    link: "/simulate",
   },
   {
     icon: IconUsers,
@@ -66,6 +69,9 @@ export function FeaturesDisplay() {
             padding="lg"
             radius="md"
             className={displayStyles.featureCard}
+            component={feature.link ? (Link as any) : "div"}     
+            href={feature.link ? feature.link : undefined} 
+            style={{ cursor: feature.link ? "pointer" : "default" }} 
           >
             <Stack gap="md">
               <div
