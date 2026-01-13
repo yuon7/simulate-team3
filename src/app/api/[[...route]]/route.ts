@@ -4,6 +4,9 @@ import { handle } from "hono/vercel";
 import jobsApp from "../jobs";
 import profileApp from "../profile";
 import applicationsApp from "../applications";
+import messagesApp from "../messages";
+import prefecturesApp from "../prefectures";
+import categoriesApp from "../categories";
 
 export const runtime = "edge";
 
@@ -13,6 +16,9 @@ const prisma = new PrismaClient();
 app.route('/jobs', jobsApp);
 app.route('/profile', profileApp);
 app.route('/applications', applicationsApp);
+app.route('/messages', messagesApp);
+app.route('/prefectures', prefecturesApp);
+app.route('/categories', categoriesApp);
 
 
 // app.get("/todos", async (c) => {
@@ -62,4 +68,5 @@ app.route('/applications', applicationsApp);
 export const GET = handle(app);
 export const POST = handle(app);
 export const PUT = handle(app);
+export const PATCH = handle(app);
 export const DELETE = handle(app);

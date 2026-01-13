@@ -8,6 +8,7 @@ import jobCardStyles from "./JobCards.module.css"
 import { useDisclosure } from "@mantine/hooks"
 import { useState } from "react"
 import { JobDetailModal } from "./JobDetailModal"
+import Link from "next/link"
 
 type Job = {
   id: number
@@ -16,6 +17,7 @@ type Job = {
   employmentType: string
   tags: string[]
   organization: {
+    id: number
     name: string
   }
   location: {
@@ -37,11 +39,17 @@ type JobsResponse = {
 
 type JobCardsProps = {
   company?: string; 
+  limit?: number;
 };
 
-export function JobCards({ company }: JobCardsProps) {
-  // Filters could be passed here
-  const { data, error, isLoading } = useSWR<JobsResponse>('/api/jobs', fetcher)
+export function JobCards({ company, limit }: JobCardsProps) {
+  const queryParams = new URLSearchParams();
+  if (limit) queryParams.append('limit', limit.toString());
+  
+  const { data, error, isLoading } = useSWR<JobsResponse>(
+    `/api/jobs${queryParams.toString() ? `?${queryParams.toString()}` : ''}`, 
+    fetcher
+  )
   const [opened, { open, close }] = useDisclosure(false);
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
 
@@ -101,7 +109,12 @@ export function JobCards({ company }: JobCardsProps) {
                 <Stack gap="xs">
                   <Group gap="xs">
                     <IconBuilding size={16} className={jobCardStyles.icon} />
-                    <Text size="sm" c="dimmed">
+                    <Text 
+                      size="sm" 
+                      component={Link} 
+                      href={`/organizations/${(job as any).organization.id}`}
+                      className={jobCardStyles.orgLink}
+                    >
                       {job.organization.name}
                     </Text>
                   </Group>
@@ -114,7 +127,9 @@ export function JobCards({ company }: JobCardsProps) {
                   <Group gap="xs">
                     <IconCurrencyYen size={16} className={jobCardStyles.icon} />
                     <Text size="sm" c="dimmed">
-                      {job.salaryMin ? `${job.salaryMin}万円~` : "応相談"}
+                      {job.salaryMin ? (
+                        job.salaryMax ? `${job.salaryMin}〜${job.salaryMax}万円` : `${job.salaryMin}万円〜`
+                      ) : "応相談"}
                     </Text>
                   </Group>
                 </Stack>

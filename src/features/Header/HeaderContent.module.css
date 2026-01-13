@@ -32,3 +32,17 @@
   .searchInput {
     width: 250px; /* Adjust as needed */
   }
+
+  .profileLink {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    width: 100%;
+    margin-bottom: var(--mantine-spacing-xs);
+    border-radius: var(--mantine-radius-sm);
+    transition: background-color 0.2s ease;
+  }
+  
+  .profileLink:hover {
+    background-color: var(--mantine-color-gray-0);
+  }

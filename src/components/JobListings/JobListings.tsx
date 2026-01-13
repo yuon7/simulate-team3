@@ -1,4 +1,5 @@
 import { Container, Title, Text, Stack, Group, Button } from "@mantine/core"
+import Link from "next/link"
 import jobSectionStyles from "./JobListings.module.css"
 import { JobCards } from "../../features/JobListings/JobCards"
 
@@ -15,10 +16,10 @@ export function JobListings() {
           </Text>
         </Stack>
 
-        <JobCards />
+        <JobCards limit={4} />
 
         <Group justify="center">
-          <Button size="lg" variant="outline">
+          <Button size="lg" variant="outline" component={Link} href="/jobs">
             すべての求人を見る
           </Button>
         </Group>
