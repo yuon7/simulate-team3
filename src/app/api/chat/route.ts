@@ -17,6 +17,7 @@ export async function POST(req: NextRequest) {
         // ストリーミングレスポンスを生成
         const result = await agent.generate(message, {
             threadId: threadId || "default-thread",
+            resourceId: "default-user",
         });
 
         return NextResponse.json({
