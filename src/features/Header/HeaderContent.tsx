@@ -44,6 +44,55 @@ type HeaderContentProps = {
   avatarUrl?: string | null;
 };
 
+const ProfileSection = ({
+  user,
+  avatarUrl,
+  onClick,
+}: {
+  user: ExtendedUser | null;
+  avatarUrl?: string | null;
+  onClick: () => void;
+}) => {
+  if (!user) {
+    return (
+      <Group p="md">
+        <Avatar size="md" />
+        <Text fw={500}>ゲスト様</Text>
+      </Group>
+    );
+  }
+
+  const profileLink = user.role === "STAFF" ? "/company/profile" : "/profile";
+
+  return (
+    <UnstyledButton
+      component="a"
+      href={profileLink}
+      className={headerContentStyles.profileLink}
+      onClick={onClick}
+    >
+      <Group p="md">
+        <Avatar
+          src={avatarUrl}
+          size="md"
+          color="initials"
+          name={user.name || user.email}
+        >
+          {!avatarUrl && <IconUser size={20} />}
+        </Avatar>
+        <div style={{ flex: 1 }}>
+          <Text size="sm" fw={500}>
+            {user.name || "ユーザー"}
+          </Text>
+          <Text c="dimmed" size="xs">
+            {user.email}
+          </Text>
+        </div>
+      </Group>
+    </UnstyledButton>
+  );
+};
+
 export function HeaderContent({ user, avatarUrl }: HeaderContentProps) {
   const [opened, setOpened] = useState(false);
   const router = useRouter();
@@ -56,47 +105,6 @@ export function HeaderContent({ user, avatarUrl }: HeaderContentProps) {
 
   const handleLinkClick = () => {
     setOpened(false);
-  };
-
-  const ProfileSection = () => {
-    if (!user) {
-      return (
-        <Group p="md">
-          <Avatar size="md" />
-          <Text fw={500}>ゲスト様</Text>
-        </Group>
-      );
-    }
-
-    const profileLink = user.role === "STAFF" ? "/company/profile" : "/profile";
-
-    return (
-      <UnstyledButton
-        component="a"
-        href={profileLink}
-        className={headerContentStyles.profileLink}
-        onClick={handleLinkClick}
-      >
-        <Group p="md">
-          <Avatar
-            src={avatarUrl}
-            size="md"
-            color="initials"
-            name={user.name || user.email}
-          >
-            {!avatarUrl && <IconUser size={20} />}
-          </Avatar>
-          <div style={{ flex: 1 }}>
-            <Text size="sm" fw={500}>
-              {user.name || "ユーザー"}
-            </Text>
-            <Text c="dimmed" size="xs">
-              {user.email}
-            </Text>
-          </div>
-        </Group>
-      </UnstyledButton>
-    );
   };
 
   return (
@@ -186,9 +194,14 @@ export function HeaderContent({ user, avatarUrl }: HeaderContentProps) {
         padding="md"
         size="xs"
         position="right"
+        zIndex={2000}
       >
         <Stack gap="xs">
-          <ProfileSection />
+          <ProfileSection
+            user={user}
+            avatarUrl={avatarUrl}
+            onClick={handleLinkClick}
+          />
           <Divider />
 
           {!user && (

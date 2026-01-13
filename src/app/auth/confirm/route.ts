@@ -42,44 +42,47 @@ export async function GET(request: NextRequest) {
     } = await supabase.auth.getUser();
 
     if (user && user.email) {
-      const { PrismaClient, UserRole } = await import("@prisma/client");
-      const prisma = new PrismaClient();
+      const { prisma } = await import("@/lib/prisma");
+      const { UserRole } = await import("@prisma/client");
 
       const role =
         user.user_metadata.role === "STAFF"
           ? UserRole.STAFF
           : UserRole.CANDIDATE;
 
-      // Check if user already exists to avoid errors on re-confirmation
+      console.log(`Confirming user ${user.email} with role ${role}`);
+
       try {
         const existingUser = await prisma.user.findUnique({
-          where: { email: user.email },
+          where: { id: user.id },
         });
 
         if (!existingUser) {
           await prisma.user.create({
             data: {
-              id: user.id, // Sync Supabase ID with Prisma ID
+              id: user.id,
               email: user.email,
-              passwordHash: "managed_by_supabase", // Placeholder
+              passwordHash: "managed_by_supabase",
               role,
             },
           });
+          console.log(`Created Prisma user for ${user.email}`);
         }
-      } catch (error) {
-        console.error("Failed to create user in Prisma:", error);
-        // Optional: redirect to an error page or continue to allow login (if user exists)
+      } catch (dbError) {
+        console.error("Failed to sync user with Prisma:", dbError);
+        // Continue anyway, as the Supabase session is established
       }
 
-      // Redirect to appropriate onboarding page
       const redirectPath =
         role === UserRole.STAFF
           ? "/onboarding/company"
           : "/onboarding/candidate";
+
+      console.log(`Redirecting confirmed user to ${redirectPath}`);
       redirect(redirectPath);
     }
 
-    // Fallback redirect
+    console.log("No user found after confirmation, redirecting to home");
     redirect(next);
   }
 

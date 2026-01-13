@@ -38,12 +38,18 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (
-    !user &&
-    !request.nextUrl.pathname.startsWith("/auth/login") &&
-    !request.nextUrl.pathname.startsWith("/auth")
-  ) {
-    // no user, potentially respond by redirecting the user to the login page
+  // Determine if the path is public
+  const isPublicPath =
+    request.nextUrl.pathname === "/" ||
+    request.nextUrl.pathname.startsWith("/jobs") ||
+    request.nextUrl.pathname.startsWith("/organizations") ||
+    request.nextUrl.pathname.startsWith("/api/jobs") ||
+    request.nextUrl.pathname.startsWith("/api/prefectures") ||
+    request.nextUrl.pathname.startsWith("/api/categories") ||
+    request.nextUrl.pathname.startsWith("/auth");
+
+  if (!user && !isPublicPath) {
+    // no user and not a public path, redirect to login
     const url = request.nextUrl.clone();
     url.pathname = "/auth/login";
     return NextResponse.redirect(url);
