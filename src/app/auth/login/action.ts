@@ -28,33 +28,85 @@ export async function login(formData: FormData) {
   const { prisma } = await import("@/lib/prisma"); // Dynamically import to avoid edge issues if any
 
   try {
-    const existingUser = await prisma.user.findUnique({
+    let existingUser = await prisma.user.findUnique({
       where: { id: user.id },
       include: { candidate: true, staff: true },
     });
 
     if (!existingUser) {
-      // User signed up but didn't complete /auth/confirm flow properly (or side-stepped)
-      // Create user from metadata
-      const roleStr = user.user_metadata.role;
-      let role: "CANDIDATE" | "STAFF" = "CANDIDATE";
-
-      if (roleStr === "STAFF") role = "STAFF";
-
-      await prisma.user.create({
-        data: {
-          id: user.id,
-          email: user.email!,
-          passwordHash: "managed_by_supabase",
-          role,
-        },
+      // Check if a user with this email was pre-seeded with a random ID
+      const seededUser = await prisma.user.findUnique({
+        where: { email: user.email! },
       });
 
-      // Redirect to onboarding
-      revalidatePath("/", "layout");
-      redirect(
-        role === "STAFF" ? "/onboarding/company" : "/onboarding/candidate",
-      );
+      if (seededUser) {
+        console.log(`Matching seeded user found for ${user.email}. Syncing IDs...`);
+        await prisma.$transaction(async (tx) => {
+          const staff = await tx.staffProfile.findUnique({ where: { userId: seededUser.id } });
+          const candidate = await tx.candidateProfile.findUnique({ where: { userId: seededUser.id } });
+
+          await tx.user.delete({ where: { id: seededUser.id } });
+          
+          existingUser = await tx.user.create({
+            data: {
+              id: user.id,
+              email: user.email!,
+              passwordHash: seededUser.passwordHash,
+              role: seededUser.role,
+              name: seededUser.name,
+            },
+            include: { candidate: true, staff: true },
+          });
+
+          if (staff) {
+            await tx.staffProfile.create({
+              data: {
+                userId: user.id,
+                organizationId: staff.organizationId,
+                department: staff.department ?? null,
+                title: staff.title ?? null,
+              }
+            });
+          }
+          if (candidate) {
+            await tx.candidateProfile.create({
+              data: {
+                userId: user.id,
+                bio: candidate.bio ?? null,
+                gender: candidate.gender,
+                age: candidate.age,
+              }
+            });
+          }
+        }) as any;
+      } else {
+        // User signed up but didn't complete /auth/confirm flow properly (or side-stepped)
+        // Create user from metadata
+        const roleStr = user.user_metadata.role;
+        let role: "CANDIDATE" | "STAFF" = "CANDIDATE";
+
+        if (roleStr === "STAFF") role = "STAFF";
+
+        existingUser = (await prisma.user.create({
+          data: {
+            id: user.id,
+            email: user.email!,
+            passwordHash: "managed_by_supabase",
+            role,
+          },
+          include: { candidate: true, staff: true },
+        })) as any;
+
+        // Redirect to onboarding
+        revalidatePath("/", "layout");
+        redirect(
+          role === "STAFF" ? "/onboarding/company" : "/onboarding/candidate",
+        );
+      }
+    }
+
+    if (!existingUser) {
+       redirect("/auth/login?error=sync_failed");
     }
 
     // User exists, but verify profile

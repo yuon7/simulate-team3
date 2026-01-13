@@ -53,20 +53,75 @@ export async function GET(request: NextRequest) {
       console.log(`Confirming user ${user.email} with role ${role}`);
 
       try {
-        const existingUser = await prisma.user.findUnique({
+        let existingUser = await prisma.user.findUnique({
           where: { id: user.id },
         });
 
         if (!existingUser) {
-          await prisma.user.create({
-            data: {
-              id: user.id,
-              email: user.email,
-              passwordHash: "managed_by_supabase",
-              role,
-            },
+          // Check if a user with this email was pre-seeded with a random ID
+          const seededUser = await prisma.user.findUnique({
+            where: { email: user.email },
           });
-          console.log(`Created Prisma user for ${user.email}`);
+
+          if (seededUser) {
+            console.log(`Matching seeded user found for ${user.email}. Syncing IDs...`);
+            
+            // Re-create user with the correct Supabase ID, transferring role and name
+            // Note: Since we use Prisma Client and the ID is the PK, we need to handle it carefully.
+            // A simple way is to delete the seeded one and create the new one, 
+            // but we need to preserve relations (like StaffProfile).
+            
+            await prisma.$transaction(async (tx) => {
+              // Extract relations before deleting
+              const staff = await tx.staffProfile.findUnique({ where: { userId: seededUser.id } });
+              const candidate = await tx.candidateProfile.findUnique({ where: { userId: seededUser.id } });
+
+              await tx.user.delete({ where: { id: seededUser.id } });
+              
+              await tx.user.create({
+                data: {
+                  id: user.id,
+                  email: user.email!,
+                  passwordHash: seededUser.passwordHash,
+                  role: seededUser.role,
+                  name: seededUser.name,
+                }
+              });
+
+              if (staff) {
+                await tx.staffProfile.create({
+                  data: {
+                    userId: user.id,
+                    organizationId: staff.organizationId,
+                    department: staff.department ?? null,
+                    title: staff.title ?? null,
+                  }
+                });
+              }
+              if (candidate) {
+                await tx.candidateProfile.create({
+                  data: {
+                    userId: user.id,
+                    bio: candidate.bio ?? null,
+                    gender: candidate.gender,
+                    age: candidate.age,
+                    // Note: UserSkills might need more complex migration if we use it heavily
+                  }
+                });
+              }
+            });
+            console.log(`Successfully claimed seeded user for ${user.email}`);
+          } else {
+            await prisma.user.create({
+              data: {
+                id: user.id,
+                email: user.email,
+                passwordHash: "managed_by_supabase",
+                role,
+              },
+            });
+            console.log(`Created new Prisma user for ${user.email}`);
+          }
         }
       } catch (dbError) {
         console.error("Failed to sync user with Prisma:", dbError);

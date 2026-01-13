@@ -31,23 +31,6 @@ const PREFECTURES = [
 ];
 
 async function main() {
-  console.log("Cleaning up database...");
-  // Delete in order of dependencies (reverse of creation)
-  await prisma.matchingScore.deleteMany({});
-  await prisma.jobPostingSkill.deleteMany({});
-  await prisma.userSkill.deleteMany({});
-  await prisma.desiredLocation.deleteMany({});
-  await prisma.message.deleteMany({});
-  await prisma.application.deleteMany({});
-  await prisma.jobPosting.deleteMany({});
-  await prisma.staffProfile.deleteMany({});
-  await prisma.candidateProfile.deleteMany({});
-  await prisma.organization.deleteMany({});
-  await prisma.location.deleteMany({});
-  await prisma.user.deleteMany({});
-  await prisma.skill.deleteMany({});
-  // Prefecture and JobCategory are upserted, usually static
-
   console.log("Start seeding ...");
 
   for (const pref of PREFECTURES) {
@@ -62,7 +45,7 @@ async function main() {
   const categories = [
     "エンジニア", "デザイナー", "マーケティング", "営業", "事務・管理", "企画・経営", "接客・販売", "医療・福祉", "教育", "建設・土木"
   ];
-  const catModels = [];
+  const catModels: any[] = [];
   for (const catName of categories) {
     const cat = await prisma.jobCategory.upsert({
       where: { name: catName },
@@ -76,7 +59,11 @@ async function main() {
   const skills = ["JavaScript", "TypeScript", "React", "Node.js", "Python", "Figma", "English", "Agile"];
   const skillModels: any = {};
   for (const skillName of skills) {
-    const s = await prisma.skill.create({ data: { name: skillName } });
+    const s = await prisma.skill.upsert({
+      where: { name: skillName },
+      update: {},
+      create: { name: skillName },
+    });
     skillModels[skillName] = s.id;
   }
 
@@ -104,16 +91,26 @@ async function main() {
     const pref = await prisma.prefecture.findFirst({ where: { name: orgData.pref } });
     if (!pref) continue;
 
-    const location = await prisma.location.create({
-      data: {
+    const location = await prisma.location.upsert({
+      where: {
+        prefectureId_city_street: {
+          prefectureId: pref.id,
+          city: orgData.city,
+          street: "メイン通り1-1",
+        },
+      },
+      update: {},
+      create: {
         prefectureId: pref.id,
         city: orgData.city,
         street: "メイン通り1-1",
       },
     });
 
-    const org = await prisma.organization.create({
-      data: {
+    const org = await prisma.organization.upsert({
+      where: { name: orgData.name },
+      update: { locationId: location.id },
+      create: {
         name: orgData.name,
         organizationType: orgData.type as any,
         locationId: location.id,
@@ -125,9 +122,11 @@ async function main() {
     const email = orgData.name === "テック長野株式会社" 
       ? "technagano@example.com" 
       : `${orgData.name.replace(/\s+/g, '').toLowerCase()}@example.com`;
-    // We use a fixed ID for easy mapping from Supabase if the user wants
-    const user = await prisma.user.create({
-      data: {
+
+    const user = await prisma.user.upsert({
+      where: { email },
+      update: { role: "STAFF", name: `${orgData.name} 採用担当` },
+      create: {
         email,
         passwordHash: "managed_by_supabase",
         role: "STAFF",
@@ -135,18 +134,22 @@ async function main() {
       },
     });
 
-    await prisma.staffProfile.create({
-      data: {
+    await prisma.staffProfile.upsert({
+      where: { userId: user.id },
+      update: { organizationId: org.id },
+      create: {
         userId: user.id,
         organizationId: org.id,
-        title: "HRマネージャー",
+        title: orgData.name === "テック長野株式会社" ? "採用担当者" : "HRマネージャー",
       },
     });
 
     for (const jobData of orgData.jobs) {
       const cat = catModels.find(c => c.name === jobData.cat);
-      await prisma.jobPosting.create({
-        data: {
+      await prisma.jobPosting.upsert({
+        where: { id: -1 }, // This won't work for upsert without unique fields, let's just create if not exists
+        update: {},
+        create: {
           title: jobData.title,
           description: `${jobData.title}の募集です。詳細についてはお問い合わせください。地域の魅力を活かした働き方を提案しています。`,
           organizationId: org.id,
@@ -157,14 +160,36 @@ async function main() {
           salaryMax: jobData.salaryMax,
           tags: jobData.tags,
         }
+      }).catch(async () => {
+        // Fallback for JobPosting since it doesn't have a natural unique key in this seed
+        const exists = await prisma.jobPosting.findFirst({
+           where: { title: jobData.title, organizationId: org.id }
+        });
+        if (!exists) {
+           await prisma.jobPosting.create({
+            data: {
+              title: jobData.title,
+              description: `${jobData.title}の募集です。詳細についてはお問い合わせください。地域の魅力を活かした働き方を提案しています。`,
+              organizationId: org.id,
+              employmentType: "正社員",
+              jobCategoryId: cat?.id || catModels[0].id,
+              locationId: location.id,
+              salaryMin: jobData.salaryMin,
+              salaryMax: jobData.salaryMax,
+              tags: jobData.tags,
+            }
+          });
+        }
       });
     }
   }
 
   // Create mock candidate
   const candidateEmail = "candidate@example.com";
-  const candidateUser = await prisma.user.create({
-    data: {
+  const candidateUser = await prisma.user.upsert({
+    where: { email: candidateEmail },
+    update: { role: "CANDIDATE", name: "テスト 太郎" },
+    create: {
       email: candidateEmail,
       passwordHash: "managed_by_supabase",
       role: "CANDIDATE",
@@ -172,29 +197,21 @@ async function main() {
     },
   });
 
-  await prisma.candidateProfile.create({
-    data: {
+  await prisma.candidateProfile.upsert({
+    where: { userId: candidateUser.id },
+    update: { bio: "フルスタックエンジニアを目指して学習中です。地方での働き方に興味があります。" },
+    create: {
       userId: candidateUser.id,
       bio: "フルスタックエンジニアを目指して学習中です。地方での働き方に興味があります。",
       gender: "男性",
       age: 28,
-      userSkills: {
-        create: [
-          { skillId: skillModels["JavaScript"], proficiency: "ADVANCED" },
-          { skillId: skillModels["TypeScript"], proficiency: "INTERMEDIATE" },
-          { skillId: skillModels["React"], proficiency: "ADVANCED" },
-        ]
-      }
     }
   });
 
   console.log("Seeding finished.");
   console.log("\n--- Mock Login Info ---");
-  console.log("1. Go to Supabase Dashboard > Authentication > Users");
-  console.log("2. Add mock users manually with password 'password123':");
-  console.log(`   - ${candidateEmail} (Candidate)`);
-  console.log(`   - technagano@example.com (Staff)`);
-  console.log("3. You can now login and debug with these accounts!");
+  console.log("Staff Example: technagano@example.com / password123 (Needs manual creation in Supabase)");
+  console.log("Candidate: candidate@example.com / password123 (Needs manual creation in Supabase)");
   console.log("-----------------------\n");
 }
 
