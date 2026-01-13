@@ -39,7 +39,7 @@ export function FooterContent() {
                 求人検索
               </Anchor>
               <Anchor
-                href="#"
+                href="/simulate"
                 size="sm"
                 c="dimmed"
                 className={footerContentStyles.link}
@@ -55,7 +55,7 @@ export function FooterContent() {
                 地域情報
               </Anchor>
               <Anchor
-                href="#"
+                href="/simulate"
                 size="sm"
                 c="dimmed"
                 className={footerContentStyles.link}
