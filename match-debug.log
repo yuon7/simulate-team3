@@ -1,3 +1,0 @@
-{"timestamp":"2026-01-13T17:32:53.232Z","input":{"skills":["マーケティング"],"location":["東京"],"desiredSalary":5000000,"priorities":{"skills":1,"location":1,"salary":1}},"skills":["マーケティング"],"location":["東京"],"desiredSalary":5000000}
-{"timestamp":"2026-01-13T17:56:23.491Z","status":"real-server-success","count":5}
-{"timestamp":"2026-01-13T18:33:17.291Z","status":"real-server-success","count":5}
