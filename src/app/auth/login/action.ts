@@ -34,14 +34,17 @@ export async function login(formData: FormData) {
     });
 
     if (!existingUser) {
-const seededUser = await prisma.user.findUnique({
+      // Check if a user with this email was pre-seeded with a random ID
+      const seededUser = await prisma.user.findUnique({
         where: { email: user.email! },
       });
+
       if (seededUser) {
         console.log(`Matching seeded user found for ${user.email}. Syncing IDs...`);
         await prisma.$transaction(async (tx) => {
           const staff = await tx.staffProfile.findUnique({ where: { userId: seededUser.id } });
           const candidate = await tx.candidateProfile.findUnique({ where: { userId: seededUser.id } });
+
           await tx.user.delete({ where: { id: seededUser.id } });
           
           existingUser = await tx.user.create({
@@ -54,6 +57,7 @@ const seededUser = await prisma.user.findUnique({
             },
             include: { candidate: true, staff: true },
           });
+
           if (staff) {
             await tx.staffProfile.create({
               data: {
@@ -80,7 +84,9 @@ const seededUser = await prisma.user.findUnique({
         // Create user from metadata
         const roleStr = user.user_metadata.role;
         let role: "CANDIDATE" | "STAFF" = "CANDIDATE";
+
         if (roleStr === "STAFF") role = "STAFF";
+
         existingUser = (await prisma.user.create({
           data: {
             id: user.id,
@@ -90,12 +96,14 @@ const seededUser = await prisma.user.findUnique({
           },
           include: { candidate: true, staff: true },
         })) as any;
+
         // Redirect to onboarding
         revalidatePath("/", "layout");
         redirect(
           role === "STAFF" ? "/onboarding/company" : "/onboarding/candidate",
         );
       }
+    }
 
     if (!existingUser) {
        redirect("/auth/login?error=sync_failed");
