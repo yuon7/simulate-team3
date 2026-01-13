@@ -1,17 +1,24 @@
 "use client";
 
-import { createCompanyProfile } from "./action";
-import styles from "./page.module.css";
 import { useFormState } from "react-dom";
-
-// Note: In a real app, fetch prefectures from DB. Hardcoding a few for demo.
-const PREFECTURES = [
-  { id: 1, name: "北海道" },
-  { id: 13, name: "東京都" },
-  { id: 27, name: "大阪府" },
-  { id: 40, name: "福岡県" },
-  // ... others
-];
+import { createCompanyProfile } from "./action";
+import { PREFECTURES } from "@/constants/prefectures";
+import {
+  Container,
+  Card,
+  Title,
+  Text,
+  TextInput,
+  Select,
+  Button,
+  Stack,
+  Group,
+  Alert,
+  Divider,
+  FileInput,
+} from "@mantine/core";
+import { IconAlertCircle, IconPhoto } from "@tabler/icons-react";
+import { ImageUpload } from "@/components/ImageUpload/ImageUpload";
 
 const initialState = {
   error: "",
@@ -21,126 +28,123 @@ export default function CompanyOnboardingPage() {
   const [state, formAction] = useFormState(createCompanyProfile, initialState);
 
   return (
-    <div className={styles.container}>
-      <div className={styles.card}>
-        <h1 className={styles.title}>企業・自治体情報登録</h1>
-        <p className={styles.description}>
+    <Container size="md" py="xl">
+      <Card shadow="lg" padding="xl" radius="md" withBorder>
+        <Title order={1} mb="md">企業・自治体情報登録</Title>
+        <Text c="dimmed" mb="xl">
           求人を掲載するために、組織情報と担当者情報を登録してください。
-        </p>
-        
+        </Text>
+
         {state?.error && (
-          <div style={{ color: "red", padding: "10px", backgroundColor: "#ffebee", borderRadius: "4px", marginBottom: "20px" }}>
+          <Alert icon={<IconAlertCircle size={16} />} title="エラー" color="red" mb="md">
             {state.error}
-          </div>
+          </Alert>
         )}
 
-        <form action={formAction} className={styles.form}>
-          <section className={styles.section}>
-            <h2 className={styles.sectionTitle}>組織情報</h2>
-            
-            <div className={styles.inputGroup}>
-              <label htmlFor="orgName" className={styles.label}>
-                組織名 (企業名・自治体名) <span className={styles.required}>*</span>
-              </label>
-              <input
-                id="orgName"
-                name="orgName"
-                type="text"
-                required
-                className={styles.input}
-                placeholder="株式会社〇〇 / 〇〇市役所"
+        <form action={formAction}>
+          <Stack gap="lg">
+            <Stack align="center" mb="lg">
+              <ImageUpload
+                label="組織ロゴ / プロフィール画像"
+                onFileChange={(file: File | null) => {
+                  const input = document.querySelector('input[name="avatar"]') as HTMLInputElement;
+                  if (input) {
+                    const dataTransfer = new DataTransfer();
+                    if (file) dataTransfer.items.add(file);
+                    input.files = dataTransfer.files;
+                  }
+                }}
               />
-            </div>
+              <input type="file" name="avatar" style={{ display: "none" }} accept="image/png,image/jpeg,image/jpg" />
+            </Stack>
 
-            <div className={styles.inputGroup}>
-              <label htmlFor="orgType" className={styles.label}>
-                組織種別 <span className={styles.required}>*</span>
-              </label>
-              <select
-                id="orgType"
-                name="orgType"
-                required
-                className={styles.select}
-              >
-                <option value="">選択してください</option>
-                <option value="COMPANY">一般企業</option>
-                <option value="GOVERNMENT">自治体</option>
-              </select>
-            </div>
-
-            <div className={styles.row}>
-              <div className={styles.inputGroup}>
-                <label htmlFor="prefectureId" className={styles.label}>
-                  都道府県 <span className={styles.required}>*</span>
-                </label>
-                <select
-                  id="prefectureId"
-                  name="prefectureId"
+            {/* Organization Section */}
+            <div>
+              <Title order={3} mb="md">組織情報</Title>
+              
+              <Stack gap="md">
+                <TextInput
+                  label="組織名 (企業名・自治体名)"
+                  placeholder="株式会社〇〇 / 〇〇市役所"
+                  name="orgName"
                   required
-                  className={styles.select}
-                >
-                  <option value="">選択してください</option>
-                  {PREFECTURES.map((pref) => (
-                    <option key={pref.id} value={pref.id}>
-                      {pref.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
+                  withAsterisk
+                />
 
-              <div className={styles.inputGroup}>
-                <label htmlFor="city" className={styles.label}>
-                  市区町村 <span className={styles.required}>*</span>
-                </label>
-                <input
-                  id="city"
-                  name="city"
-                  type="text"
+                <Select
+                  label="組織種別"
+                  placeholder="選択してください"
+                  name="orgType"
                   required
-                  className={styles.input}
-                  placeholder="〇〇市"
+                  withAsterisk
+                  data={[
+                    { value: "COMPANY", label: "一般企業" },
+                    { value: "GOVERNMENT", label: "自治体" },
+                  ]}
                 />
-              </div>
+
+                <Group grow>
+                  <Select
+                    label="都道府県"
+                    placeholder="選択してください"
+                    name="prefectureId"
+                    required
+                    withAsterisk
+                    searchable
+                    data={PREFECTURES.map((pref) => ({
+                      value: pref.id.toString(),
+                      label: pref.name,
+                    }))}
+                  />
+
+                  <TextInput
+                    label="市区町村"
+                    placeholder="〇〇市"
+                    name="city"
+                    required
+                    withAsterisk
+                  />
+                </Group>
+              </Stack>
             </div>
-          </section>
 
-          <section className={styles.section}>
-            <h2 className={styles.sectionTitle}>担当者情報</h2>
-            
-            <div className={styles.row}>
-              <div className={styles.inputGroup}>
-                <label htmlFor="department" className={styles.label}>
-                  部署名
-                </label>
-                <input
-                  id="department"
-                  name="department"
-                  type="text"
-                  className={styles.input}
-                  placeholder="人事部"
-                />
-              </div>
+            <Divider />
 
-              <div className={styles.inputGroup}>
-                <label htmlFor="title" className={styles.label}>
-                  役職
-                </label>
-                <input
-                  id="title"
-                  name="title"
-                  type="text"
-                  className={styles.input}
-                  placeholder="採用担当"
+            {/* Staff Information Section */}
+            <div>
+              <Title order={3} mb="md">担当者情報</Title>
+              
+              <Stack gap="md">
+                <TextInput
+                  label="担当者名"
+                  placeholder="山田 太郎"
+                  name="staffName"
+                  required
+                  withAsterisk
                 />
-              </div>
+
+                <Group grow>
+                  <TextInput
+                    label="部署名"
+                    placeholder="人事部"
+                    name="department"
+                  />
+
+                  <TextInput
+                    label="役職"
+                    placeholder="採用担当"
+                    name="title"
+                  />
+                </Group>
+              </Stack>
             </div>
-          </section>
 
-          <button type="submit" className={styles.submitButton}>
-            登録してはじめる
-          </button>
+            <Button type="submit" fullWidth size="lg" mt="md">
+              登録してはじめる
+            </Button>
+          </Stack>
         </form>
-      </div>
-    </div>
+      </Card>
+    </Container>
   );
 }

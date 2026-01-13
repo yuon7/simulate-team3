@@ -22,13 +22,35 @@ export async function createCompanyProfile(prevState: any, formData: FormData) {
   const city = formData.get("city") as string;
   const department = formData.get("department") as string;
   const title = formData.get("title") as string;
+  const staffName = formData.get("staffName") as string;
+  const avatarFile = formData.get("avatar") as File | null;
 
   // Validation
-  if (!orgName || !orgType || isNaN(prefectureId) || !city) {
+  if (!orgName || !orgType || isNaN(prefectureId) || !city || !staffName) {
     return { error: "必須項目が入力されていません" };
   }
 
-  // Ensure Prisma User exists and matches Supabase ID
+  try {
+    let avatarUrl = null;
+
+    // Upload avatar if provided
+    if (avatarFile && avatarFile.size > 0) {
+      const fileExt = avatarFile.name.split('.').pop();
+      const fileName = `${user.id}/${Math.random().toString(36).substring(7)}.${fileExt}`;
+      
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(fileName, avatarFile, { upsert: true });
+
+      if (uploadError) {
+        console.error("Avatar upload error:", uploadError);
+        return { error: "画像のアップロードに失敗しました" };
+      }
+      
+      avatarUrl = fileName;
+    }
+
+    // Ensure Prisma User exists and matches Supabase ID
   let dbUser = await prisma.user.findUnique({
     where: { id: user.id },
   });
@@ -64,24 +86,43 @@ export async function createCompanyProfile(prevState: any, formData: FormData) {
                 id: user.id,
                 email: user.email,
                 passwordHash: "managed_by_supabase",
-                role: "STAFF", 
+                role: "STAFF",
+                name: staffName,
+                ...(avatarUrl && { avatarUrl }),
             },
         });
     } catch (createError) {
         console.error("Failed to sync user:", createError);
         return { error: "ユーザー情報の同期に失敗しました" };
     }
+  } else {
+    // Update name and avatar if user already exists
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { 
+        name: staffName,
+        ...(avatarUrl && { avatarUrl }),
+      },
+    });
   }
 
   try {
     await prisma.$transaction(async (tx) => {
       // 1. Create or Find Location (Simplified: assuming creation for now)
       // In a real app, you might want to reuse locations more carefully
-      const location = await tx.location.create({
-        data: {
+      const location = await tx.location.upsert({
+        where: {
+          prefectureId_city_street: {
+            prefectureId,
+            city,
+            street: "",
+          },
+        },
+        update: {},
+        create: {
           prefectureId,
           city,
-          street: "", // Optional in form, default empty
+          street: "",
         },
       });
 
@@ -91,6 +132,7 @@ export async function createCompanyProfile(prevState: any, formData: FormData) {
           name: orgName,
           organizationType: orgType,
           locationId: location.id,
+          logoUrl: avatarUrl, // 保存したパスを組織ロゴとしても登録
         },
       });
 
@@ -104,12 +146,15 @@ export async function createCompanyProfile(prevState: any, formData: FormData) {
         },
       });
     });
-  } catch (error: any) {
-    console.error("Failed to create company profile details:", JSON.stringify(error, null, 2));
-    if (error.code === "P2002" && error.meta?.target?.includes("name")) {
-       return { error: "この組織名は既に登録されています" };
+    } catch (error: any) {
+      if (error && error.digest?.startsWith("NEXT_REDIRECT")) throw error;
+      console.error("Failed to create company profile details:", error);
+      return { error: "プロフィールの作成に失敗しました" };
     }
-    return { error: `プロフィールの作成に失敗しました: ${error.message}` };
+  } catch (error: any) {
+    if (error && error.digest?.startsWith("NEXT_REDIRECT")) throw error;
+    console.error("Outer onboarding error:", error);
+    return { error: "登録処理中にエラーが発生しました" };
   }
 
   redirect("/");

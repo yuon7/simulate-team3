@@ -1,84 +1,131 @@
+"use client";
+
+import { useFormState } from "react-dom";
 import { createCandidateProfile } from "./action";
-import styles from "./page.module.css";
+import { 
+  Container, 
+  Card, 
+  Title, 
+  Text, 
+  TextInput, 
+  Select, 
+  Textarea, 
+  Button, 
+  FileInput, 
+  Stack,
+  Group,
+  Alert
+} from "@mantine/core";
+import { IconPhoto, IconAlertCircle } from "@tabler/icons-react";
+import { PREFECTURES } from "@/constants/prefectures";
+import { ImageUpload } from "@/components/ImageUpload/ImageUpload";
+
+const initialState = {
+  error: "",
+};
 
 export default function CandidateOnboardingPage() {
-  return (
-    <div className={styles.container}>
-      <div className={styles.card}>
-        <h1 className={styles.title}>求職者プロフィール登録</h1>
-        <p className={styles.description}>
-          あなたにぴったりの仕事や移住先を見つけるために、プロフィールを入力してください。
-        </p>
-        
-        <form action={createCandidateProfile} className={styles.form}>
-          <div className={styles.inputGroup}>
-            <label htmlFor="name" className={styles.label}>
-              お名前 <span className={styles.required}>*</span>
-            </label>
-            <input
-              id="name"
-              name="name"
-              type="text"
-              required
-              className={styles.input}
-              placeholder="山田 太郎"
-            />
-          </div>
+  const [state, formAction] = useFormState(createCandidateProfile, initialState);
 
-          <div className={styles.row}>
-            <div className={styles.inputGroup}>
-              <label htmlFor="gender" className={styles.label}>
-                性別 <span className={styles.required}>*</span>
-              </label>
-              <select
-                id="gender"
+  return (
+    <Container size="md" py="xl">
+      <Card shadow="lg" padding="xl" radius="md" withBorder>
+        <Title order={1} mb="md">求職者プロフィール登録</Title>
+        <Text c="dimmed" mb="xl">
+          あなたにぴったりの仕事や移住先を見つけるために、プロフィールを入力してください。
+        </Text>
+
+        {state?.error && (
+          <Alert icon={<IconAlertCircle size={16} />} title="エラー" color="red" mb="md">
+            {state.error}
+          </Alert>
+        )}
+
+        <form action={formAction}>
+          <Stack gap="md">
+            <Stack align="center" mb="lg">
+              <ImageUpload
+                label="プロフィール画像"
+                onFileChange={(file: File | null) => {
+                  // Standard form submission needs the file in an input
+                  const input = document.querySelector('input[name="avatar"]') as HTMLInputElement;
+                  if (input) {
+                    const dataTransfer = new DataTransfer();
+                    if (file) dataTransfer.items.add(file);
+                    input.files = dataTransfer.files;
+                  }
+                }}
+              />
+              <input type="file" name="avatar" style={{ display: "none" }} accept="image/png,image/jpeg,image/jpg" />
+            </Stack>
+
+            <TextInput
+              label="お名前"
+              placeholder="山田 太郎"
+              name="name"
+              required
+              withAsterisk
+            />
+
+            <Group grow>
+              <Select
+                label="性別"
+                placeholder="選択してください"
                 name="gender"
                 required
-                className={styles.select}
-              >
-                <option value="">選択してください</option>
-                <option value="男性">男性</option>
-                <option value="女性">女性</option>
-                <option value="その他">その他</option>
-                <option value="回答しない">回答しない</option>
-              </select>
-            </div>
+                withAsterisk
+                data={[
+                  { value: "男性", label: "男性" },
+                  { value: "女性", label: "女性" },
+                  { value: "その他", label: "その他" },
+                  { value: "回答しない", label: "回答しない" },
+                ]}
+              />
 
-            <div className={styles.inputGroup}>
-              <label htmlFor="age" className={styles.label}>
-                年齢 <span className={styles.required}>*</span>
-              </label>
-              <input
-                id="age"
+              <TextInput
+                label="年齢"
+                placeholder="25"
                 name="age"
                 type="number"
+                min={15}
+                max={100}
                 required
-                min="15"
-                max="100"
-                className={styles.input}
-                placeholder="25"
+                withAsterisk
               />
-            </div>
-          </div>
+            </Group>
 
-          <div className={styles.inputGroup}>
-            <label htmlFor="bio" className={styles.label}>
-              自己紹介
-            </label>
-            <textarea
-              id="bio"
-              name="bio"
-              rows={4}
-              className={styles.textarea}
-              placeholder="これまでの経歴や、移住・転職にかける思いなどを自由にご記入ください。"
+            <Select
+              label="出身都道府県"
+              placeholder="選択してください"
+              name="prefectureId"
+              searchable
+              data={PREFECTURES.map((pref) => ({
+                value: pref.id.toString(),
+                label: pref.name,
+              }))}
             />
-          </div>
 
-          <button type="submit" className={styles.submitButton}>
-            登録してはじめる
-          </button>
+            <TextInput
+              label="出身市区町村"
+              placeholder="例: 渋谷区"
+              name="city"
+              description="出身都道府県を選択した場合は入力してください"
+            />
+
+            <Textarea
+              label="自己紹介"
+              placeholder="これまでの経歴や、移住・転職にかける思いなどを自由にご記入ください。"
+              name="bio"
+              minRows={4}
+              autosize
+            />
+
+            <Button type="submit" fullWidth size="lg" mt="md">
+              登録してはじめる
+            </Button>
+          </Stack>
         </form>
-      </div>
-    </div>
+      </Card>
+    </Container>
   );
 }

@@ -42,9 +42,10 @@ export default function ProfilePage() {
         email={profile.email}
         phone={profile.phone}
         location={profile.location}
-        role={profile.role}
+        role={profile.jobTitle || profile.role || "未設定"}
         bio={profile.bio}
         skills={profile.skills}
+        avatarUrl={profile.avatarUrl}
         onEdit={open}
       />
 
