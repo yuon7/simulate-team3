@@ -1,47 +1,73 @@
-"use client"
+"use client";
 
-import { Grid, Card, Badge, Group, Button, Stack, Title, Text, Loader, Center, Alert } from "@mantine/core"
-import { IconMapPin, IconBuilding, IconCurrencyYen, IconArrowRight, IconInfoCircle } from "@tabler/icons-react"
-import useSWR from "swr"
-import { fetcher } from "@/lib/fetcher"
-import jobCardStyles from "./JobCards.module.css"
-import { useDisclosure } from "@mantine/hooks"
-import { useState } from "react"
-import { JobDetailModal } from "./JobDetailModal"
+import {
+  Grid,
+  Card,
+  Badge,
+  Group,
+  Button,
+  Stack,
+  Title,
+  Text,
+  Loader,
+  Center,
+  Alert,
+} from "@mantine/core";
+import {
+  IconMapPin,
+  IconBuilding,
+  IconCurrencyYen,
+  IconArrowRight,
+  IconInfoCircle,
+} from "@tabler/icons-react";
+import useSWR from "swr";
+import { fetcher } from "@/lib/fetcher";
+import jobCardStyles from "./JobCards.module.css";
+import { useDisclosure } from "@mantine/hooks";
+import { useState } from "react";
+import { JobDetailModal } from "./JobDetailModal";
+import Link from "next/link";
 
 type Job = {
-  id: number
-  title: string
-  description: string
-  employmentType: string
-  tags: string[]
+  id: number;
+  title: string;
+  description: string;
+  employmentType: string;
+  tags: string[];
   organization: {
-    name: string
-  }
+    id: number;
+    name: string;
+  };
   location: {
-    city: string
+    city: string;
     prefecture: {
-      name: string
-    }
-  } | null
-  salaryMin: number | null
-  salaryMax: number | null
-}
-
-type JobsResponse = {
-  data: Job[]
-  meta: {
-    total: number
-  }
-}
-
-type JobCardsProps = {
-  company?: string; 
+      name: string;
+    };
+  } | null;
+  salaryMin: number | null;
+  salaryMax: number | null;
 };
 
-export function JobCards({ company }: JobCardsProps) {
-  // Filters could be passed here
-  const { data, error, isLoading } = useSWR<JobsResponse>('/api/jobs', fetcher)
+type JobsResponse = {
+  data: Job[];
+  meta: {
+    total: number;
+  };
+};
+
+type JobCardsProps = {
+  company?: string;
+  limit?: number;
+};
+
+export function JobCards({ company, limit }: JobCardsProps) {
+  const queryParams = new URLSearchParams();
+  if (limit) queryParams.append("limit", limit.toString());
+
+  const { data, error, isLoading } = useSWR<JobsResponse>(
+    `/api/jobs${queryParams.toString() ? `?${queryParams.toString()}` : ""}`,
+    fetcher,
+  );
   const [opened, { open, close }] = useDisclosure(false);
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
 
@@ -55,7 +81,7 @@ export function JobCards({ company }: JobCardsProps) {
       <Center h={200}>
         <Loader />
       </Center>
-    )
+    );
   }
 
   if (error) {
@@ -63,25 +89,23 @@ export function JobCards({ company }: JobCardsProps) {
       <Alert icon={<IconInfoCircle />} title="エラー" color="red" mb="xl">
         求人情報の取得に失敗しました。
       </Alert>
-    )
+    );
   }
 
-  const jobs = data?.data || []
-  
-  // Note: Client-side filtering for 'company' prop is suboptimal for large datasets, 
+  const jobs = data?.data || [];
+
+  // Note: Client-side filtering for 'company' prop is suboptimal for large datasets,
   // but matches the previous existing logic. Ideally, pass filter to API.
   const jobsToDisplay = company
     ? jobs.filter((job) => job.organization.name === company)
     : jobs;
-  
-
 
   if (jobsToDisplay.length === 0) {
     return (
-       <Alert icon={<IconInfoCircle />} title="お知らせ" color="blue" mb="xl">
+      <Alert icon={<IconInfoCircle />} title="お知らせ" color="blue" mb="xl">
         現在掲載されている求人はありません。
       </Alert>
-    )
+    );
   }
 
   return (
@@ -89,7 +113,12 @@ export function JobCards({ company }: JobCardsProps) {
       <Grid gutter="lg" mb={48}>
         {jobsToDisplay.map((job) => (
           <Grid.Col key={job.id} span={{ base: 12, md: 6 }}>
-            <Card shadow="sm" padding="lg" radius="md" className={jobCardStyles.jobCard}>
+            <Card
+              shadow="sm"
+              padding="lg"
+              radius="md"
+              className={jobCardStyles.jobCard}
+            >
               <Stack gap="md">
                 <Group justify="space-between" align="flex-start">
                   <Title order={4}>{job.title}</Title>
@@ -101,20 +130,31 @@ export function JobCards({ company }: JobCardsProps) {
                 <Stack gap="xs">
                   <Group gap="xs">
                     <IconBuilding size={16} className={jobCardStyles.icon} />
-                    <Text size="sm" c="dimmed">
+                    <Text
+                      size="sm"
+                      component={Link}
+                      href={`/organizations/${(job as any).organization.id}`}
+                      className={jobCardStyles.orgLink}
+                    >
                       {job.organization.name}
                     </Text>
                   </Group>
                   <Group gap="xs">
                     <IconMapPin size={16} className={jobCardStyles.icon} />
                     <Text size="sm" c="dimmed">
-                       {job.location ? `${job.location.prefecture.name} ${job.location.city}` : '勤務地未定'}
+                      {job.location
+                        ? `${job.location.prefecture.name} ${job.location.city}`
+                        : "勤務地未定"}
                     </Text>
                   </Group>
                   <Group gap="xs">
                     <IconCurrencyYen size={16} className={jobCardStyles.icon} />
                     <Text size="sm" c="dimmed">
-                      {job.salaryMin ? `${job.salaryMin}万円~` : "応相談"}
+                      {job.salaryMin
+                        ? job.salaryMax
+                          ? `${job.salaryMin}〜${job.salaryMax}万円`
+                          : `${job.salaryMin}万円〜`
+                        : "応相談"}
                     </Text>
                   </Group>
                 </Stack>
@@ -132,8 +172,8 @@ export function JobCards({ company }: JobCardsProps) {
                 </Group>
 
                 <Group gap="sm" mt="md">
-                  <Button 
-                    flex={1} 
+                  <Button
+                    flex={1}
                     rightSection={<IconArrowRight size={16} />}
                     onClick={() => handleOpenDetail(job)}
                   >
@@ -146,12 +186,8 @@ export function JobCards({ company }: JobCardsProps) {
           </Grid.Col>
         ))}
       </Grid>
-      
-      <JobDetailModal 
-        job={selectedJob} 
-        opened={opened} 
-        onClose={close} 
-      />
+
+      <JobDetailModal job={selectedJob} opened={opened} onClose={close} />
     </>
-  )
+  );
 }

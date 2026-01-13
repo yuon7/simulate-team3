@@ -1,8 +1,21 @@
-'use client';
+"use client";
 
-import { Card, Text, Group, Badge, Stack, Button, Divider } from '@mantine/core';
-import { IconMail, IconPhone, IconMapPin, IconBuilding } from '@tabler/icons-react';
-import { JobCards } from '@/features/JobListings/JobCards';
+import {
+  Card,
+  Text,
+  Group,
+  Badge,
+  Stack,
+  Button,
+  Divider,
+} from "@mantine/core";
+import {
+  IconMail,
+  IconPhone,
+  IconMapPin,
+  IconBuilding,
+} from "@tabler/icons-react";
+import { JobCards } from "@/features/JobListings/JobCards";
 
 type CompanyCardProps = {
   name: string;
@@ -33,7 +46,9 @@ export function CompanyCard({
     <Card shadow="md" padding="lg" radius="md" withBorder>
       <Group justify="space-between" mb="md">
         <div>
-          <Text fw={700} size="lg">{name}</Text>
+          <Text fw={700} size="lg">
+            {name}
+          </Text>
           <Text c="dimmed">{industry}</Text>
         </div>
 
@@ -47,11 +62,20 @@ export function CompanyCard({
       <Divider mb="md" />
 
       <Stack gap="xs">
-        <Text><IconMapPin size={16} style={{ marginRight: 4 }} /> {location}</Text>
-        <Text><IconBuilding size={16} style={{ marginRight: 4 }} /> 設立: {established}</Text>
+        <Text>
+          <IconMapPin size={16} style={{ marginRight: 4 }} /> {location}
+        </Text>
+        <Text>
+          <IconBuilding size={16} style={{ marginRight: 4 }} /> 設立:{" "}
+          {established}
+        </Text>
         <Text>従業員数: {employees}</Text>
-        <Text><IconMail size={16} style={{ marginRight: 4 }} /> {email}</Text>
-        <Text><IconPhone size={16} style={{ marginRight: 4 }} /> {phone}</Text>
+        <Text>
+          <IconMail size={16} style={{ marginRight: 4 }} /> {email}
+        </Text>
+        <Text>
+          <IconPhone size={16} style={{ marginRight: 4 }} /> {phone}
+        </Text>
       </Stack>
 
       <Text mt="md">{description}</Text>
@@ -63,14 +87,12 @@ export function CompanyCard({
           </Badge>
         ))}
       </Group>
-    
+
       <JobCards company={name} />
-      
+
       <Button mt="lg" fullWidth color="blue">
         企業サイトを見る
       </Button>
-
-      
     </Card>
   );
 }

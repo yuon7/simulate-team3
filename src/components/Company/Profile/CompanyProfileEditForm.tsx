@@ -8,7 +8,7 @@ export function CompanyProfileEditForm() {
     <Container size="sm" py="xl" className={styles.container}>
       <Group justify="space-between" mb="xl">
         <Title order={1}>企業情報編集</Title>
-        <Button variant="subtle" component={Link} href="/company">
+        <Button variant="subtle" component={Link} href="/company/profile">
           キャンセル
         </Button>
       </Group>

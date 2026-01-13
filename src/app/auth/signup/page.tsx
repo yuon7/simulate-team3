@@ -15,7 +15,7 @@ export default function SignupPage({
     <div className={styles.container}>
       <div className={styles.card}>
         <h1 className={styles.title}>{roleLabel}アカウント登録</h1>
-        
+
         {error === "exists" && (
           <div className={styles.alert}>
             このメールアドレスは既に登録されています。
@@ -28,7 +28,7 @@ export default function SignupPage({
 
         <form className={styles.form}>
           <input type="hidden" name="role" value={role} />
-          
+
           <div className={styles.inputGroup}>
             <label htmlFor="email" className={styles.label}>
               メールアドレス

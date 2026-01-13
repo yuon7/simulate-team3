@@ -1,6 +1,17 @@
-"use client"
+"use client";
 
-import { Container, Title, Text, Card, Stack, Group, Badge, Button, Grid, Paper } from "@mantine/core"
+import {
+  Container,
+  Title,
+  Text,
+  Card,
+  Stack,
+  Group,
+  Badge,
+  Button,
+  Grid,
+  Paper,
+} from "@mantine/core";
 import {
   IconCalculator,
   IconHome,
@@ -9,17 +20,41 @@ import {
   IconHeart,
   IconTrendingDown,
   IconTrendingUp,
-} from "@tabler/icons-react"
-import simulationStyles from "./LifeSimulation.module.css"
+} from "@tabler/icons-react";
+import simulationStyles from "./LifeSimulation.module.css";
 
 const simulationData = {
   location: "長野県松本市",
   salary: "500万円",
   costs: [
-    { category: "住居費", amount: 60000, icon: IconHome, trend: "down", comparison: "東京比 -65%" },
-    { category: "交通費", amount: 15000, icon: IconCar, trend: "down", comparison: "東京比 -40%" },
-    { category: "食費", amount: 45000, icon: IconShoppingCart, trend: "down", comparison: "東京比 -20%" },
-    { category: "娯楽費", amount: 25000, icon: IconHeart, trend: "up", comparison: "東京比 +15%" },
+    {
+      category: "住居費",
+      amount: 60000,
+      icon: IconHome,
+      trend: "down",
+      comparison: "東京比 -65%",
+    },
+    {
+      category: "交通費",
+      amount: 15000,
+      icon: IconCar,
+      trend: "down",
+      comparison: "東京比 -40%",
+    },
+    {
+      category: "食費",
+      amount: 45000,
+      icon: IconShoppingCart,
+      trend: "down",
+      comparison: "東京比 -20%",
+    },
+    {
+      category: "娯楽費",
+      amount: 25000,
+      icon: IconHeart,
+      trend: "up",
+      comparison: "東京比 +15%",
+    },
   ],
   totalMonthlyCost: 145000,
   disposableIncome: 270000,
@@ -29,7 +64,7 @@ const simulationData = {
     community: "活発",
     workLife: "良好",
   },
-}
+};
 
 export function LifeSimulation() {
   return (
@@ -38,8 +73,13 @@ export function LifeSimulation() {
         <Stack gap="xl">
           <div>
             <Group gap="xs" mb="xs">
-              <IconCalculator size={20} className={simulationStyles.primaryIcon} />
-              <Title order={3}>{simulationData.location}での生活シミュレーション結果</Title>
+              <IconCalculator
+                size={20}
+                className={simulationStyles.primaryIcon}
+              />
+              <Title order={3}>
+                {simulationData.location}での生活シミュレーション結果
+              </Title>
             </Group>
             <Group gap="md">
               <Text size="sm" c="dimmed">
@@ -58,23 +98,41 @@ export function LifeSimulation() {
                   </Title>
                   <Stack gap="sm">
                     {simulationData.costs.map((cost, index) => (
-                      <Paper key={index} p="md" className={simulationStyles.costItem}>
+                      <Paper
+                        key={index}
+                        p="md"
+                        className={simulationStyles.costItem}
+                      >
                         <Group justify="space-between">
                           <Group gap="sm">
-                            <cost.icon size={18} className={simulationStyles.icon} />
+                            <cost.icon
+                              size={18}
+                              className={simulationStyles.icon}
+                            />
                             <Text size="sm" fw={500}>
                               {cost.category}
                             </Text>
                           </Group>
                           <div style={{ textAlign: "right" }}>
-                            <Text fw={600}>¥{cost.amount.toLocaleString()}</Text>
+                            <Text fw={600}>
+                              ¥{cost.amount.toLocaleString()}
+                            </Text>
                             <Group gap={4} justify="flex-end">
                               {cost.trend === "down" ? (
-                                <IconTrendingDown size={14} className={simulationStyles.trendDown} />
+                                <IconTrendingDown
+                                  size={14}
+                                  className={simulationStyles.trendDown}
+                                />
                               ) : (
-                                <IconTrendingUp size={14} className={simulationStyles.trendUp} />
+                                <IconTrendingUp
+                                  size={14}
+                                  className={simulationStyles.trendUp}
+                                />
                               )}
-                              <Text size="xs" c={cost.trend === "down" ? "green" : "orange"}>
+                              <Text
+                                size="xs"
+                                c={cost.trend === "down" ? "green" : "orange"}
+                              >
                                 {cost.comparison}
                               </Text>
                             </Group>
@@ -88,7 +146,11 @@ export function LifeSimulation() {
                 <Paper p="lg" className={simulationStyles.incomeCard}>
                   <Group justify="space-between" mb="xs">
                     <Text fw={600}>月間可処分所得</Text>
-                    <Text size="xl" fw={700} className={simulationStyles.incomeAmount}>
+                    <Text
+                      size="xl"
+                      fw={700}
+                      className={simulationStyles.incomeAmount}
+                    >
                       ¥{simulationData.disposableIncome.toLocaleString()}
                     </Text>
                   </Group>
@@ -111,7 +173,10 @@ export function LifeSimulation() {
                         <Text size="sm" c="dimmed" mb={4}>
                           通勤時間
                         </Text>
-                        <Text fw={600} className={simulationStyles.qualityValue}>
+                        <Text
+                          fw={600}
+                          className={simulationStyles.qualityValue}
+                        >
                           {simulationData.qualityOfLife.commute}
                         </Text>
                       </Paper>
@@ -121,7 +186,10 @@ export function LifeSimulation() {
                         <Text size="sm" c="dimmed" mb={4}>
                           自然環境
                         </Text>
-                        <Text fw={600} className={simulationStyles.qualityValue}>
+                        <Text
+                          fw={600}
+                          className={simulationStyles.qualityValue}
+                        >
                           {simulationData.qualityOfLife.nature}
                         </Text>
                       </Paper>
@@ -131,7 +199,10 @@ export function LifeSimulation() {
                         <Text size="sm" c="dimmed" mb={4}>
                           コミュニティ
                         </Text>
-                        <Text fw={600} className={simulationStyles.qualityValue}>
+                        <Text
+                          fw={600}
+                          className={simulationStyles.qualityValue}
+                        >
                           {simulationData.qualityOfLife.community}
                         </Text>
                       </Paper>
@@ -141,7 +212,10 @@ export function LifeSimulation() {
                         <Text size="sm" c="dimmed" mb={4}>
                           ワークライフ
                         </Text>
-                        <Text fw={600} className={simulationStyles.qualityValue}>
+                        <Text
+                          fw={600}
+                          className={simulationStyles.qualityValue}
+                        >
                           {simulationData.qualityOfLife.workLife}
                         </Text>
                       </Paper>
@@ -172,12 +246,16 @@ export function LifeSimulation() {
             </Grid.Col>
           </Grid>
 
-          <Group gap="md" pt="md" style={{ borderTop: "1px solid var(--mantine-color-gray-3)" }}>
+          <Group
+            gap="md"
+            pt="md"
+            style={{ borderTop: "1px solid var(--mantine-color-gray-3)" }}
+          >
             <Button flex={1}>この条件で求人を探す</Button>
             <Button variant="outline">条件を変更してシミュレーション</Button>
           </Group>
         </Stack>
       </Card>
     </Container>
-  )
+  );
 }

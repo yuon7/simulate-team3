@@ -1,10 +1,10 @@
-import { Agent } from '@mastra/core/agent';
-import { Memory } from '@mastra/memory';
-import { LibSQLStore } from '@mastra/libsql';
-import { matchTool } from '../tools/match-tool';
+import { Agent } from "@mastra/core/agent";
+import { Memory } from "@mastra/memory";
+import { LibSQLStore } from "@mastra/libsql";
+import { matchTool } from "../tools/match-tool";
 
 export const matchAgent = new Agent({
-  name: 'Match Agent',
+  name: "Match Agent",
   instructions: `
     あなたは、ユーザーのスキルや希望に基づいて最適な企業を推薦する、優秀なキャリアアシスタントです。
     あなたの主な役割は、ユーザーが自身のスキルセットに合った企業を見つける手助けをすることです。
@@ -19,11 +19,11 @@ export const matchAgent = new Agent({
     - 常に親切で、プロフェッショナルな対話姿勢を保ってください。
     - 検索の結果、適合する企業が見つからなかった場合は、正直にその旨を伝え、別の勤務地やスキル、希望年収に変更して再検索するように提案してください。
   `,
-  model: 'google/gemini-2.5-flash-lite',
+  model: "google/gemini-2.5-flash-lite",
   tools: { matchTool },
   memory: new Memory({
     storage: new LibSQLStore({
-      url: 'file:../mastra.db',
+      url: "file:../mastra.db",
     }),
   }),
 });
