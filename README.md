@@ -117,22 +117,26 @@ Supabase を使用する場合、通常の PostgreSQL 接続文字列を使用�
 4. deploy
 
 ## Mastra環境構築
+
 1.  TypeScript プロジェクトを初期化し、次の依存関係を インストール:
-  ```sh
-  npm init -y
-  npm install -D typescript @types/node mastra@latest
-  npm install @mastra/core@latest zod@^4
-  ```
+
+```sh
+npm init -y
+npm install -D typescript @types/node mastra@latest
+npm install @mastra/core@latest zod@^4
+```
 
 2. 依存関係をインストール:
+
    ```sh
    npm install @mastra/memory
    npm install @mastra/libsql
    ```
 
 3. APIキーを追加:
-  `.env`ファイルに以下を追加:
-  Gemini
+   `.env`ファイルに以下を追加:
+   Gemini
+
    ```sh
    GOOGLE_GENERATIVE_AI_API_KEY=your-API-key
    ```
@@ -150,21 +154,25 @@ Supabase を使用する場合、通常の PostgreSQL 接続文字列を使用�
 <summary><strong>🏗️ アーキテクチャと技術スタック</strong></summary>
 
 ### フロントエンド
+
 - **Next.js 14** - React フレームワーク（App Router使用）
 - **TypeScript** - 型安全なJavaScript
 - **Mantine UI** - モダンなUIコンポーネントライブラリ
 - **CSS Modules** - コンポーネント単位のスタイリング
 
 ### バックエンド
+
 - **Hono** - 軽量で高速なWebフレームワーク
 - **Prisma** - データベースORM
 - **Supabase** - 認証とデータベース
 
 ### その他
+
 - **Vercel** - デプロイ先
 - **ESLint/Prettier** - コード品質管理
 
 ### プロジェクト構造
+
 ```
 src/
 ├── app/                 # Next.js App Router
@@ -342,16 +350,16 @@ export const POST = handle(app);
 ```typescript
 app.get("/users/:id", async (c) => {
   const id = c.req.param("id");
-  
+
   try {
     const user = await prisma.user.findUnique({
-      where: { id: parseInt(id) }
+      where: { id: parseInt(id) },
     });
-    
+
     if (!user) {
       return c.json({ error: "User not found" }, 404);
     }
-    
+
     return c.json(user);
   } catch (error) {
     return c.json({ error: "Internal server error" }, 500);
@@ -363,12 +371,12 @@ app.get("/users/:id", async (c) => {
 
 ```typescript
 // src/app/api/posts/route.ts
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const category = searchParams.get('category');
-  
+  const category = searchParams.get("category");
+
   // データ取得処理
   return NextResponse.json({ posts: [] });
 }
@@ -379,7 +387,7 @@ export async function POST(request: NextRequest) {
     // データ作成処理
     return NextResponse.json({ success: true }, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ error: 'Server error' }, { status: 500 });
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
 ```
@@ -449,12 +457,14 @@ npm install @tabler/icons-react
 このテンプレートには以下のサンプルが含まれています：
 
 ### 📄 作成済みページ
+
 - **プロフィールページ** (`/profile`) - ユーザー情報を表示
-- **ブログ一覧ページ** (`/blog`) - 記事一覧を表示  
+- **ブログ一覧ページ** (`/blog`) - 記事一覧を表示
 - **ブログ詳細ページ** (`/blog/[id]`) - 個別記事を表示（動的ルート）
 - **API エンドポイント** (`/api/posts`) - ブログ記事のCRUD操作
 
 ### 🧩 作成済みコンポーネント
+
 - **ProfileCard** - プロフィール情報を表示するカードコンポーネント
 - **BlogCard** - ブログ記事を表示するカードコンポーネント
 
@@ -478,17 +488,20 @@ npm run dev
 ### 📚 学習ポイント
 
 **フロントエンド:**
+
 - Mantine UIコンポーネントの使い方
 - CSS Modulesでのスタイリング
 - TypeScriptでの型定義
 - Next.js App Routerでのルーティング
 
 **バックエンド:**
+
 - Next.js API Routesの作成
 - リクエスト/レスポンスの処理
 - エラーハンドリング
 
 **開発の流れ:**
+
 1. コンポーネント設計 → 2. スタイリング → 3. 型定義 → 4. API連携
 
 </details>

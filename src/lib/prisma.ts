@@ -1,5 +1,5 @@
-import { PrismaClient } from '@prisma/client/edge';
-import { withAccelerate } from '@prisma/extension-accelerate';
+import { PrismaClient } from "@prisma/client/edge";
+import { withAccelerate } from "@prisma/extension-accelerate";
 
 const prismaClientSingleton = () => {
   return new PrismaClient().$extends(withAccelerate());
@@ -13,6 +13,6 @@ const globalForPrisma = globalThis as unknown as {
 
 export const prisma = globalForPrisma.prisma ?? prismaClientSingleton();
 
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV !== "production") {
   globalForPrisma.prisma = prisma;
 }

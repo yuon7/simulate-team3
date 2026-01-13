@@ -1,18 +1,18 @@
 .container {
-  font-family: "Arial", sans-serif;
   max-width: 600px;
-  margin: 0 auto;
   padding: 20px;
-  background-color: #fff;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
   color: #333;
+  background-color: #fff;
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgb(0 0 0 / 10%);
 }
 
 .heading,
 .loading {
-  text-align: center;
   color: #000;
+  text-align: center;
 }
 
 .subheading {
@@ -33,12 +33,12 @@
 }
 
 .button {
-  background-color: #000;
-  color: #fff;
-  border: none;
   padding: 10px;
   margin-left: 10px;
+  color: #fff;
   cursor: pointer;
+  background-color: #000;
+  border: none;
 }
 
 .button:hover {
@@ -50,8 +50,8 @@
 }
 
 .list {
-  list-style-type: none;
   padding-left: 0;
+  list-style-type: none;
 }
 
 .listItem {
@@ -61,10 +61,10 @@
 }
 
 .deleteButton {
-  background-color: #ff4d4d;
-  color: white;
-  border: none;
   padding: 5px;
+  color: white;
+  background-color: #ff4d4d;
+  border: none;
 }
 
 .deleteButton:hover {

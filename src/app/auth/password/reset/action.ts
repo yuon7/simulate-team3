@@ -21,7 +21,7 @@ export async function resetPassword(formData: FormData) {
   if (error) {
     if (error.code === "same_password") {
       throw new Error(
-        "新しいパスワードは古いパスワードと異なる必要があります。"
+        "新しいパスワードは古いパスワードと異なる必要があります。",
       );
     }
     throw error;

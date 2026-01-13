@@ -1,6 +1,6 @@
-import { Container, Title, Text, Stack } from "@mantine/core"
-import sectionStyles from "./FeaturesSection.module.css"
-import { FeaturesDisplay } from "../../features/FeaturesSection/FeaturesDisplay"
+import { Container, Title, Text, Stack } from "@mantine/core";
+import sectionStyles from "./FeaturesSection.module.css";
+import { FeaturesDisplay } from "../../features/FeaturesSection/FeaturesDisplay";
 
 export function FeaturesSection() {
   return (
@@ -17,5 +17,5 @@ export function FeaturesSection() {
         <FeaturesDisplay />
       </Container>
     </section>
-  )
+  );
 }

@@ -1,5 +1,5 @@
-import heroSectionStyles from "./HeroSection.module.css"
-import { HeroContent } from "../../features/HeroSection/HeroContent"
+import heroSectionStyles from "./HeroSection.module.css";
+import { HeroContent } from "../../features/HeroSection/HeroContent";
 
 export function HeroSection() {
   return (
@@ -7,5 +7,5 @@ export function HeroSection() {
       <div className={heroSectionStyles.background} />
       <HeroContent />
     </section>
-  )
+  );
 }

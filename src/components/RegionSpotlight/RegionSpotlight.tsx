@@ -1,6 +1,6 @@
-import { Container, Title, Text, Stack, Group, Button } from "@mantine/core"
-import regionSectionStyles from "./RegionSpotlight.module.css"
-import { RegionCards } from "../../features/RegionSpotlight/RegionCards"
+import { Container, Title, Text, Stack, Group, Button } from "@mantine/core";
+import regionSectionStyles from "./RegionSpotlight.module.css";
+import { RegionCards } from "../../features/RegionSpotlight/RegionCards";
 
 export function RegionSpotlight() {
   return (
@@ -24,5 +24,5 @@ export function RegionSpotlight() {
         </Group>
       </Container>
     </section>
-  )
+  );
 }

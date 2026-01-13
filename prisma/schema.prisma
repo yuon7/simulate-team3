@@ -43,6 +43,7 @@ model User {
   passwordHash String
   role         UserRole
   name         String    @default("guest")
+  avatarUrl    String?   // プロフィール画像パス (Supabase Storage)
   phone        String?
   
   candidate    CandidateProfile?
@@ -140,18 +141,33 @@ model JobPosting {
 }
 
 model Application {
+  id           Int                @id @default(autoincrement())
   candidateId  String
   candidate    CandidateProfile @relation(fields: [candidateId], references: [userId])
   
   jobPostingId Int
-  jobPosting   JobPosting       @relation(fields: [jobPostingId], references: [id])
+  jobPosting   JobPosting       @relation(fields: [jobPostingId], references: [id], onDelete: Cascade)
   
   status       ApplicationStatus @default(PENDING)
+  
+  messages     Message[]
   
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   
-  @@id([candidateId, jobPostingId])
+  @@unique([candidateId, jobPostingId])
+}
+
+model Message {
+  id            Int         @id @default(autoincrement())
+  applicationId Int
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  
+  senderId      String      // User.id
+  content       String
+  
+  readAt        DateTime?   // New: when the message was read
+  createdAt     DateTime    @default(now())
 }
 
 model JobCategory {
@@ -202,7 +218,7 @@ model UserSkill {
 
 model JobPostingSkill {
   jobPostingId Int
-  jobPosting   JobPosting @relation(fields: [jobPostingId], references: [id])
+  jobPosting   JobPosting @relation(fields: [jobPostingId], references: [id], onDelete: Cascade)
   
   skillId      Int
   skill        Skill      @relation(fields: [skillId], references: [id])
@@ -228,7 +244,7 @@ model MatchingScore {
   candidate      CandidateProfile @relation(fields: [candidateId], references: [userId], name: "CandidateScores")
   
   jobPostingId   Int
-  jobPosting     JobPosting @relation(fields: [jobPostingId], references: [id], name: "JobPostingScores")
+  jobPosting     JobPosting @relation(fields: [jobPostingId], references: [id], name: "JobPostingScores", onDelete: Cascade)
   
   score          Float    // 総合マッチングスコア (例: 0.85)
   // 各項目の個別スコアも保存可能

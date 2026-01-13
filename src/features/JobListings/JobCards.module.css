@@ -1,13 +1,24 @@
 .jobCard {
-    transition: transform 0.2s ease-in-out;
-    border: 1px solid var(--mantine-color-gray-2);
-  }
-  
-  .jobCard:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--mantine-shadow-md);
-  }
-  
-  .icon {
-    color: var(--mantine-color-dimmed);
-  }
+  border: 1px solid var(--mantine-color-gray-2);
+  transition: transform 0.2s ease-in-out;
+}
+
+.jobCard:hover {
+  box-shadow: var(--mantine-shadow-md);
+  transform: translateY(-5px);
+}
+
+.icon {
+  color: var(--mantine-color-dimmed);
+}
+
+.orgLink {
+  display: inline-block;
+  font-weight: 600;
+  color: var(--mantine-color-blue-6);
+  text-decoration: none;
+}
+
+.orgLink:hover {
+  text-decoration: underline;
+}

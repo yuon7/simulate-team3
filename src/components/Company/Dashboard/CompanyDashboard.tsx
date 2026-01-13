@@ -1,6 +1,14 @@
 "use client";
 
-import { Container, Title, Grid, Card, Text, Button, Group } from "@mantine/core";
+import {
+  Container,
+  Title,
+  Grid,
+  Card,
+  Text,
+  Button,
+  Group,
+} from "@mantine/core";
 import Link from "next/link";
 import styles from "./CompanyDashboard.module.css";
 import { ReactNode } from "react";
@@ -27,7 +35,7 @@ export function CompanyDashboard({ summary }: CompanyDashboardProps) {
             </Title>
             {summary}
           </Card>
-          
+
           {/* Future: Recent Applications */}
           <Card withBorder shadow="sm" radius="md" p="lg">
             <Title order={2} size="h3" mb="md">
@@ -40,11 +48,19 @@ export function CompanyDashboard({ summary }: CompanyDashboardProps) {
         <Grid.Col span={{ base: 12, md: 4 }}>
           {/* Sidebar / Quick Actions */}
           <Card withBorder shadow="sm" radius="md" p="lg">
-            <Title order={3} size="h4" mb="md">クイックメニュー</Title>
+            <Title order={3} size="h4" mb="md">
+              クイックメニュー
+            </Title>
             <div className={styles.menuLinks}>
-              <Link href="/company/jobs/new" className={styles.link}>求人を作成する</Link>
-              <Link href="/company/jobs" className={styles.link}>求人を管理する</Link>
-              <Link href="/company/profile/edit" className={styles.link}>会社情報を更新する</Link>
+              <Link href="/company/jobs/new" className={styles.link}>
+                求人を作成する
+              </Link>
+              <Link href="/company/jobs" className={styles.link}>
+                求人を管理する
+              </Link>
+              <Link href="/company/profile/edit" className={styles.link}>
+                会社情報を更新する
+              </Link>
             </div>
           </Card>
         </Grid.Col>
