@@ -1,6 +1,5 @@
 import { Mastra } from "@mastra/core/mastra";
-import { PinoLogger } from "@mastra/loggers";
-import { LibSQLStore } from "@mastra/libsql";
+import { PostgresStore } from "@mastra/pg";
 import { matchAgent } from "./agents/userAgents";
 
 export const mastra = new Mastra({
@@ -8,11 +7,7 @@ export const mastra = new Mastra({
   agents: {
     matchAgent,
   },
-  storage: new LibSQLStore({
-    url: ":memory:",
-  }),
-  logger: new PinoLogger({
-    name: "Mastra",
-    level: "info",
+  storage: new PostgresStore({
+    connectionString: process.env.DATABASE_URL!,
   }),
 });
