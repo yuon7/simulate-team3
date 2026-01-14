@@ -1,6 +1,6 @@
 import { Agent } from "@mastra/core/agent";
 import { Memory } from "@mastra/memory";
-import { LibSQLStore } from "@mastra/libsql";
+import { PostgresStore } from "@mastra/pg";
 import { matchTool } from "../tools/match-tool";
 import { openai } from "@ai-sdk/openai";
 import { openaiWithINIADEndpoint } from "../utils/openaiWithINIADEndpoint";
@@ -31,8 +31,8 @@ export const matchAgent = new Agent({
       : (openaiWithINIADEndpoint.chat("gpt-4o") as any),
   tools: { matchTool },
   memory: new Memory({
-    storage: new LibSQLStore({
-      url: "file:../mastra.db",
+    storage: new PostgresStore({
+      connectionString: process.env.DATABASE_URL!,
     }),
   }),
 });
