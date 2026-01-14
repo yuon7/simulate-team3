@@ -55,13 +55,17 @@ export async function POST(req: NextRequest) {
       contextMessage = `${profileContext}\n${message}`;
     }
 
+    console.log("Chat API: Request received");
     const agent = mastra.getAgent("matchAgent");
+    console.log("Chat API: Agent retrieved", agent ? agent.name : "null");
 
     // ストリーミングレスポンスを生成 (Standard v5 stream)
+    console.log("Chat API: Starting stream");
     const result = await agent.stream(contextMessage, {
       threadId: threadId || "default-thread",
       resourceId: "default-user",
     });
+    console.log("Chat API: Stream started");
 
     // フロントエンドがJSONを期待しているため、ストリームをサーバー側で全受信して返す
     let fullText = "";
